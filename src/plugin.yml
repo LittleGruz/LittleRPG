@@ -1,0 +1,8 @@
+name: LittleRPG
+main: littlegruz.arpeegee.ArpeegeeMain
+version: 0.1
+
+commands:
+   testy:
+      description: Adds the current world to the list of worlds effected by the mod
+      usage: /testy
