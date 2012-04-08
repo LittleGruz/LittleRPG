@@ -8,17 +8,17 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-public class Modify implements CommandExecutor {
-   private ArpeegeeMain plugin;
+public class Create implements CommandExecutor{
+private ArpeegeeMain plugin;
    
-   public Modify(ArpeegeeMain instance){
+   public Create(ArpeegeeMain instance){
       plugin = instance;
    }
 
    @Override
    public boolean onCommand(CommandSender sender, Command cmd,
          String commandLabel, String[] args) {
-      if(sender.hasPermission("arpeegee.modify")){
+      if(sender.hasPermission("arpeegee.create")){
          // Add a class
          if(cmd.getName().compareToIgnoreCase("addclass") == 0){
             if(args.length == 4){
@@ -50,20 +50,6 @@ public class Modify implements CommandExecutor {
             }
             else
                sender.sendMessage("Wrong number of parameters");
-         }
-         // Remove a class
-         else if(cmd.getName().compareToIgnoreCase("removeclass") == 0){
-            if(plugin.getClassMap().remove(args[0]) == null)
-               sender.sendMessage("A class with the name \"" + args[0] + "\" does not exist");
-            else
-               sender.sendMessage("Removal successful");
-         }
-         // Remove a sub-class
-         else if(cmd.getName().compareToIgnoreCase("removesubclass") == 0){
-            if(plugin.getSubClassMap().remove(args[0]) == null)
-               sender.sendMessage("A sub-class with the name \"" + args[0] + "\" does not exist");
-            else
-               sender.sendMessage("Removal successful");
          }
       }
       else

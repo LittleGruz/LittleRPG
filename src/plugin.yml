@@ -23,9 +23,13 @@ commands:
       usage: /displaysubclass [name]
       
 permissions:
-   arpeegee.modify:
-      description: Modifying [sub-]classes
+   arpeegee.create:
+      description: Creating [sub-]classes
+      default: op
+   arpeegee.remove:
+      description: Removing [sub-]classes
       default: op
    arpeegee.display:
       description: Displaying [sub-]classes
       default: true
+depend: [Spout]

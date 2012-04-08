@@ -26,6 +26,7 @@ public class Display implements CommandExecutor{
       RPGSubClass rpgSubClass;
       
       if(sender.hasPermission("arpeegee.display")){
+         // Display class info
          if(cmd.getName().compareToIgnoreCase("displayclass") == 0){
             // Just display the names of the classes
             if(args.length == 0){
@@ -46,6 +47,7 @@ public class Display implements CommandExecutor{
                sender.sendMessage("Intelligence: " + rpgClass.getIntel());
             }
          }
+         // Display sub-class info
          else if(cmd.getName().compareToIgnoreCase("displaysubclass") == 0){
             // Just display the names of the sub-classes
             if(args.length == 0){

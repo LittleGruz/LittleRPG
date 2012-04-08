@@ -16,6 +16,9 @@ public class PlayerListener implements Listener {
 
    @EventHandler
    public void onPlayerJoin(PlayerJoinEvent event){
+      plugin.getLogger().info("Point0");
       plugin.getPlayerMap().put(event.getPlayer().getName(), new RPGPlayer(event.getPlayer().getName(), "Warrior", "Minion"));
+      plugin.getLogger().info("Point1");
+      plugin.getGUI().chooseClass(event.getPlayer());
    }
 }
