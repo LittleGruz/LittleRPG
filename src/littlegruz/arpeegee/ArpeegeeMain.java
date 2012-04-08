@@ -14,6 +14,8 @@ import java.util.StringTokenizer;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import littlegruz.arpeegee.commands.Display;
+import littlegruz.arpeegee.commands.Modify;
 import littlegruz.arpeegee.entities.RPGClass;
 import littlegruz.arpeegee.entities.RPGPlayer;
 import littlegruz.arpeegee.entities.RPGSubClass;
@@ -163,8 +165,14 @@ public class ArpeegeeMain extends JavaPlugin {
       }catch(Exception e){
          log.info("Incorrectly formatted Arpeegy sub-class file");
       }
+
+      getCommand("addclass").setExecutor(new Modify(this));
+      getCommand("addsubclass").setExecutor(new Modify(this));
+      getCommand("removeclass").setExecutor(new Modify(this));
+      getCommand("removesubclass").setExecutor(new Modify(this));
+      getCommand("displayclass").setExecutor(new Display(this));
+      getCommand("displaysubclass").setExecutor(new Display(this));
       
-      getCommand("testy").setExecutor(new RPGCommands());
       getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
 
       log.info("Yes");
@@ -234,5 +242,13 @@ public class ArpeegeeMain extends JavaPlugin {
 
    public HashMap<String, RPGPlayer> getPlayerMap() {
       return playerMap;
+   }
+   
+   public HashMap<String, RPGClass> getClassMap() {
+      return classMap;
+   }
+   
+   public HashMap<String, RPGSubClass> getSubClassMap() {
+      return subClassMap;
    }
 }

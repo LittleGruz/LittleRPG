@@ -3,6 +3,29 @@ main: littlegruz.arpeegee.ArpeegeeMain
 version: 0.1
 
 commands:
-   testy:
-      description: Adds the current world to the list of worlds effected by the mod
-      usage: /testy
+   addclass:
+      description: Adds a new class
+      usage: /addclass <name> <strength> <accuracy> <intelligence>
+   addsubclass:
+      description: Adds a new sub-class
+      usage: /addsubclass <name> <archery> <blade> <egg> <farming> <health> <healing> <mining>
+   removeclass:
+      description: Removes a new class
+      usage: /removeclass <name>
+   removesubclass:
+      description: Removes a new sub-class
+      usage: /removesubclass <name>
+   displayclass:
+      description: Removes a new class
+      usage: /dispayclass [name]
+   displaysubclass:
+      description: Removes a new class
+      usage: /displaysubclass [name]
+      
+permissions:
+   arpeegee.modify:
+      description: Modifying [sub-]classes
+      default: op
+   arpeegee.display:
+      description: Displaying [sub-]classes
+      default: true
