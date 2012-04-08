@@ -67,7 +67,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * certain perks*/
 
 public class ArpeegeeMain extends JavaPlugin {
-   Logger log = Logger.getLogger("This is MINECRAFT!");
+   private Logger log = Logger.getLogger("This is MINECRAFT!");
    private File playerFile;
    private File classFile;
    private File subClassFile;
@@ -76,15 +76,16 @@ public class ArpeegeeMain extends JavaPlugin {
    private HashMap<String, RPGSubClass> subClassMap;
    
    public void onEnable(){
+      BufferedReader br;
+      String input;
+      StringTokenizer st;
+      
       // Create the directory if needed
       new File(getDataFolder().toString()).mkdir();
       playerFile = new File(getDataFolder().toString() + "/player.txt");
       classFile = new File(getDataFolder().toString() + "/classes.txt");
       subClassFile = new File(getDataFolder().toString() + "/subclasses.txt");
       
-      BufferedReader br;
-      String input;
-      StringTokenizer st;
       
       playerMap = new HashMap<String, RPGPlayer>();
       // Load up the players from file
@@ -170,7 +171,7 @@ public class ArpeegeeMain extends JavaPlugin {
    }
    
    public void onDisable(){
-      
+
       // Save ALL the data!
       BufferedWriter bw;
       try{
@@ -188,6 +189,44 @@ public class ArpeegeeMain extends JavaPlugin {
          bw.close();
       }catch(IOException e){
          log.info("Error saving Arpeegy players");
+      }
+      
+      try{
+         bw = new BufferedWriter(new FileWriter(classFile));
+         
+         // Save classes to file
+         Iterator<Map.Entry<String, RPGClass>> it = classMap.entrySet().iterator();
+         while(it.hasNext()){
+            Entry<String, RPGClass> classIter = it.next();
+            bw.write(classIter.getKey() + " "
+                  + Double.toString(classIter.getValue().getStr()) + " "
+                  + Double.toString(classIter.getValue().getAcc()) + " "
+                  + Double.toString(classIter.getValue().getIntel()) + "\n");
+         }
+         bw.close();
+      }catch(IOException e){
+         log.info("Error saving Arpeegy classes");
+      }
+
+      try{
+         bw = new BufferedWriter(new FileWriter(subClassFile));
+         
+         // Save classes to file
+         Iterator<Map.Entry<String, RPGSubClass>> it = subClassMap.entrySet().iterator();
+         while(it.hasNext()){
+            Entry<String, RPGSubClass> subClassIter = it.next();
+            bw.write(subClassIter.getKey() + " "
+                  + Double.toString(subClassIter.getValue().getArch()) + " "
+                  + Double.toString(subClassIter.getValue().getBlade()) + " "
+                  + Double.toString(subClassIter.getValue().getEgg()) + " "
+                  + Double.toString(subClassIter.getValue().getFarm()) + " "
+                  + Double.toString(subClassIter.getValue().getHealth()) + " "
+                  + Double.toString(subClassIter.getValue().getHeal()) + " "
+                  + Double.toString(subClassIter.getValue().getMining()) + "\n");
+         }
+         bw.close();
+      }catch(IOException e){
+         log.info("Error saving Arpeegy sub-classes");
       }
       
       log.info("Gone");
