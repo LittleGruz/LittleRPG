@@ -2,13 +2,14 @@ package littlegruz.arpeegee.entities;
 
 public class RPGPlayer {
    private String name, className, subClassName;
-   private int level;
+   private int level, unusedPoints;
 
    public RPGPlayer(String name, String className, String subClassName){
       this.name = name;
       this.className = className;
       this.subClassName = subClassName;
       level = 1;
+      unusedPoints = 0;
    }
    
    public RPGPlayer(String name, String className, String subClassName, int level){
@@ -16,6 +17,7 @@ public class RPGPlayer {
       this.className = className;
       this.subClassName = subClassName;
       this.level = level;
+      unusedPoints = 0;
    }
 
    public String getName() {
@@ -32,5 +34,9 @@ public class RPGPlayer {
    
    public int getLevel(){
       return level;
+   }
+   
+   public int getPointsLeft(){
+      return unusedPoints;
    }
 }

@@ -8,7 +8,7 @@ commands:
       usage: /addclass <name> <strength> <accuracy> <intelligence>
    addsubclass:
       description: Adds a new sub-class
-      usage: /addsubclass <name> <archery> <blade> <egg> <farming> <health> <healing> <mining>
+      usage: /addsubclass <name> <archery> <blade> <block> <egg> <spell>
    removeclass:
       description: Removes a new class
       usage: /removeclass <name>
@@ -32,4 +32,3 @@ permissions:
    arpeegee.display:
       description: Displaying [sub-]classes
       default: true
-depend: [Spout]

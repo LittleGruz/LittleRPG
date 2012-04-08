@@ -20,17 +20,24 @@ import littlegruz.arpeegee.commands.Remove;
 import littlegruz.arpeegee.entities.RPGClass;
 import littlegruz.arpeegee.entities.RPGPlayer;
 import littlegruz.arpeegee.entities.RPGSubClass;
-import littlegruz.arpeegee.gui.RPGGUI;
 import littlegruz.arpeegee.listeners.PlayerListener;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-/*Create a custom RPG where the player picks their user defined class which has
- * attributes which the user sets
+/* Create a custom RPG where the admin creates classes with the desired power
+ * levels along with wizz-bang spells and attributes
  * 
- * Perks:
  * If blade/archery/egg is high enough, chance (or increase chance) of crit
- * If farming/mining is high enough, chance (or increase chance) of double drop*/
+ * Add spells which get opened up as the player levels
+ * Attributes like health and mana will be linked to strength and intelligence
+ * 
+ * Spells (so far):
+ * Heal
+ * Adv. Heal
+ * Lightning (single)
+ * Lightning (area)
+ * Fireball
+ * Teleport*/
 
 /*The file which the classes are stored would have a format like the following
  * Name [name]
@@ -38,34 +45,30 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Accuracy [modifier]
  * Intelligence [modifier]
  * 
- * e.g. For a warrior class it may look like this
+ * e.g. For a warrior class it may look like this (after a few levels)
  * Name Warrior
  * Strength 3
  * Accuracy 0.5
  * Intelligence 0.5
  * 
- * Deals 3x with swinging weapons, deals 0.5x damage with
- * ranged and 0.5x mana*/
+ * Deals 3x damage with swinging weapons (always hitting), deals 0.5x ranged
+ * damage with 50% chance to miss and 0.5x mana*/
 
 /*And then for the sub-classes
  * Name [name]
- * Blade [modifier]
  * Archery [modifier]
+ * Blade [modifier]
+ * Block [modifier]
  * Egg [modifier]
- * Farming [modifier]
- * Mining [modifier]
- * Healing [modifier]
- * Health [modifier]
+ * Spells [modifier]
  * 
- * e.g. For a minion sub-class it may look like this
- * Name Minion
- * Blade 1
- * Archery 1
- * Egg 0.5
- * Farming 3
- * Mining 2
- * Healing 1
- * Health 1
+ * e.g. For a Eggman sub-class it may look like this
+ * Name Eggman
+ * Archery 0.5
+ * Blade 0.5
+ * Block 0.5
+ * Egg 5
+ * Spells 0
  * 
  * The modifiers change the normal damage done by those weapons or activates
  * certain perks*/
@@ -78,7 +81,6 @@ public class ArpeegeeMain extends JavaPlugin {
    private HashMap<String, RPGPlayer> playerMap;
    private HashMap<String, RPGClass> classMap;
    private HashMap<String, RPGSubClass> subClassMap;
-   private RPGGUI rpgGUI;
    
    public void onEnable(){
       BufferedReader br;
@@ -128,8 +130,6 @@ public class ArpeegeeMain extends JavaPlugin {
             st = new StringTokenizer(input, " ");
             name = st.nextToken();
             subClassMap.put(name, new RPGSubClass(name,
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken()),
                   Double.parseDouble(st.nextToken()),
                   Double.parseDouble(st.nextToken()),
                   Double.parseDouble(st.nextToken()),
@@ -187,8 +187,6 @@ public class ArpeegeeMain extends JavaPlugin {
       getCommand("removesubclass").setExecutor(new Remove(this));
       getCommand("displayclass").setExecutor(new Display(this));
       getCommand("displaysubclass").setExecutor(new Display(this));
-      
-      rpgGUI = new RPGGUI(this);
 
       log.info("LittleRPG v0.1 enabled");
    }
@@ -241,11 +239,9 @@ public class ArpeegeeMain extends JavaPlugin {
             bw.write(subClassIter.getKey() + " "
                   + Double.toString(subClassIter.getValue().getArch()) + " "
                   + Double.toString(subClassIter.getValue().getBlade()) + " "
+                  + Double.toString(subClassIter.getValue().getBlock()) + " "
                   + Double.toString(subClassIter.getValue().getEgg()) + " "
-                  + Double.toString(subClassIter.getValue().getFarm()) + " "
-                  + Double.toString(subClassIter.getValue().getHealth()) + " "
-                  + Double.toString(subClassIter.getValue().getHeal()) + " "
-                  + Double.toString(subClassIter.getValue().getMining()) + "\n");
+                  + Double.toString(subClassIter.getValue().getSpell()) + "\n");
          }
          bw.close();
       }catch(IOException e){
@@ -265,9 +261,5 @@ public class ArpeegeeMain extends JavaPlugin {
    
    public HashMap<String, RPGSubClass> getSubClassMap() {
       return subClassMap;
-   }
-   
-   public RPGGUI getGUI(){
-      return rpgGUI;
    }
 }

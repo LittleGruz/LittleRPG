@@ -2,18 +2,16 @@ package littlegruz.arpeegee.entities;
 
 public class RPGSubClass {
    private String name;
-   private double arch, blade, egg, farm, health, heal, mining;
+   private double arch, blade, block, egg, spell;
    
-   public RPGSubClass(String name, double archery, double blade, double egg,
-         double farming, double health, double healing, double mining){
+   public RPGSubClass(String name, double archery, double blade, double block, double egg,
+         double spell){
       this.name = name;
       arch = archery;
       this.blade = blade;
+      this.block = block;
       this.egg = egg;
-      farm = farming;
-      this.health = health;
-      heal = healing;
-      this.mining = mining;
+      this.spell = spell;
    }
 
    public String getName() {
@@ -28,23 +26,15 @@ public class RPGSubClass {
       return blade;
    }
 
+   public double getBlock() {
+      return block;
+   }
+
    public double getEgg() {
       return egg;
    }
 
-   public double getFarm() {
-      return farm;
-   }
-
-   public double getHealth() {
-      return health;
-   }
-
-   public double getHeal() {
-      return heal;
-   }
-
-   public double getMining() {
-      return mining;
+   public double getSpell() {
+      return spell;
    }
 }

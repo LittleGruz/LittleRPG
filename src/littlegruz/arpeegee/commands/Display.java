@@ -65,11 +65,9 @@ public class Display implements CommandExecutor{
                sender.sendMessage("The " + args[0] + " sub-class stats:");
                sender.sendMessage("Archery: " + rpgSubClass.getArch());
                sender.sendMessage("Blade: " + rpgSubClass.getBlade());
+               sender.sendMessage("Block: " + rpgSubClass.getBlock());
                sender.sendMessage("Egg: " + rpgSubClass.getEgg());
-               sender.sendMessage("Farming: " + rpgSubClass.getFarm());
-               sender.sendMessage("Health: " + rpgSubClass.getHealth());
-               sender.sendMessage("Healing: " + rpgSubClass.getHeal());
-               sender.sendMessage("Mining: " + rpgSubClass.getMining());
+               sender.sendMessage("Spells: " + rpgSubClass.getSpell());
             }
          }
       }

@@ -41,8 +41,7 @@ private ArpeegeeMain plugin;
                   plugin.getSubClassMap().put(args[0], new RPGSubClass(args[0],
                         Double.parseDouble(args[1]), Double.parseDouble(args[2]),
                         Double.parseDouble(args[3]), Double.parseDouble(args[4]),
-                        Double.parseDouble(args[5]), Double.parseDouble(args[6]),
-                        Double.parseDouble(args[7])));
+                        Double.parseDouble(args[5])));
                   sender.sendMessage("Sub-class addition successful");
                }
                else
