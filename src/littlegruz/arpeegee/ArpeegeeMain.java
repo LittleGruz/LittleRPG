@@ -37,7 +37,18 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Lightning (single)
  * Lightning (area)
  * Fireball
- * Teleport*/
+ * Teleport
+ * 
+ * Diamond sword gives chance for critical hits
+ * Gold sword gives chance for dodge
+ * Rage mechanic gives increased sword bonuses and extra damage
+ * Right click with sword will activate rage if rage meter is full
+ * 
+ * Can fire bow quicker than egg but with less damage than egg
+ * Egg can occasionally explode
+ * A certain bow equip can make user ran faster?
+ * 
+ * */
 
 /*The file which the classes are stored would have a format like the following
  * Name [name]
@@ -81,6 +92,7 @@ public class ArpeegeeMain extends JavaPlugin {
    private HashMap<String, RPGPlayer> playerMap;
    private HashMap<String, RPGClass> classMap;
    private HashMap<String, RPGSubClass> subClassMap;
+   private HashMap<String, String> berserkMap;
    
    public void onEnable(){
       BufferedReader br;
@@ -187,6 +199,8 @@ public class ArpeegeeMain extends JavaPlugin {
       getCommand("removesubclass").setExecutor(new Remove(this));
       getCommand("displayclass").setExecutor(new Display(this));
       getCommand("displaysubclass").setExecutor(new Display(this));
+      
+      berserkMap = new HashMap<String, String>();
 
       log.info("LittleRPG v0.1 enabled");
    }
@@ -261,5 +275,9 @@ public class ArpeegeeMain extends JavaPlugin {
    
    public HashMap<String, RPGSubClass> getSubClassMap() {
       return subClassMap;
+   }
+   
+   public HashMap<String, String> getBerserkMap() {
+      return berserkMap;
    }
 }
