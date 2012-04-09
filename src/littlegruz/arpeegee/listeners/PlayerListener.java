@@ -1,5 +1,6 @@
 package littlegruz.arpeegee.listeners;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import littlegruz.arpeegee.ArpeegeeMain;
@@ -8,6 +9,7 @@ import littlegruz.arpeegee.entities.RPGPlayer;
 import net.minecraft.server.EntityFireball;
 import net.minecraft.server.EntityLiving;
 
+//import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,6 +17,7 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
@@ -39,18 +42,23 @@ public class PlayerListener implements Listener {
 
    @EventHandler
    public void onPlayerDamageEntity(EntityDamageByEntityEvent event){
-      if(event.getDamager() instanceof Player){
+      if(event.getDamager() instanceof Player
+            && event.getEntity() instanceof LivingEntity){
          Player playa = (Player) event.getDamager();
+         LivingEntity victim = (LivingEntity) event.getEntity();
          
          // Heal spell
          if(playa.getItemInHand().getData().toString().contains("WHITE DYE")){
             event.setCancelled(true);
-            healSpell(playa, event.getEntity(), 0);
+            healSpell(playa, victim, 1);
          }
          // Advanced heal spell
          else if(playa.getItemInHand().getData().toString().contains("BONE")){
+            
             event.setCancelled(true);
-            healSpell(playa, event.getEntity(), 1);
+            healSpell(playa, victim, 2);
+            //TODO Healing damage
+            victim.damage(1);
          }
          // Lightning (single target) spell
          else if(playa.getItemInHand().getData().toString().contains("YELLOW DYE")){
@@ -60,6 +68,37 @@ public class PlayerListener implements Listener {
             loc.setY(loc.getY() + 1);
             loc.getWorld().strikeLightningEffect(loc);
             //TODO Lightning damage
+            victim.damage(1);
+         }
+         // Lightning (area) spell
+         else if(playa.getItemInHand().getType().compareTo(Material.BLAZE_ROD) == 0){
+            Location loc = event.getEntity().getLocation();
+            final ArrayList<LivingEntity> nearEnemies = new ArrayList<LivingEntity>();
+            
+            event.setCancelled(true);
+            loc.setY(loc.getY() + 1);
+            loc.getWorld().strikeLightningEffect(loc);
+            //TODO Lightning damage
+            victim.damage(1);
+            
+            nearEnemies.add(victim);
+            for(Entity e : event.getEntity().getNearbyEntities(5, 5, 5)) {
+               if (e instanceof LivingEntity) {
+                  nearEnemies.add((LivingEntity)e);
+               }
+            }
+            
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+               public void run() {
+                  for(LivingEntity e : nearEnemies) {
+                     Location enemyLoc = e.getLocation();
+                     enemyLoc.setY(enemyLoc.getY() + 1);
+                     enemyLoc.getWorld().strikeLightningEffect(enemyLoc);
+                     //TODO Lightning damage
+                     e.damage(1);
+                  }
+               }
+           }, 20L);
          }
       }
    }
@@ -69,8 +108,11 @@ public class PlayerListener implements Listener {
       // The fireball creation code is based off MadMatt199's code (https://github.com/madmatt199/GhastBlast)
       Player playa = event.getPlayer();
       playa.sendMessage(playa.getItemInHand().getData().toString());//Data checking
+      playa.sendMessage(event.getAction().toString());//Data checking
       
-      if(playa.getItemInHand().getData().toString().contains("MAGENTA DYE")){
+      //Casting weapon to "Flash"
+      if(playa.getItemInHand().getData().toString().contains("MAGENTA DYE")
+            && event.getAction().toString().contains("RIGHT_CLICK")){
          HashSet<Byte> hs = new HashSet<Byte>();
          Block block;
          Location loc;
@@ -86,17 +128,22 @@ public class PlayerListener implements Listener {
          block = playa.getTargetBlock(hs, 20);
          loc = block.getLocation();
          
+         playa.sendMessage(block.getType().toString());
+         
          if(block.getType().compareTo(Material.AIR) != 0
                && block.getType().compareTo(Material.WATER) != 0
                && block.getType().compareTo(Material.STATIONARY_WATER) != 0
                && block.getType().compareTo(Material.GLASS) != 0
-               && block.getType().compareTo(Material.THIN_GLASS) != 0){
-            loc.setY(loc.getY() + 1);
+               && block.getType().compareTo(Material.THIN_GLASS) != 0
+               && block.getType().compareTo(Material.IRON_FENCE) != 0){
+            loc.setY(loc.getY() + 1.5);
             
             if(loc.getBlock().getType().compareTo(Material.WATER) == 0
                   || loc.getBlock().getType().compareTo(Material.STATIONARY_WATER) == 0
                   || loc.getBlock().getType().compareTo(Material.AIR) == 0){
-               playa.teleport(loc);
+               playa.teleport(new Location(loc.getWorld(), loc.getX(),
+                     loc.getY(), loc.getZ(), playa.getLocation().getYaw(),
+                     playa.getLocation().getPitch()));
                playa.sendMessage("*Zoom*");
             }
             else
@@ -107,13 +154,16 @@ public class PlayerListener implements Listener {
          
          event.setCancelled(true);
       }
+      //Casting weapon to launch a fireball
       else if(playa.getItemInHand().getData().toString().contains("RED DYE")
-            && event.getAction().toString().compareTo("LEFT_CLICK_AIR") == 0){
+            && event.getAction().toString().compareTo("RIGHT_CLICK_AIR") == 0){
          Vector dir = playa.getLocation().getDirection().multiply(10);
          Location loc = playa.getLocation();
          
          EntityLiving entityPlaya = ((CraftPlayer) playa).getHandle();
-         EntityFireball fireball = new EntityFireball(((CraftWorld) playa.getWorld()).getHandle(), entityPlaya, dir.getX(), dir.getY(), dir.getZ());
+         EntityFireball fireball = new EntityFireball(
+               ((CraftWorld) playa.getWorld()).getHandle(), entityPlaya,
+               dir.getX(), dir.getY(), dir.getZ());
          
          // Spawn the fireball a bit up and away from the player
          fireball.locX = loc.getX() + (dir.getX()/5.0) + 0.25;
@@ -127,15 +177,20 @@ public class PlayerListener implements Listener {
       }
    }
    
-   private void healSpell(Player playa, Entity entity, int adv){
-      if(entity instanceof Pig){
+   private void healSpell(Player playa, LivingEntity victim, int adv){
+      if(victim instanceof Pig){
          playa.sendMessage("Pig healed");
+         //victim.playEffect(playa.getLocation(), Effect.SMOKE, 1); Uncomment when Pig is changed in Player
          //TODO Player heal
+         victim.setHealth(victim.getHealth() + 1);
       }
       // If player heals a zombie, then deal damage instead
-      else if(entity instanceof Zombie){
-         entity.playEffect(EntityEffect.HURT);
+      else if(victim instanceof Zombie){
+         victim.playEffect(EntityEffect.HURT);
          //TODO Zombie damage
+         victim.damage(1);
       }
    }
+   
+   
 }

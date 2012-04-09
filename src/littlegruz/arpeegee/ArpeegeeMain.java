@@ -178,7 +178,7 @@ public class ArpeegeeMain extends JavaPlugin {
       }catch(Exception e){
          log.info("Incorrectly formatted Arpeegy player file");
       }
-      
+
       getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
 
       getCommand("addclass").setExecutor(new Create(this));
