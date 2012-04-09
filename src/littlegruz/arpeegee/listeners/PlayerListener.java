@@ -9,7 +9,7 @@ import littlegruz.arpeegee.entities.RPGPlayer;
 import net.minecraft.server.EntityFireball;
 import net.minecraft.server.EntityLiving;
 
-//import org.bukkit.Effect;
+import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -69,6 +69,7 @@ public class PlayerListener implements Listener {
             loc.getWorld().strikeLightningEffect(loc);
             //TODO Lightning damage
             victim.damage(1);
+            playa.sendMessage("*Zap*");
          }
          // Lightning (area) spell
          else if(playa.getItemInHand().getType().compareTo(Material.BLAZE_ROD) == 0){
@@ -87,6 +88,7 @@ public class PlayerListener implements Listener {
                   nearEnemies.add((LivingEntity)e);
                }
             }
+            playa.sendMessage("*Zap zap zap*");
             
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                public void run() {
@@ -107,8 +109,8 @@ public class PlayerListener implements Listener {
    public void onPlayerInteract(PlayerInteractEvent event){
       // The fireball creation code is based off MadMatt199's code (https://github.com/madmatt199/GhastBlast)
       Player playa = event.getPlayer();
-      playa.sendMessage(playa.getItemInHand().getData().toString());//Data checking
-      playa.sendMessage(event.getAction().toString());//Data checking
+      //playa.sendMessage(playa.getItemInHand().getData().toString());//Data checking
+      //playa.sendMessage(event.getAction().toString());//Data checking
       
       //Casting weapon to "Flash"
       if(playa.getItemInHand().getData().toString().contains("MAGENTA DYE")
@@ -121,6 +123,7 @@ public class PlayerListener implements Listener {
          hs.add((byte)8); //Flowing water
          hs.add((byte)9); //Stationary water
          hs.add((byte)20); //Glass
+         hs.add((byte)101); //Iron bar
          hs.add((byte)102); //Glass pane
          
          //TODO Flat distance until I determine a proper scale
@@ -128,7 +131,7 @@ public class PlayerListener implements Listener {
          block = playa.getTargetBlock(hs, 20);
          loc = block.getLocation();
          
-         playa.sendMessage(block.getType().toString());
+         //playa.sendMessage(block.getType().toString());
          
          if(block.getType().compareTo(Material.AIR) != 0
                && block.getType().compareTo(Material.WATER) != 0
@@ -172,15 +175,16 @@ public class PlayerListener implements Listener {
          dir = dir.multiply(10);
          
          ((CraftWorld) playa.getWorld()).getHandle().addEntity(fireball);
-         
+
+         playa.sendMessage("*Fwoosh*");
          event.setCancelled(true);
       }
    }
    
    private void healSpell(Player playa, LivingEntity victim, int adv){
       if(victim instanceof Pig){
-         playa.sendMessage("Pig healed");
-         //victim.playEffect(playa.getLocation(), Effect.SMOKE, 1); Uncomment when Pig is changed in Player
+         playa.sendMessage("Healed");
+         playa.playEffect(victim.getLocation(), Effect.SMOKE, 1); //Change when Pig is changed to Player
          //TODO Player heal
          victim.setHealth(victim.getHealth() + 1);
       }
