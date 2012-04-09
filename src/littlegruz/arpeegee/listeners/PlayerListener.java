@@ -1,5 +1,7 @@
 package littlegruz.arpeegee.listeners;
 
+import java.util.HashSet;
+
 import littlegruz.arpeegee.ArpeegeeMain;
 import littlegruz.arpeegee.entities.RPGPlayer;
 
@@ -8,6 +10,8 @@ import net.minecraft.server.EntityLiving;
 
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
@@ -66,7 +70,44 @@ public class PlayerListener implements Listener {
       Player playa = event.getPlayer();
       playa.sendMessage(playa.getItemInHand().getData().toString());//Data checking
       
-      if(playa.getItemInHand().getData().toString().contains("RED DYE")
+      if(playa.getItemInHand().getData().toString().contains("MAGENTA DYE")){
+         HashSet<Byte> hs = new HashSet<Byte>();
+         Block block;
+         Location loc;
+   
+         hs.add((byte)0); //Air
+         hs.add((byte)8); //Flowing water
+         hs.add((byte)9); //Stationary water
+         hs.add((byte)20); //Glass
+         hs.add((byte)102); //Glass pane
+         
+         //TODO Flat distance until I determine a proper scale
+         //playa.sendMessage(playa.getTargetBlock(hs, 20).getType().toString());
+         block = playa.getTargetBlock(hs, 20);
+         loc = block.getLocation();
+         
+         if(block.getType().compareTo(Material.AIR) != 0
+               && block.getType().compareTo(Material.WATER) != 0
+               && block.getType().compareTo(Material.STATIONARY_WATER) != 0
+               && block.getType().compareTo(Material.GLASS) != 0
+               && block.getType().compareTo(Material.THIN_GLASS) != 0){
+            loc.setY(loc.getY() + 1);
+            
+            if(loc.getBlock().getType().compareTo(Material.WATER) == 0
+                  || loc.getBlock().getType().compareTo(Material.STATIONARY_WATER) == 0
+                  || loc.getBlock().getType().compareTo(Material.AIR) == 0){
+               playa.teleport(loc);
+               playa.sendMessage("*Zoom*");
+            }
+            else
+               playa.sendMessage("You can not flash to there");
+         }
+         else
+            playa.sendMessage("You can not flash that far!");
+         
+         event.setCancelled(true);
+      }
+      else if(playa.getItemInHand().getData().toString().contains("RED DYE")
             && event.getAction().toString().compareTo("LEFT_CLICK_AIR") == 0){
          Vector dir = playa.getLocation().getDirection().multiply(10);
          Location loc = playa.getLocation();
@@ -81,6 +122,8 @@ public class PlayerListener implements Listener {
          dir = dir.multiply(10);
          
          ((CraftWorld) playa.getWorld()).getHandle().addEntity(fireball);
+         
+         event.setCancelled(true);
       }
    }
    
