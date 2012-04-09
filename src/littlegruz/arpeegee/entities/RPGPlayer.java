@@ -4,6 +4,7 @@ public class RPGPlayer {
    private String name, className, subClassName;
    private int level, rage;
 
+   // New RPGPlayer
    public RPGPlayer(String name, String className, String subClassName){
       this.name = name;
       this.className = className;
@@ -12,12 +13,13 @@ public class RPGPlayer {
       rage = 0;
    }
    
-   public RPGPlayer(String name, String className, String subClassName, int level){
+   // Restoring an RPGPlayer from a saved state
+   public RPGPlayer(String name, String className, String subClassName, int level, int rage){
       this.name = name;
       this.className = className;
       this.subClassName = subClassName;
       this.level = level;
-      rage = 0;
+      this.rage = rage;
    }
 
    public String getName() {

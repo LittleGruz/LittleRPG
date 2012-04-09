@@ -20,7 +20,8 @@ import littlegruz.arpeegee.commands.Remove;
 import littlegruz.arpeegee.entities.RPGClass;
 import littlegruz.arpeegee.entities.RPGPlayer;
 import littlegruz.arpeegee.entities.RPGSubClass;
-import littlegruz.arpeegee.listeners.PlayerListener;
+import littlegruz.arpeegee.listeners.EntityDamageEntity;
+import littlegruz.arpeegee.listeners.PlayerInteractListener;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -179,7 +180,7 @@ public class ArpeegeeMain extends JavaPlugin {
                log.warning("Player " + name + " has an unmatched sub-class name. Please fix this before they login.");
             
             playerMap.put(name, new RPGPlayer(name, rpgClass, rpgSubClass,
-                  Integer.parseInt(st.nextToken())));
+                  Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
          }
          br.close();
          
@@ -191,7 +192,8 @@ public class ArpeegeeMain extends JavaPlugin {
          log.info("Incorrectly formatted Arpeegy player file");
       }
 
-      getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+      getServer().getPluginManager().registerEvents(new EntityDamageEntity(this), this);
+      getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
 
       getCommand("addclass").setExecutor(new Create(this));
       getCommand("addsubclass").setExecutor(new Create(this));
@@ -219,7 +221,8 @@ public class ArpeegeeMain extends JavaPlugin {
             bw.write(player.getKey() + " "
                   + player.getValue().getClassName() + " "
                   + player.getValue().getSubClassName() + " "
-                  + Integer.toString(player.getValue().getLevel()) + "\n");
+                  + Integer.toString(player.getValue().getLevel()) + " "
+                  + Integer.toString(player.getValue().getRage()) + "\n");
          }
          bw.close();
       }catch(IOException e){
