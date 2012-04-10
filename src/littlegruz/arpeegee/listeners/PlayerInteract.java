@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -74,6 +75,26 @@ public class PlayerInteract implements Listener{
             playa.sendMessage("You can not flash that far!");
          
          event.setCancelled(true);
+      }
+      // Melancholy (high intelligence only version of rage). Spawns sheep around mage.
+      else if(playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
+            && event.getAction().toString().compareTo("RIGHT_CLICK_AIR") == 0){
+         Location loc = event.getPlayer().getLocation();
+         plugin.getPlayerMap().get(playa.getName()).setRage(100);
+         //TODO Add intelligence check
+         if(plugin.getPlayerMap().get(playa.getName()).getRage() == 100){
+            loc.setY(loc.getY() + 1.5);
+            loc.setX(loc.getX() + 1);
+            loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
+            loc.setX(loc.getX() - 2);
+            loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
+            loc.setX(loc.getX() + 1);
+            loc.setZ(loc.getZ() + 1);
+            loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
+            loc.setZ(loc.getZ() - 2);
+            loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
+            plugin.getPlayerMap().get(playa.getName()).setRage(0);
+         }
       }
       // This fireball creation code is based off MadMatt199's code (https://github.com/madmatt199/GhastBlast)
       // Casting weapon to launch a fireball

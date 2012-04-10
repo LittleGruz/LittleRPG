@@ -34,8 +34,6 @@ public class EntityDamageEntity implements Listener {
 
    @EventHandler
    public void onEntityDamageEntity(EntityDamageByEntityEvent event){
-      plugin.getServer().broadcastMessage(event.getDamager().toString());
-      
       if(event.getDamager() instanceof Player
             && event.getEntity() instanceof LivingEntity){
          Player playa = (Player) event.getDamager();
