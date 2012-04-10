@@ -200,7 +200,7 @@ public class ArpeegeeMain extends JavaPlugin {
       getServer().getPluginManager().registerEvents(new EntityDamageEntity(this), this);
       getServer().getPluginManager().registerEvents(new PlayerInteract(this), this);
       getServer().getPluginManager().registerEvents(new PlayerProjectile(this), this);
-      getServer().getPluginManager().registerEvents(new PlayerSpeed(this), this);
+      getServer().getPluginManager().registerEvents(new PlayerSpeed(), this);
 
       getCommand("addclass").setExecutor(new Create(this));
       getCommand("addsubclass").setExecutor(new Create(this));
