@@ -15,9 +15,7 @@ import java.util.StringTokenizer;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-import littlegruz.arpeegee.commands.Create;
 import littlegruz.arpeegee.commands.Display;
-import littlegruz.arpeegee.commands.Remove;
 import littlegruz.arpeegee.entities.RPGClass;
 import littlegruz.arpeegee.entities.RPGPlayer;
 import littlegruz.arpeegee.entities.RPGSubClass;
@@ -52,7 +50,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * 
  * Can fire bow quicker than egg but with less damage than egg
  * Egg can occasionally explode
- * A certain bow equip can make user ran faster?
+ * A certain armour equip can make user run faster
  * 
  * */
 
@@ -68,8 +66,8 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Accuracy 0.5
  * Intelligence 0.5
  * 
- * Deals 3x damage with swinging weapons (always hitting), deals 0.5x ranged
- * damage with 50% chance to miss and 0.5x mana*/
+ * Strength influences health and it (as well as the other 2) determines the
+ * levelling of the sub-class skills*/
 
 /*And then for the sub-classes
  * Name [name]
@@ -165,6 +163,9 @@ public class ArpeegeeMain extends JavaPlugin {
          log.info("Incorrectly formatted Arpeegy sub-class file");
       }
 
+      log.info(Integer.toString(subClassMap.size()));
+      log.info(Integer.toString(classMap.size()));
+
       playerMap = new HashMap<String, RPGPlayer>();
       // Load up the players from file
       try{
@@ -173,12 +174,18 @@ public class ArpeegeeMain extends JavaPlugin {
          // Load player file data into the player HashMap
          while((input = br.readLine()) != null){
             String name;
-            String rpgClass, rpgSubClass;
+            String rpgClass;
+            RPGSubClass rpgSubClass;
             
             st = new StringTokenizer(input, " ");
             name = st.nextToken();
             rpgClass = st.nextToken();
-            rpgSubClass = st.nextToken();
+            rpgSubClass = new RPGSubClass(st.nextToken(),
+                  Double.parseDouble(st.nextToken()),
+                  Double.parseDouble(st.nextToken()),
+                  Double.parseDouble(st.nextToken()),
+                  Double.parseDouble(st.nextToken()),
+                  Double.parseDouble(st.nextToken()));
             
             if(classMap.get(rpgClass) == null)
                log.warning("Player " + name + " has an unfound class name. Please fix this before they login.");
@@ -205,10 +212,6 @@ public class ArpeegeeMain extends JavaPlugin {
       getServer().getPluginManager().registerEvents(new PlayerSpeed(), this);
       getServer().getPluginManager().registerEvents(new EnemyDeath(), this);
 
-      getCommand("addclass").setExecutor(new Create(this));
-      getCommand("addsubclass").setExecutor(new Create(this));
-      getCommand("removeclass").setExecutor(new Remove(this));
-      getCommand("removesubclass").setExecutor(new Remove(this));
       getCommand("displayclass").setExecutor(new Display(this));
       getCommand("displaysubclass").setExecutor(new Display(this));
 
@@ -231,7 +234,12 @@ public class ArpeegeeMain extends JavaPlugin {
             Entry<String, RPGPlayer> player = it.next();
             bw.write(player.getKey() + " "
                   + player.getValue().getClassName() + " "
-                  + player.getValue().getSubClassName() + " "
+                  + player.getValue().getSubClassObject().getName() + " "
+                  + Double.toString(player.getValue().getSubClassObject().getArch()) + " "
+                  + Double.toString(player.getValue().getSubClassObject().getBlade()) + " "
+                  + Double.toString(player.getValue().getSubClassObject().getBlock()) + " "
+                  + Double.toString(player.getValue().getSubClassObject().getEgg()) + " "
+                  + Double.toString(player.getValue().getSubClassObject().getSpell()) + " "
                   + Integer.toString(player.getValue().getLevel()) + " "
                   + Integer.toString(player.getValue().getRage()) + "\n");
          }

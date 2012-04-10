@@ -4,8 +4,8 @@ import java.util.HashSet;
 
 import littlegruz.arpeegee.ArpeegeeMain;
 
-import net.minecraft.server.EntityFireball;
 import net.minecraft.server.EntityLiving;
+import net.minecraft.server.EntitySmallFireball;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -104,7 +104,7 @@ public class PlayerInteract implements Listener{
          Location loc = playa.getLocation();
          
          EntityLiving entityPlaya = ((CraftPlayer) playa).getHandle();
-         EntityFireball fireball = new EntityFireball(
+         EntitySmallFireball fireball = new EntitySmallFireball(
                ((CraftWorld) playa.getWorld()).getHandle(), entityPlaya,
                dir.getX(), dir.getY(), dir.getZ());
          

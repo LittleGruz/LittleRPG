@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import littlegruz.arpeegee.ArpeegeeMain;
 import littlegruz.arpeegee.entities.RPGPlayer;
+import littlegruz.arpeegee.entities.RPGSubClass;
 
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
@@ -29,7 +30,7 @@ public class EntityDamageEntity implements Listener {
 
    @EventHandler
    public void onPlayerJoin(PlayerJoinEvent event){
-      plugin.getPlayerMap().put(event.getPlayer().getName(), new RPGPlayer(event.getPlayer().getName(), "Warrior", "Minion"));
+      plugin.getPlayerMap().put(event.getPlayer().getName(), new RPGPlayer(event.getPlayer().getName(), "Ranged", new RPGSubClass("Archer",1,0,0,1,0)));
    }
 
    @EventHandler
@@ -150,6 +151,7 @@ public class EntityDamageEntity implements Listener {
          if(plugin.getProjMap().get(event.getDamager()) != null){
             //Location loc;
             LivingEntity le;
+            int arch = (int) Double.parseDouble(plugin.getProjMap().get(event.getDamager()));
             
             /* Since cancelling the event causes the arrow to bounce of, it
              * gets removed manually */
@@ -158,13 +160,13 @@ public class EntityDamageEntity implements Listener {
 
             le = (LivingEntity) event.getEntity();
             //loc = le.getLocation();
-            
-            //TODO Arrow damage
-            le.damage(0);
+
+            plugin.getServer().broadcastMessage(Integer.toString(arch));
+            le.damage(1 * arch);
             // If crit, do additional damage
-            if(plugin.getChance(15) == 2){
+            if(plugin.getChance(5 * arch) == 2){
                //loc.getWorld().strikeLightningEffect(loc);
-               le.damage(0);
+               le.damage(1 * arch);
             }
          }
       }

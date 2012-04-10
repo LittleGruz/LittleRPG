@@ -3,7 +3,7 @@ package littlegruz.arpeegee.entities;
 public class RPGSubClass {
    private String name;
    private double arch, blade, block, egg, spell;
-   
+
    public RPGSubClass(String name, double archery, double blade, double block, double egg,
          double spell){
       this.name = name;

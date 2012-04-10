@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -31,9 +30,8 @@ public class PlayerProjectile implements Listener{
          Player playa = (Player) event.getEntity();
 
          //event.setProjectile(playa.getWorld().spawnCreature(playa.getLocation(), EntityType.SHEEP));
-         if(event.getProjectile() instanceof Arrow)
-            playa.sendMessage(event.getProjectile().toString());
-         plugin.getProjMap().put(event.getProjectile(), "arrow");
+         plugin.getProjMap().put(event.getProjectile(),
+               Double.toString(plugin.getPlayerMap().get(playa.getName()).getSubClassObject().getArch()));
          
       }
    }
@@ -41,6 +39,8 @@ public class PlayerProjectile implements Listener{
    @EventHandler
    public void onEggThrow(PlayerEggThrowEvent event){
       event.setHatching(false);
+      plugin.getProjMap().put(event.getEgg(),
+            Double.toString(plugin.getPlayerMap().get(event.getPlayer().getName()).getSubClassObject().getArch()));
    }
 
    // Not a great solution for shrinking down the arrow hashmap, but it will do for now
@@ -59,14 +59,14 @@ public class PlayerProjectile implements Listener{
    @EventHandler
    public void onProjectileHit(ProjectileHitEvent event){
       Entity ent = event.getEntity();
-      
+      int arch = (int) Double.parseDouble(plugin.getProjMap().get(event.getEntity()));
+      //TODO Fix this bit
       if(plugin.getProjMap().get(ent) != null){
          plugin.getProjMap().put(ent, "grounded");
          return;
       }
-      
-      //TODO Explodey chances
-      if((int) plugin.getChance(15) == 2 && ent instanceof Egg){
+      plugin.getServer().broadcastMessage(Integer.toString(arch));
+      if((int) plugin.getChance(5 * arch) == 2 && ent instanceof Egg){
          ent.getLocation().getWorld().createExplosion(ent.getLocation(), 1F, false);
       }
    }
