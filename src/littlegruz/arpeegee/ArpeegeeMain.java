@@ -21,6 +21,7 @@ import littlegruz.arpeegee.commands.Remove;
 import littlegruz.arpeegee.entities.RPGClass;
 import littlegruz.arpeegee.entities.RPGPlayer;
 import littlegruz.arpeegee.entities.RPGSubClass;
+import littlegruz.arpeegee.listeners.EnemyDeath;
 import littlegruz.arpeegee.listeners.EntityDamageEntity;
 import littlegruz.arpeegee.listeners.PlayerInteract;
 import littlegruz.arpeegee.listeners.PlayerProjectile;
@@ -185,7 +186,8 @@ public class ArpeegeeMain extends JavaPlugin {
                log.warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");
             
             playerMap.put(name, new RPGPlayer(name, rpgClass, rpgSubClass,
-                  Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
+                  Integer.parseInt(st.nextToken()),
+                  Integer.parseInt(st.nextToken())));
          }
          br.close();
          
@@ -201,6 +203,7 @@ public class ArpeegeeMain extends JavaPlugin {
       getServer().getPluginManager().registerEvents(new PlayerInteract(this), this);
       getServer().getPluginManager().registerEvents(new PlayerProjectile(this), this);
       getServer().getPluginManager().registerEvents(new PlayerSpeed(), this);
+      getServer().getPluginManager().registerEvents(new EnemyDeath(), this);
 
       getCommand("addclass").setExecutor(new Create(this));
       getCommand("addsubclass").setExecutor(new Create(this));

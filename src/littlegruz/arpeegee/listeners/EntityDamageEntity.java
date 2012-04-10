@@ -72,7 +72,7 @@ public class EntityDamageEntity implements Listener {
             loc.getWorld().strikeLightningEffect(loc);
             //TODO Lightning damage
             victim.damage(1);
-            
+            playa.sendMessage(Float.toString(playa.getExp()));
             // Place all nearby enemies into an array for the area lightning effect
             nearEnemies.add(victim);
             for(Entity e : event.getEntity().getNearbyEntities(5, 5, 5)) {
@@ -109,10 +109,9 @@ public class EntityDamageEntity implements Listener {
             }
             else{
                crit = (int) plugin.getChance(5);
-               victim.damage(0 * crit);
+               victim.damage(3 * crit);
                //TODO Rage gain
                plugin.getPlayerMap().get(playa.getName()).addRage(25);
-               victim.remove();
             }
             if(crit == 2)
                playa.sendMessage("*crit*");
