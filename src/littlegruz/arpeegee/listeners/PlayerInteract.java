@@ -45,7 +45,7 @@ public class PlayerInteract implements Listener{
          hs.add((byte)101); //Iron bar
          hs.add((byte)102); //Glass pane
          
-         //TODO Flat distance until I determine a proper scale
+         //TODO Flash range
          block = playa.getTargetBlock(hs, 20);
          loc = block.getLocation();
          
@@ -101,18 +101,19 @@ public class PlayerInteract implements Listener{
       // Active berserk mode if player has gained enough rage
       else if(event.getAction().toString().contains("RIGHT_CLICK")
             && (playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
-            || playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0)){
+                  || playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0)){
          final String pName = playa.getName();
          
          if(plugin.getPlayerMap().get(pName).getRage() == 100){
-            playa.sendMessage("RAAAAGE (Berserk mode activated)");
+            playa.sendMessage("RAAAAGE (Berserker mode activated)");
             plugin.getPlayerMap().get(pName).setRage(0);
             plugin.getBerserkMap().put(pName, pName);
+            
             // 10 seconds of Berserker mode (increased damage and sword bonuses)
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                public void run() {
                   plugin.getBerserkMap().remove(pName);
-                  plugin.getServer().getPlayer(pName).sendMessage("Cool it");
+                  plugin.getServer().getPlayer(pName).sendMessage("Berserker mode deactivated");
                }
            }, 200L);
          }

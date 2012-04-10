@@ -180,9 +180,9 @@ public class ArpeegeeMain extends JavaPlugin {
             rpgSubClass = st.nextToken();
             
             if(classMap.get(rpgClass) == null)
-               log.warning("Player " + name + " has an unmatched class name. Please fix this before they login.");
+               log.warning("Player " + name + " has an unfound class name. Please fix this before they login.");
             if(subClassMap.get(rpgSubClass) == null)
-               log.warning("Player " + name + " has an unmatched sub-class name. Please fix this before they login.");
+               log.warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");
             
             playerMap.put(name, new RPGPlayer(name, rpgClass, rpgSubClass,
                   Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));

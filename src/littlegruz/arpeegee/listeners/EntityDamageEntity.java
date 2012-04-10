@@ -9,10 +9,10 @@ import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Animals;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
@@ -48,7 +48,6 @@ public class EntityDamageEntity implements Listener {
          }
          // Advanced heal spell
          else if(playa.getItemInHand().getData().toString().contains("BONE")){
-            
             event.setCancelled(true);
             healSpell(playa, victim, 2);
          }
@@ -57,6 +56,7 @@ public class EntityDamageEntity implements Listener {
             Location loc = event.getEntity().getLocation();
             
             event.setCancelled(true);
+            
             loc.setY(loc.getY() + 1);
             loc.getWorld().strikeLightningEffect(loc);
             //TODO Lightning damage
@@ -69,11 +69,13 @@ public class EntityDamageEntity implements Listener {
             final ArrayList<LivingEntity> nearEnemies = new ArrayList<LivingEntity>();
             
             event.setCancelled(true);
+            
             loc.setY(loc.getY() + 1);
             loc.getWorld().strikeLightningEffect(loc);
             //TODO Lightning damage
             victim.damage(1);
             
+            // Place all nearby enemies into an array for the area lightning effect
             nearEnemies.add(victim);
             for(Entity e : event.getEntity().getNearbyEntities(5, 5, 5)) {
                if (e instanceof LivingEntity) {
@@ -96,19 +98,26 @@ public class EntityDamageEntity implements Listener {
          }
          // Provides a base 5% critical hit chance
          else if(playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0){
+            int crit;
+            
             event.setCancelled(true);
             
             /* If player is in Berserk mode, attack has a base 10% chance of
              * crit (double damage) otherwise the base crit is 5%*/
             //TODO Sword damage and crit addition
-            if(plugin.getBerserkMap().get(playa.getName()) != null)
-               victim.damage(1 * (int) plugin.getChance(10));
+            if(plugin.getBerserkMap().get(playa.getName()) != null){
+               crit = (int) plugin.getChance(10);
+               victim.damage(1 * crit);
+            }
             else{
-               victim.damage(0 * (int) plugin.getChance(5));
+               crit = (int) plugin.getChance(5);
+               victim.damage(0 * crit);
                //TODO Rage gain
                plugin.getPlayerMap().get(playa.getName()).addRage(25);
                victim.remove();
             }
+            if(crit == 2)
+               playa.sendMessage("*crit*");
             
             playa.getItemInHand().setDurability((short) 0);
          }
@@ -131,6 +140,7 @@ public class EntityDamageEntity implements Listener {
       else if(event.getEntity() instanceof Player){
          Player playa = (Player) event.getEntity();
          if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0){
+            //TODO Dodge chance
             if((int) plugin.getChance(5) == 1){
                event.setCancelled(true);
                playa.sendMessage("*dodged*");
@@ -141,29 +151,30 @@ public class EntityDamageEntity implements Listener {
       else if(event.getDamager() instanceof Arrow){
          // Check that it came from a player
          if(plugin.getProjMap().get(event.getDamager()) != null){
-            Location loc;
+            //Location loc;
             LivingEntity le;
             
+            /* Since cancelling the event causes the arrow to bounce of, it
+             * gets removed manually */
             event.setCancelled(true);
             event.getDamager().remove();
 
             le = (LivingEntity) event.getEntity();
-            loc = le.getLocation();
+            //loc = le.getLocation();
             
+            //TODO Arrow damage
             le.damage(0);
             // If crit, do additional damage
             if(plugin.getChance(15) == 2){
-               loc.getWorld().strikeLightningEffect(loc);
+               //loc.getWorld().strikeLightningEffect(loc);
                le.damage(0);
             }
-            
-            plugin.getServer().broadcastMessage("Arrowed");
          }
       }
    }
    
    private void healSpell(Player playa, LivingEntity fortunate, int adv){
-      if(fortunate instanceof Pig){
+      if(fortunate instanceof Animals){
          playa.sendMessage("Healed");
          playa.playEffect(fortunate.getLocation(), Effect.SMOKE, 1); //Change when Pig is changed to Player
          //TODO Player heal
