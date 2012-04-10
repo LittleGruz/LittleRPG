@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
@@ -21,8 +22,11 @@ import littlegruz.arpeegee.entities.RPGClass;
 import littlegruz.arpeegee.entities.RPGPlayer;
 import littlegruz.arpeegee.entities.RPGSubClass;
 import littlegruz.arpeegee.listeners.EntityDamageEntity;
-import littlegruz.arpeegee.listeners.PlayerInteractListener;
+import littlegruz.arpeegee.listeners.PlayerInteract;
+import littlegruz.arpeegee.listeners.PlayerProjectile;
+import littlegruz.arpeegee.listeners.PlayerSpeed;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /* Create a custom RPG where the admin creates classes with the desired power
@@ -94,6 +98,7 @@ public class ArpeegeeMain extends JavaPlugin {
    private HashMap<String, RPGClass> classMap;
    private HashMap<String, RPGSubClass> subClassMap;
    private HashMap<String, String> berserkMap;
+   private HashMap<Entity, String> projMap;
    
    public void onEnable(){
       BufferedReader br;
@@ -193,7 +198,9 @@ public class ArpeegeeMain extends JavaPlugin {
       }
 
       getServer().getPluginManager().registerEvents(new EntityDamageEntity(this), this);
-      getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
+      getServer().getPluginManager().registerEvents(new PlayerInteract(this), this);
+      getServer().getPluginManager().registerEvents(new PlayerProjectile(this), this);
+      getServer().getPluginManager().registerEvents(new PlayerSpeed(this), this);
 
       getCommand("addclass").setExecutor(new Create(this));
       getCommand("addsubclass").setExecutor(new Create(this));
@@ -201,8 +208,9 @@ public class ArpeegeeMain extends JavaPlugin {
       getCommand("removesubclass").setExecutor(new Remove(this));
       getCommand("displayclass").setExecutor(new Display(this));
       getCommand("displaysubclass").setExecutor(new Display(this));
-      
+
       berserkMap = new HashMap<String, String>();
+      projMap = new HashMap<Entity, String>();
 
       log.info("LittleRPG v0.1 enabled");
    }
@@ -282,5 +290,28 @@ public class ArpeegeeMain extends JavaPlugin {
    
    public HashMap<String, String> getBerserkMap() {
       return berserkMap;
+   }
+   
+   public HashMap<Entity, String> getProjMap() {
+      return projMap;
+   }
+   
+   /* Will return a number greater then or equal to 2 at the probability chosen*/
+   public double getChance(int percent){
+      Random rand = new Random();
+      switch(percent){
+      case 0: return (rand.nextDouble() * 0) + 1;
+      case 5: return (rand.nextDouble() * 1.052) + 1;
+      case 10: return (rand.nextDouble() * 1.111) + 1;
+      case 15: return (rand.nextDouble() * 1.177) + 1;
+      case 20: return (rand.nextDouble() * 1.25) + 1;
+      case 25: return (rand.nextDouble() * 1.333) + 1;
+      case 30: return (rand.nextDouble() * 1.43) + 1;
+      case 35: return (rand.nextDouble() * 1.539) + 1;
+      case 40: return (rand.nextDouble() * 1.667) + 1;
+      case 45: return (rand.nextDouble() * 1.818) + 1;
+      case 50: return (rand.nextDouble() * 2) + 0.999; // 0.999 is to prevent a 3 occurring
+      default: return 0;
+      }
    }
 }

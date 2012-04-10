@@ -1,7 +1,6 @@
 package littlegruz.arpeegee.listeners;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import littlegruz.arpeegee.ArpeegeeMain;
 import littlegruz.arpeegee.entities.RPGPlayer;
@@ -10,6 +9,7 @@ import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Pig;
@@ -34,11 +34,12 @@ public class EntityDamageEntity implements Listener {
 
    @EventHandler
    public void onEntityDamageEntity(EntityDamageByEntityEvent event){
+      plugin.getServer().broadcastMessage(event.getDamager().toString());
+      
       if(event.getDamager() instanceof Player
             && event.getEntity() instanceof LivingEntity){
          Player playa = (Player) event.getDamager();
          LivingEntity victim = (LivingEntity) event.getEntity();
-         
          
          // Heal spell
          if(playa.getItemInHand().getData().toString().contains("WHITE DYE")){
@@ -88,7 +89,7 @@ public class EntityDamageEntity implements Listener {
                      enemyLoc.setY(enemyLoc.getY() + 1);
                      enemyLoc.getWorld().strikeLightningEffect(enemyLoc);
                      //TODO Lightning damage
-                     e.damage(1);
+                     e.damage(0);
                   }
                }
            }, 20L);
@@ -98,13 +99,15 @@ public class EntityDamageEntity implements Listener {
             event.setCancelled(true);
             
             /* If player is in Berserk mode, attack has a base 10% chance of
-             * crit otherwise the base crit is 5%*/
-            //TODO Sword damage and perhaps determine set doubles for probabilities i.e. ten = 1.1, five = 1.052
+             * crit (double damage) otherwise the base crit is 5%*/
+            //TODO Sword damage and crit addition
             if(plugin.getBerserkMap().get(playa.getName()) != null)
-               victim.damage(1 * (int) getRandomDouble(1.1));
+               victim.damage(1 * (int) plugin.getChance(10));
             else{
-               victim.damage(1 * (int) getRandomDouble(1.052));
+               victim.damage(0 * (int) plugin.getChance(5));
+               //TODO Rage gain
                plugin.getPlayerMap().get(playa.getName()).addRage(25);
+               victim.remove();
             }
             
             playa.getItemInHand().setDurability((short) 0);
@@ -114,8 +117,9 @@ public class EntityDamageEntity implements Listener {
             event.setCancelled(true);
 
             //TODO Sword damage
-            victim.damage(1);
-            
+            victim.damage(0);
+
+            //TODO Rage gain
             if(plugin.getBerserkMap().get(playa.getName()) == null)
                plugin.getPlayerMap().get(playa.getName()).addRage(25);
             
@@ -123,36 +127,58 @@ public class EntityDamageEntity implements Listener {
             
          }
       }
+      // Player dodging
       else if(event.getEntity() instanceof Player){
          Player playa = (Player) event.getEntity();
          if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0){
-            if((int) getRandomDouble(1.052) == 1){
+            if((int) plugin.getChance(5) == 1){
                event.setCancelled(true);
                playa.sendMessage("*dodged*");
             }
          }
       }
+      // Player arrow hit
+      else if(event.getDamager() instanceof Arrow){
+         // Check that it came from a player
+         if(plugin.getProjMap().get(event.getDamager()) != null){
+            Location loc;
+            LivingEntity le;
+            
+            event.setCancelled(true);
+            event.getDamager().remove();
+
+            le = (LivingEntity) event.getEntity();
+            loc = le.getLocation();
+            
+            le.damage(0);
+            // If crit, do additional damage
+            if(plugin.getChance(15) == 2){
+               loc.getWorld().strikeLightningEffect(loc);
+               le.damage(0);
+            }
+            
+            plugin.getServer().broadcastMessage("Arrowed");
+         }
+      }
    }
    
-   private void healSpell(Player playa, LivingEntity victim, int adv){
-      if(victim instanceof Pig){
+   private void healSpell(Player playa, LivingEntity fortunate, int adv){
+      if(fortunate instanceof Pig){
          playa.sendMessage("Healed");
-         playa.playEffect(victim.getLocation(), Effect.SMOKE, 1); //Change when Pig is changed to Player
+         playa.playEffect(fortunate.getLocation(), Effect.SMOKE, 1); //Change when Pig is changed to Player
          //TODO Player heal
-         victim.setHealth((victim.getHealth() + 1) * adv);
+         playa.sendMessage(Integer.toString(fortunate.getMaxHealth()));
+         if(fortunate.getHealth() + (1 * adv) > fortunate.getMaxHealth())
+            fortunate.setHealth(fortunate.getMaxHealth());
+         else
+            fortunate.setHealth(fortunate.getHealth() + (1 * adv));
       }
       // If player heals a zombie, then deal damage instead
-      else if(victim instanceof Zombie){
-         victim.playEffect(EntityEffect.HURT);
+      else if(fortunate instanceof Zombie){
+         fortunate.playEffect(EntityEffect.HURT);
          //TODO Zombie damage
-         victim.damage(1 * adv);
+         fortunate.damage(1 * adv);
+         playa.sendMessage("Burn zombie!");
       }
    }
-   
-   private double getRandomDouble(double range){
-      Random rand = new Random();
-      return (rand.nextDouble() * range) + 1;
-   }
-   
-   
 }

@@ -18,10 +18,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
-public class PlayerInteractListener implements Listener{
+public class PlayerInteract implements Listener{
    private ArpeegeeMain plugin;
    
-   public PlayerInteractListener(ArpeegeeMain instance){
+   public PlayerInteract(ArpeegeeMain instance){
       plugin = instance;
    }
    
@@ -30,7 +30,7 @@ public class PlayerInteractListener implements Listener{
       Player playa = event.getPlayer();
       //playa.sendMessage(playa.getItemInHand().getData().toString());//Data checking
       //playa.sendMessage(event.getAction().toString());//Data checking
-      
+
       // Casting weapon to "Flash"
       if(playa.getItemInHand().getData().toString().contains("MAGENTA DYE")
             && event.getAction().toString().contains("RIGHT_CLICK")){
