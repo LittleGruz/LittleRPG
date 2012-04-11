@@ -1,6 +1,9 @@
 package littlegruz.arpeegee.listeners;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import littlegruz.arpeegee.ArpeegeeMain;
 import littlegruz.arpeegee.entities.RPGPlayer;
@@ -151,7 +154,8 @@ public class EntityDamageEntity implements Listener {
          if(plugin.getProjMap().get(event.getDamager()) != null){
             //Location loc;
             LivingEntity le;
-            int arch = (int) Double.parseDouble(plugin.getProjMap().get(event.getDamager()));
+            ArrayList<Entity> ent = new ArrayList<Entity>();
+            int arch, i;
             
             /* Since cancelling the event causes the arrow to bounce of, it
              * gets removed manually */
@@ -160,13 +164,27 @@ public class EntityDamageEntity implements Listener {
 
             le = (LivingEntity) event.getEntity();
             //loc = le.getLocation();
+            
+            arch = (int) Double.parseDouble(plugin.getProjMap().get(event.getDamager()).replace("grounded", ""));
 
-            plugin.getServer().broadcastMessage(Integer.toString(arch));
+            //plugin.getServer().broadcastMessage(Integer.toString(arch));
             le.damage(1 * arch);
             // If crit, do additional damage
             if(plugin.getChance(5 * arch) == 2){
                //loc.getWorld().strikeLightningEffect(loc);
                le.damage(1 * arch);
+            }
+            
+            // Remove all arrows that have hit the ground from hashmap
+            Iterator<Map.Entry<Entity, String>> it = plugin.getProjMap().entrySet().iterator();
+            while(it.hasNext()){
+               Entry<Entity, String> arrow = it.next();
+               if(arrow.getValue().contains("grounded"))
+                  ent.add(arrow.getKey());
+            }
+            for(i = ent.size() - 1; ent.size() > 0; i--){
+               plugin.getProjMap().remove(ent.get(i));
+               ent.remove(i);
             }
          }
       }

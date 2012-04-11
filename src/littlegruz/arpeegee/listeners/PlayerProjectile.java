@@ -1,10 +1,5 @@
 package littlegruz.arpeegee.listeners;
 
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -13,7 +8,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
 
 import littlegruz.arpeegee.ArpeegeeMain;
 
@@ -42,29 +36,19 @@ public class PlayerProjectile implements Listener{
       plugin.getProjMap().put(event.getEgg(),
             Double.toString(plugin.getPlayerMap().get(event.getPlayer().getName()).getSubClassObject().getArch()));
    }
-
-   // Not a great solution for shrinking down the arrow hashmap, but it will do for now
-   @EventHandler
-   public void clearHash(PlayerItemHeldEvent event){
-      Iterator<Map.Entry<Entity, String>> it = plugin.getProjMap().entrySet().iterator();
-      try{
-         while(it.hasNext()){
-            Entry<Entity, String> arrow = it.next();
-            if(arrow.getValue().compareTo("grounded") == 0)
-               plugin.getProjMap().remove(arrow.getKey());
-         }
-      }catch(ConcurrentModificationException e){}
-   }
    
    @EventHandler
    public void onProjectileHit(ProjectileHitEvent event){
+      // Projectile hitting something
       Entity ent = event.getEntity();
-      int arch = (int) Double.parseDouble(plugin.getProjMap().get(event.getEntity()));
-      //TODO Fix this bit
       if(plugin.getProjMap().get(ent) != null){
-         plugin.getProjMap().put(ent, "grounded");
+         plugin.getProjMap().put(ent, plugin.getProjMap().get(ent) + "grounded");
          return;
       }
+
+      // Determining explosion chance
+      int arch = (int) Double.parseDouble(plugin.getProjMap().get(event.getEntity()));
+      
       plugin.getServer().broadcastMessage(Integer.toString(arch));
       if((int) plugin.getChance(5 * arch) == 2 && ent instanceof Egg){
          ent.getLocation().getWorld().createExplosion(ent.getLocation(), 1F, false);
