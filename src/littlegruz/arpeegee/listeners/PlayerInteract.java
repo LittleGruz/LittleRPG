@@ -36,7 +36,7 @@ public class PlayerInteract implements Listener{
       //playa.sendMessage(playa.getItemInHand().getData().toString());//Data checking
       //playa.sendMessage(event.getAction().toString());//Data checking
 
-      // Casting weapon to "Flash"
+      // Casting weapon for "Flash"
       if(playa.getItemInHand().getData().toString().contains("MAGENTA DYE")
             && event.getAction().toString().contains("RIGHT_CLICK")){
          HashSet<Byte> hs = new HashSet<Byte>();

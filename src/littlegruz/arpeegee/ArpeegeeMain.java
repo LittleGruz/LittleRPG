@@ -307,23 +307,14 @@ public class ArpeegeeMain extends JavaPlugin {
       return projMap;
    }
    
-   /* Will return a number greater then or equal to 2 at the probability chosen*/
-   public double getChance(int percent){
+   /* Returns true if the RNG smiles upon the user*/
+   public boolean probabilityRoll(int percent){
       Random rand = new Random();
-      switch(percent){
-      case 0: return (rand.nextDouble() * 0) + 1;
-      case 5: return (rand.nextDouble() * 1.052) + 1;
-      case 10: return (rand.nextDouble() * 1.111) + 1;
-      case 15: return (rand.nextDouble() * 1.177) + 1;
-      case 20: return (rand.nextDouble() * 1.25) + 1;
-      case 25: return (rand.nextDouble() * 1.333) + 1;
-      case 30: return (rand.nextDouble() * 1.43) + 1;
-      case 35: return (rand.nextDouble() * 1.539) + 1;
-      case 40: return (rand.nextDouble() * 1.667) + 1;
-      case 45: return (rand.nextDouble() * 1.818) + 1;
-      case 50: return (rand.nextDouble() * 2) + 0.999; // 0.999 is to prevent a 3 occurring
-      default: return 0;
-      }
+      
+      if(rand.nextInt(100) <= percent)
+         return true;
+      else
+         return false;
    }
    
    public boolean isEnemy(Entity ent){

@@ -64,11 +64,17 @@ public class EntityDamageEntity implements Listener {
             /* If player is in Berserk mode, attack has an increased chance of
              * crit (double damage) otherwise the crit is (5 * blade skill)%*/
             if(plugin.getBerserkMap().get(playa.getName()) != null){
-               crit = (int) plugin.getChance(5 * (blade + level));
+               if(plugin.probabilityRoll(5 * blade + level))
+                  crit = 2;
+               else
+                  crit = 1;
                victim.damage((blade + (level / 2)) * crit);
             }
             else{
-               crit = (int) plugin.getChance(5 * blade);
+               if(plugin.probabilityRoll(5 * (blade)))
+                  crit = 2;
+               else
+                  crit = 1;
                victim.damage(blade * crit);
                plugin.getPlayerMap().get(playa.getName()).addRage(5);
             }
@@ -100,7 +106,7 @@ public class EntityDamageEntity implements Listener {
             int block;
             
             block = (int) plugin.getPlayerMap().get(playa.getName()).getSubClassObject().getBlock();
-            if((int) plugin.getChance(5 * block) == 2){
+            if(plugin.probabilityRoll(5 * block)){
                event.setCancelled(true);
                playa.sendMessage("*blocked*");
             }
@@ -125,12 +131,13 @@ public class EntityDamageEntity implements Listener {
             
             arch = (int) Double.parseDouble(plugin.getProjMap().get(event.getDamager()).replace("grounded", ""));
 
-            le.damage(1 * arch);
-            // If crit, do additional damage
-            if(plugin.getChance(5 * arch) == 2){
+            // If crit, do double damage
+            if(plugin.probabilityRoll(5 * arch)){
                //loc.getWorld().strikeLightningEffect(loc);
-               le.damage(1 * arch);
+               le.damage(1 * arch * 2);
             }
+            else
+               le.damage(1 * arch);
             
             // Remove all arrows that have hit the ground from hashmap
             // The removal is separate to stop concurrency issues
