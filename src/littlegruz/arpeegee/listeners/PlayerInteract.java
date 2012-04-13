@@ -40,8 +40,11 @@ public class PlayerInteract implements Listener{
       if(playa.getItemInHand().getData().toString().contains("MAGENTA DYE")
             && event.getAction().toString().contains("RIGHT_CLICK")){
          HashSet<Byte> hs = new HashSet<Byte>();
+         int spell;
          Block block;
          Location loc;
+         
+         spell = (int) plugin.getPlayerMap().get(playa.getName()).getSubClassObject().getSpell();
    
          hs.add((byte)0); //Air
          hs.add((byte)8); //Flowing water
@@ -50,8 +53,7 @@ public class PlayerInteract implements Listener{
          hs.add((byte)101); //Iron bar
          hs.add((byte)102); //Glass pane
          
-         //TODO Flash range
-         block = playa.getTargetBlock(hs, 20);
+         block = playa.getTargetBlock(hs, 3 * spell);
          loc = block.getLocation();
          
          //playa.sendMessage(block.getType().toString());
@@ -93,10 +95,13 @@ public class PlayerInteract implements Listener{
       // Melancholy (high intelligence only version of rage). Spawns sheep around mage.
       else if(playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
             && event.getAction().toString().compareTo("RIGHT_CLICK_AIR") == 0){
+         int level;
+         
          Location loc = event.getPlayer().getLocation();
-         plugin.getPlayerMap().get(playa.getName()).setRage(100);
-         //TODO Add intelligence check
-         if(plugin.getPlayerMap().get(playa.getName()).getRage() == 100){
+         
+         level = (int) plugin.getPlayerMap().get(playa.getName()).getLevel();
+         
+         if(level >= 10){
             loc.setY(loc.getY() + 1.5);
             loc.setX(loc.getX() + 1);
             loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
@@ -107,7 +112,6 @@ public class PlayerInteract implements Listener{
             loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
             loc.setZ(loc.getZ() - 2);
             loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
-            plugin.getPlayerMap().get(playa.getName()).setRage(0);
          }
       }
       // This fireball creation code is based off MadMatt199's code (https://github.com/madmatt199/GhastBlast)
@@ -123,7 +127,7 @@ public class PlayerInteract implements Listener{
                dir.getX(), dir.getY(), dir.getZ());
          
          // Spawn the fireball a bit up and away from the player
-         fireball.locX = loc.getX() + (dir.getX()/5.0) + 0.25;
+         fireball.locX = loc.getX() + (dir.getX()/5.0);
          fireball.locY = loc.getY() + (playa.getEyeHeight()/2.0);
          fireball.locZ = loc.getZ() + (dir.getZ()/5.0);
          dir = dir.multiply(10);
@@ -157,23 +161,28 @@ public class PlayerInteract implements Listener{
       }
    }
    
+   /* The ranged entity seeking code is borrowed from code listed by
+    * DirtyStarfish on the bukkit.org forums (with modifications)*/
    private void callThor(Player playa, boolean area){
       Location loc;
       Block block;
-      int bx, by, bz;
+      int bx, by, bz, range;
+      final int spell;
       double ex, ey, ez;
       BlockIterator bItr;
       ArrayList<LivingEntity> enemies = new ArrayList<LivingEntity>();
       
-      // TODO Change to be set by intelligence?
-      for(Entity e : playa.getNearbyEntities(15, 15, 15)) {
+      // Base range is 10 blocks plus the casters spell ability
+      spell = (int) plugin.getPlayerMap().get(playa.getName()).getSubClassObject().getSpell();
+      range = 10 + spell;
+      
+      for(Entity e : playa.getNearbyEntities(range, range, range)) {
          if (plugin.isEnemy(e)) {
             enemies.add((LivingEntity)e);
          }
       }
       
-      //TODO This range should change with the above range values
-      bItr = new BlockIterator(playa.getLocation(), 0, 15);
+      bItr = new BlockIterator(playa.getLocation(), 0, range);
       
       while (bItr.hasNext()) {
          block = bItr.next();
@@ -189,8 +198,8 @@ public class PlayerInteract implements Listener{
             if ((bx - 0.75 <= ex && ex <= bx + 0.75) && (bz - 0.75 <= ez && ez <= bz + 0.75) && (by - 1 <= ey && ey <= by + 1)){
                loc.setY(loc.getY() + 1);
                loc.getWorld().strikeLightningEffect(loc);
-               //TODO Lightning damage
-               e.damage(1);
+               
+               e.damage(spell);
                if(!area){
                   playa.sendMessage("*Zap*");
                }
@@ -212,8 +221,7 @@ public class PlayerInteract implements Listener{
                            Location enemyLoc = e.getLocation();
                            enemyLoc.setY(enemyLoc.getY() + 1);
                            enemyLoc.getWorld().strikeLightningEffect(enemyLoc);
-                           //TODO Lightning damage
-                           e.damage(0);
+                           e.damage(spell/2);
                         }
                      }
                  }, 20L);

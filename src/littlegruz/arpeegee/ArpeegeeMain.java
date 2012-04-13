@@ -166,9 +166,6 @@ public class ArpeegeeMain extends JavaPlugin {
          log.info("Incorrectly formatted Arpeegy sub-class file");
       }
 
-      log.info(Integer.toString(subClassMap.size()));
-      log.info(Integer.toString(classMap.size()));
-
       playerMap = new HashMap<String, RPGPlayer>();
       // Load up the players from file
       try{
