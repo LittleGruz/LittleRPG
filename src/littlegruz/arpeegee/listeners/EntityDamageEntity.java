@@ -11,7 +11,6 @@ import littlegruz.arpeegee.entities.RPGSubClass;
 
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Arrow;
@@ -54,7 +53,7 @@ public class EntityDamageEntity implements Listener {
             healSpell(playa, victim, 2);
          }
          // Lightning (single target) spell
-         else if(playa.getItemInHand().getData().toString().contains("YELLOW DYE")){
+         /*else if(playa.getItemInHand().getData().toString().contains("YELLOW DYE")){
             Location loc = event.getEntity().getLocation();
             
             event.setCancelled(true);
@@ -64,9 +63,9 @@ public class EntityDamageEntity implements Listener {
             //TODO Lightning damage
             victim.damage(1);
             playa.sendMessage("*Zap*");
-         }
+         }*/
          // Lightning (area) spell
-         else if(playa.getItemInHand().getType().compareTo(Material.BLAZE_ROD) == 0){
+         /*else if(playa.getItemInHand().getType().compareTo(Material.BLAZE_ROD) == 0){
             Location loc = event.getEntity().getLocation();
             final ArrayList<LivingEntity> nearEnemies = new ArrayList<LivingEntity>();
             
@@ -76,8 +75,7 @@ public class EntityDamageEntity implements Listener {
             loc.getWorld().strikeLightningEffect(loc);
             //TODO Lightning damage
             victim.damage(1);
-            playa.sendMessage(Float.toString(playa.getExp()));
-            // Place all nearby enemies into an array for the area lightning effect
+            // Place all nearby enemies into an array for the area lightning effect later
             nearEnemies.add(victim);
             for(Entity e : event.getEntity().getNearbyEntities(5, 5, 5)) {
                if (e instanceof LivingEntity) {
@@ -97,7 +95,7 @@ public class EntityDamageEntity implements Listener {
                   }
                }
            }, 20L);
-         }
+         }*/
          // Provides a base 5% critical hit chance
          else if(playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0){
             int crit;
@@ -167,7 +165,6 @@ public class EntityDamageEntity implements Listener {
             
             arch = (int) Double.parseDouble(plugin.getProjMap().get(event.getDamager()).replace("grounded", ""));
 
-            //plugin.getServer().broadcastMessage(Integer.toString(arch));
             le.damage(1 * arch);
             // If crit, do additional damage
             if(plugin.getChance(5 * arch) == 2){
@@ -176,6 +173,7 @@ public class EntityDamageEntity implements Listener {
             }
             
             // Remove all arrows that have hit the ground from hashmap
+            // The removal is separate to stop concurrency issues
             Iterator<Map.Entry<Entity, String>> it = plugin.getProjMap().entrySet().iterator();
             while(it.hasNext()){
                Entry<Entity, String> arrow = it.next();

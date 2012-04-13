@@ -1,5 +1,6 @@
 package littlegruz.arpeegee.listeners;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import littlegruz.arpeegee.ArpeegeeMain;
@@ -12,11 +13,14 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
 public class PlayerInteract implements Listener{
@@ -74,6 +78,16 @@ public class PlayerInteract implements Listener{
          else
             playa.sendMessage("You can not flash that far!");
          
+         event.setCancelled(true);
+      }
+      // Lightning (single target) spell
+      else if(playa.getItemInHand().getData().toString().contains("YELLOW DYE")){
+         callThor(playa, false);
+         event.setCancelled(true);
+      }
+      // Lightning (area) spell
+      else if(playa.getItemInHand().getType().compareTo(Material.BLAZE_ROD) == 0){
+         callThor(playa, true);
          event.setCancelled(true);
       }
       // Melancholy (high intelligence only version of rage). Spawns sheep around mage.
@@ -140,6 +154,73 @@ public class PlayerInteract implements Listener{
          }
          else
             playa.sendMessage("Not enough rage. Current rage: " + Integer.toString(plugin.getPlayerMap().get(playa.getName()).getRage()));
+      }
+   }
+   
+   private void callThor(Player playa, boolean area){
+      Location loc;
+      Block block;
+      int bx, by, bz;
+      double ex, ey, ez;
+      BlockIterator bItr;
+      ArrayList<LivingEntity> enemies = new ArrayList<LivingEntity>();
+      
+      // TODO Change to be set by intelligence?
+      for(Entity e : playa.getNearbyEntities(15, 15, 15)) {
+         if (plugin.isEnemy(e)) {
+            enemies.add((LivingEntity)e);
+         }
+      }
+      
+      //TODO This range should change with the above range values
+      bItr = new BlockIterator(playa.getLocation(), 0, 15);
+      
+      while (bItr.hasNext()) {
+         block = bItr.next();
+         bx = block.getX();
+         by = block.getY();
+         bz = block.getZ();
+         for (LivingEntity e : enemies) {
+            loc = e.getLocation();
+            ex = loc.getX();
+            ey = loc.getY();
+            ez = loc.getZ();
+            // If entity is within the boundaries then it is the one being looked at
+            if ((bx - 0.75 <= ex && ex <= bx + 0.75) && (bz - 0.75 <= ez && ez <= bz + 0.75) && (by - 1 <= ey && ey <= by + 1)){
+               loc.setY(loc.getY() + 1);
+               loc.getWorld().strikeLightningEffect(loc);
+               //TODO Lightning damage
+               e.damage(1);
+               if(!area){
+                  playa.sendMessage("*Zap*");
+               }
+               else{
+                  final ArrayList<LivingEntity> nearEnemies = new ArrayList<LivingEntity>();
+                  
+                  playa.sendMessage("*Zap zap zap*");
+
+                  nearEnemies.add(e);
+                  for(Entity victims : e.getNearbyEntities(5, 5, 5)) {
+                     if (plugin.isEnemy(victims)) {
+                        nearEnemies.add((LivingEntity) victims);
+                     }
+                  }
+                  
+                  plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                     public void run() {
+                        for(LivingEntity e : nearEnemies) {
+                           Location enemyLoc = e.getLocation();
+                           enemyLoc.setY(enemyLoc.getY() + 1);
+                           enemyLoc.getWorld().strikeLightningEffect(enemyLoc);
+                           //TODO Lightning damage
+                           e.damage(0);
+                        }
+                     }
+                 }, 20L);
+               }
+               return;
+            }
+         }
       }
    }
 }

@@ -25,7 +25,10 @@ import littlegruz.arpeegee.listeners.PlayerInteract;
 import littlegruz.arpeegee.listeners.PlayerProjectile;
 import littlegruz.arpeegee.listeners.PlayerSpeed;
 
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Monster;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /* Create a custom RPG where the admin creates classes with the desired power
@@ -189,7 +192,7 @@ public class ArpeegeeMain extends JavaPlugin {
             
             if(classMap.get(rpgClass) == null)
                log.warning("Player " + name + " has an unfound class name. Please fix this before they login.");
-            if(subClassMap.get(rpgSubClass) == null)
+            if(subClassMap.get(rpgSubClass.getName()) == null)
                log.warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");
             
             playerMap.put(name, new RPGPlayer(name, rpgClass, rpgSubClass,
@@ -324,5 +327,15 @@ public class ArpeegeeMain extends JavaPlugin {
       case 50: return (rand.nextDouble() * 2) + 0.999; // 0.999 is to prevent a 3 occurring
       default: return 0;
       }
+   }
+   
+   public boolean isEnemy(Entity ent){
+      if(ent instanceof Animals)
+         return true;
+      else if(ent instanceof Monster)
+         return true;
+      else if(ent instanceof EnderDragon)
+         return true;
+      return false;
    }
 }
