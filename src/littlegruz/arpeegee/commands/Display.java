@@ -21,7 +21,7 @@ public class Display implements CommandExecutor{
 
    @Override
    public boolean onCommand(CommandSender sender, Command cmd,
-         String commandLabel, String[] args) {
+         String commandLabel, String[] args){
       RPGClass rpgClass;
       RPGSubClass rpgSubClass;
       

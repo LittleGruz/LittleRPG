@@ -15,6 +15,7 @@ import java.util.StringTokenizer;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import littlegruz.arpeegee.commands.Begin;
 import littlegruz.arpeegee.commands.Display;
 import littlegruz.arpeegee.entities.RPGClass;
 import littlegruz.arpeegee.entities.RPGPlayer;
@@ -22,6 +23,7 @@ import littlegruz.arpeegee.entities.RPGSubClass;
 import littlegruz.arpeegee.listeners.EnemyDeath;
 import littlegruz.arpeegee.listeners.EntityDamageEntity;
 import littlegruz.arpeegee.listeners.PlayerInteract;
+import littlegruz.arpeegee.listeners.PlayerJoin;
 import littlegruz.arpeegee.listeners.PlayerProjectile;
 import littlegruz.arpeegee.listeners.PlayerSpeed;
 
@@ -38,7 +40,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Add spells which get opened up as the player levels
  * Attributes like health and mana will be linked to strength and intelligence
  * 
- * Spells (so far):
+ * Spells (so far): DONE
  * Heal
  * Adv. Heal
  * Lightning (single)
@@ -46,14 +48,17 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Fireball
  * Teleport
  * 
- * Diamond sword gives chance for critical hits
- * Gold sword gives chance for dodge
- * Rage mechanic gives increased sword bonuses and extra damage
- * Right click with sword will activate rage if rage meter is full
+ * Diamond sword gives chance for critical hits DONE
+ * Iron sword gives chance for dodge DONE
+ * Rage mechanic gives increased sword bonuses and extra damage DONE
+ * Right click with sword will activate rage if rage meter is full DONE
  * 
  * Can fire bow quicker than egg but with less damage than egg
- * Egg can occasionally explode
+ * Egg can occasionally explode DONE
  * A certain armour equip can make user run faster
+ * Cooldowns for spells
+ * Levels
+ * Reduced damage taken by Warriors
  * 
  * */
 
@@ -206,14 +211,19 @@ public class ArpeegeeMain extends JavaPlugin {
          log.info("Incorrectly formatted Arpeegy player file");
       }
 
+      //Set up listeners
+      getServer().getPluginManager().registerEvents(new EnemyDeath(), this);
       getServer().getPluginManager().registerEvents(new EntityDamageEntity(this), this);
       getServer().getPluginManager().registerEvents(new PlayerInteract(this), this);
+      getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
       getServer().getPluginManager().registerEvents(new PlayerProjectile(this), this);
       getServer().getPluginManager().registerEvents(new PlayerSpeed(), this);
-      getServer().getPluginManager().registerEvents(new EnemyDeath(), this);
 
       getCommand("displayclass").setExecutor(new Display(this));
       getCommand("displaysubclass").setExecutor(new Display(this));
+      getCommand("iammelee").setExecutor(new Begin(this));
+      getCommand("iamranged").setExecutor(new Begin(this));
+      getCommand("iammagic").setExecutor(new Begin(this));
 
       berserkMap = new HashMap<String, String>();
       projMap = new HashMap<Entity, String>();

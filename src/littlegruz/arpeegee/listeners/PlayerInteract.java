@@ -100,7 +100,6 @@ public class PlayerInteract implements Listener{
          Location loc = event.getPlayer().getLocation();
          
          level = (int) plugin.getPlayerMap().get(playa.getName()).getLevel();
-         
          if(level >= 10){
             loc.setY(loc.getY() + 1.5);
             loc.setX(loc.getX() + 1);
@@ -128,7 +127,7 @@ public class PlayerInteract implements Listener{
          
          // Spawn the fireball a bit up and away from the player
          fireball.locX = loc.getX() + (dir.getX()/5.0);
-         fireball.locY = loc.getY() + (playa.getEyeHeight()/2.0);
+         fireball.locY = loc.getY() + (playa.getEyeHeight()/2.0) + 0.5;
          fireball.locZ = loc.getZ() + (dir.getZ()/5.0);
          dir = dir.multiply(10);
          

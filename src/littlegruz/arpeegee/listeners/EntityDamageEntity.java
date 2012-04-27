@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import littlegruz.arpeegee.ArpeegeeMain;
-import littlegruz.arpeegee.entities.RPGPlayer;
-import littlegruz.arpeegee.entities.RPGSubClass;
 
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
@@ -21,7 +19,6 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 
 /* This class contains melee damage methods...apart from arrow damage and heal.*/
 public class EntityDamageEntity implements Listener {
@@ -29,11 +26,6 @@ public class EntityDamageEntity implements Listener {
    
    public EntityDamageEntity(ArpeegeeMain instance){
       plugin = instance;
-   }
-
-   @EventHandler
-   public void onPlayerJoin(PlayerJoinEvent event){
-      plugin.getPlayerMap().put(event.getPlayer().getName(), new RPGPlayer(event.getPlayer().getName(), "Ranged", new RPGSubClass("Archer",1,0,0,1,0)));
    }
 
    @EventHandler
@@ -169,7 +161,7 @@ public class EntityDamageEntity implements Listener {
       else if(fortunate instanceof Zombie){
          fortunate.playEffect(EntityEffect.HURT);
          fortunate.damage(spell * adv);
-         playa.sendMessage("Burn zombie!");
+         playa.sendMessage("Undead damage!");
       }
    }
 }

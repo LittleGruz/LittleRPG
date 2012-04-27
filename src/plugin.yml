@@ -9,6 +9,15 @@ commands:
    displaysubclass:
       description: Displays all sub-classes or the stats of just one
       usage: /displaysubclass [name]
+   iammelee:
+      description: Sets your class as melee
+      usage: /iammelee
+   iamranged:
+      description: Sets your class as ranged
+      usage: /iamranged
+   iammagic:
+      description: Makes it all complete
+      usage: /iammagic
       
 permissions:
    arpeegee.create:
@@ -19,4 +28,7 @@ permissions:
       default: op
    arpeegee.display:
       description: Displaying [sub-]classes
+      default: true
+   arpeegee.begin:
+      description: Choosing starting classes
       default: true
