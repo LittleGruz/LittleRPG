@@ -59,6 +59,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Cooldowns for spells
  * Levels
  * Reduced damage taken by Warriors
+ * Weapon assignment PARTIAL (initial assignment, not levels)
  * 
  * */
 

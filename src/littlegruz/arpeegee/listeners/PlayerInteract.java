@@ -20,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
@@ -94,7 +95,7 @@ public class PlayerInteract implements Listener{
       }
       // Melancholy (high intelligence only version of rage). Spawns sheep around mage.
       else if(playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
-            && event.getAction().toString().compareTo("RIGHT_CLICK_AIR") == 0){
+            && event.getAction().toString().contains("RIGHT_CLICK")){
          int level;
          
          Location loc = event.getPlayer().getLocation();
@@ -112,11 +113,12 @@ public class PlayerInteract implements Listener{
             loc.setZ(loc.getZ() - 2);
             loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
          }
+         event.setCancelled(true);
       }
       // This fireball creation code is based off MadMatt199's code (https://github.com/madmatt199/GhastBlast)
       // Casting weapon to launch a fireball
       else if(playa.getItemInHand().getData().toString().contains("RED DYE")
-            && event.getAction().toString().compareTo("RIGHT_CLICK_AIR") == 0){
+            && event.getAction().toString().contains("RIGHT_CLICK")){
          Vector dir = playa.getLocation().getDirection().multiply(10);
          Location loc = playa.getLocation();
          
@@ -158,6 +160,15 @@ public class PlayerInteract implements Listener{
          else
             playa.sendMessage("Not enough rage. Current rage: " + Integer.toString(plugin.getPlayerMap().get(playa.getName()).getRage()));
       }
+      else if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0)
+         event.getPlayer().getInventory().setItem(playa.getInventory().getHeldItemSlot(), new ItemStack(Material.IRON_SWORD,1));
+      else if(playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0)
+         event.getPlayer().getInventory().setItem(playa.getInventory().getHeldItemSlot(), new ItemStack(Material.DIAMOND_SWORD,1));
+      else if(playa.getItemInHand().getType().compareTo(Material.BOW) == 0)
+         event.getPlayer().getInventory().setItem(playa.getInventory().getHeldItemSlot(), new ItemStack(Material.BOW,1));
+      else if(playa.getItemInHand().getType().compareTo(Material.EGG) == 0)
+         event.getPlayer().getInventory().setItem(playa.getInventory().getHeldItemSlot(), new ItemStack(Material.EGG,1));
+      
    }
    
    /* The ranged entity seeking code is borrowed from code listed by
