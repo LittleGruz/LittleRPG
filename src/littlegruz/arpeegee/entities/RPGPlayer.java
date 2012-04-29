@@ -39,6 +39,10 @@ public class RPGPlayer {
       return level;
    }
    
+   public void setLevel(int lvl){
+      level = lvl;
+   }
+   
    public int getRage(){
       return rage;
    }
