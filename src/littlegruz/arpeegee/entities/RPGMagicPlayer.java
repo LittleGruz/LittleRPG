@@ -69,7 +69,7 @@ public class RPGMagicPlayer extends RPGPlayer{
       return fire;
    }
 
-   public void setFireReadiness(boolean fire){
+   public void setFireballReadiness(boolean fire){
       this.fire = fire;
    }
 
@@ -77,8 +77,8 @@ public class RPGMagicPlayer extends RPGPlayer{
       return sheeeep;
    }
 
-   public void setSheeeepReadiness(boolean sheeeep){
-      this.sheeeep = sheeeep;
+   public void setSheepReadiness(boolean sheep){
+      this.sheeeep = sheep;
    }
 
 }

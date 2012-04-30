@@ -41,6 +41,19 @@ public class PlayerInteract implements Listener{
       if(playa.getItemInHand().getData().toString().contains("MAGENTA DYE")
             && event.getAction().toString().contains("RIGHT_CLICK")
             && plugin.getMagicPlayerMap().get(playa.getName()) != null){
+         event.setCancelled(true);
+         
+         if(!plugin.getMagicPlayerMap().get(playa.getName()).isTeleportReady()){
+            playa.sendMessage("Teleport is still on cooldown");
+            return;
+         }
+         else{
+            ItemStack is = new ItemStack(351,1);
+            is.setDurability((short)13);
+            playa.getInventory().remove(is);
+            plugin.giveCooldown(playa, "tele", 5);
+         }
+         
          HashSet<Byte> hs = new HashSet<Byte>();
          int spell;
          Block block;
@@ -81,27 +94,57 @@ public class PlayerInteract implements Listener{
          }
          else
             playa.sendMessage("You can not flash that far!");
-         
-         event.setCancelled(true);
       }
       // Lightning (single target) spell
       else if(playa.getItemInHand().getData().toString().contains("YELLOW DYE")
             && plugin.getMagicPlayerMap().get(playa.getName()) != null){
-         callThor(playa, false);
          event.setCancelled(true);
+         
+         if(!plugin.getMagicPlayerMap().get(playa.getName()).isLightningReady()){
+            playa.sendMessage("Lightning is still on cooldown");
+            return;
+         }
+         else{
+            ItemStack is = new ItemStack(351,1);
+            is.setDurability((short)11);
+            playa.getInventory().remove(is);
+            plugin.giveCooldown(playa, "light", 5);
+         }
+         
+         callThor(playa, false);
       }
       // Lightning (area) spell
       else if(playa.getItemInHand().getType().compareTo(Material.BLAZE_ROD) == 0
             && plugin.getMagicPlayerMap().get(playa.getName()) != null){
-         callThor(playa, true);
          event.setCancelled(true);
+         
+         if(!plugin.getMagicPlayerMap().get(playa.getName()).isAdvLightningReady()){
+            playa.sendMessage("Advanced lightning is still on cooldown");
+            return;
+         }
+         else{
+            playa.getInventory().remove(Material.BLAZE_ROD);
+            plugin.giveCooldown(playa, "advLight", 5);
+         }
+         
+         callThor(playa, true);
       }
       // Melancholy. Spawns sheep around mage.
       else if(playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
             && event.getAction().toString().contains("RIGHT_CLICK")
             && plugin.getMagicPlayerMap().get(playa.getName()) != null){
-         int level;
+         event.setCancelled(true);
          
+         if(!plugin.getMagicPlayerMap().get(playa.getName()).isSheepReady()){
+            playa.sendMessage("Sheep summon is still on cooldown");
+            return;
+         }
+         else{
+            playa.getInventory().remove(Material.WHEAT);
+            plugin.giveCooldown(playa, "baaa", 5);
+         }
+         
+         int level;
          Location loc = event.getPlayer().getLocation();
          
          level = (int) plugin.getMagicPlayerMap().get(playa.getName()).getLevel();
@@ -117,13 +160,25 @@ public class PlayerInteract implements Listener{
             loc.setZ(loc.getZ() - 2);
             loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
          }
-         event.setCancelled(true);
       }
       // This fireball creation code is based off MadMatt199's code (https://github.com/madmatt199/GhastBlast)
       // Casting weapon to launch a fireball
       else if(playa.getItemInHand().getData().toString().contains("RED DYE")
             && event.getAction().toString().contains("RIGHT_CLICK")
             && plugin.getMagicPlayerMap().get(playa.getName()) != null){
+         event.setCancelled(true);
+         
+         if(!plugin.getMagicPlayerMap().get(playa.getName()).isFireballReady()){
+            playa.sendMessage("Fireball is still on cooldown");
+            return;
+         }
+         else{
+            ItemStack is = new ItemStack(351,1);
+            is.setDurability((short)1);
+            playa.getInventory().remove(is);
+            plugin.giveCooldown(playa, "fire", 5);
+         }
+         
          Vector dir = playa.getLocation().getDirection().multiply(10);
          Location loc = playa.getLocation();
          
@@ -141,7 +196,6 @@ public class PlayerInteract implements Listener{
          ((CraftWorld) playa.getWorld()).getHandle().addEntity(fireball);
 
          playa.sendMessage("*Fwoosh*");
-         event.setCancelled(true);
       }
       // Active berserk mode if player has gained enough rage
       else if(event.getAction().toString().contains("RIGHT_CLICK")
@@ -168,7 +222,7 @@ public class PlayerInteract implements Listener{
                playa.sendMessage("Not enough rage. Current rage: " + Integer.toString(plugin.getMeleePlayerMap().get(pName).getRage()));
          }
          else
-            playa.sendMessage("Your class does not use rage...so why do you have this weapon?");
+            playa.sendMessage("Your class does not use rage...why do you have this weapon?");
       }
       else if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
             && plugin.getMeleePlayerMap().get(playa.getName()) != null)
@@ -180,8 +234,12 @@ public class PlayerInteract implements Listener{
             && plugin.getRangedPlayerMap().get(playa.getName()) != null)
          event.getPlayer().getInventory().setItem(playa.getInventory().getHeldItemSlot(), new ItemStack(Material.BOW,1));
       else if(playa.getItemInHand().getType().compareTo(Material.EGG) == 0
-            && plugin.getRangedPlayerMap().get(playa.getName()) != null)
-         event.getPlayer().getInventory().setItem(playa.getInventory().getHeldItemSlot(), new ItemStack(Material.EGG,1));
+            && plugin.getRangedPlayerMap().get(playa.getName()) != null){
+         if(!plugin.getRangedPlayerMap().get(playa.getName()).isEggReady())
+            playa.sendMessage("Egg is still on cooldown");
+         else
+            plugin.giveCooldown(playa, 5);
+      }
       
    }
    

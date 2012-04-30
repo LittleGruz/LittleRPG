@@ -28,10 +28,13 @@ import littlegruz.arpeegee.listeners.PlayerJoin;
 import littlegruz.arpeegee.listeners.PlayerProjectile;
 import littlegruz.arpeegee.listeners.PlayerSpeed;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /* Create a custom RPG where the admin creates classes with the desired power
@@ -54,11 +57,11 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Rage mechanic gives increased sword bonuses and extra damage DONE
  * Right click with sword will activate rage if rage meter is full DONE
  * 
- * Can fire bow quicker than egg but with less damage than egg
+ * Can fire bow quicker than egg but with less damage than egg DONE
  * Egg can occasionally explode DONE
  * A certain armour equip can make user run faster
- * Cooldowns for spells
- * Levels PARTIAL
+ * Cooldowns for spells DONE
+ * Levels PARTIAL (no balancing)
  * Reduced damage taken by Warriors
  * Weapon assignment DONE */
 
@@ -397,6 +400,7 @@ public class ArpeegeeMain extends JavaPlugin {
          return false;
    }
    
+   /* Checks if the given entity is an enemy*/
    public boolean isEnemy(Entity ent){
       if(ent instanceof Animals)
          return true;
@@ -405,5 +409,61 @@ public class ArpeegeeMain extends JavaPlugin {
       else if(ent instanceof EnderDragon)
          return true;
       return false;
+   }
+   
+   /* Sets a task to turn off a ranged ability's cooldown*/
+   public void giveCooldown(final Player playa, int delay){
+      getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+         public void run() {
+            rangedPlayerMap.get(playa.getName()).setEggReadiness(true);
+            playa.getInventory().setItem(1, new ItemStack(Material.EGG,1));
+         }
+     }, delay * 20); // Multiplied by 20 to turn the delay time into seconds
+   }
+   
+   /* Sets a task to turn off a magical ability's cooldown*/
+   public void giveCooldown(final Player playa, final String type, int delay){
+      getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+         public void run() {
+            RPGMagicPlayer rpgPlaya = magicPlayerMap.get(playa.getName());
+            ItemStack is = new ItemStack(351,1);
+            
+            if(type.compareTo("heal") == 0){
+               rpgPlaya.setHealReadiness(true);
+               is.setDurability((short)15);
+               playa.getInventory().setItem(1, is);
+            }
+            else if(type.compareTo("advHeal") == 0){
+               rpgPlaya.setAdvHealReadiness(true);
+               is.setType(Material.BONE);
+               playa.getInventory().setItem(5, is);
+            }
+            else if(type.compareTo("light") == 0){
+               rpgPlaya.setLightningReadiness(true);
+               is.setDurability((short)11);
+               playa.getInventory().setItem(0, is);
+            }
+            else if(type.compareTo("advLight") == 0){
+               rpgPlaya.setAdvLightningReadiness(true);
+               is.setType(Material.BLAZE_ROD);
+               playa.getInventory().setItem(6, is);
+            }
+            else if(type.compareTo("fire") == 0){
+               rpgPlaya.setHealReadiness(true);
+               is.setDurability((short)1);
+               playa.getInventory().setItem(2, is);
+            }
+            else if(type.compareTo("tele") == 0){
+               rpgPlaya.setHealReadiness(true);
+               is.setDurability((short)13);
+               playa.getInventory().setItem(3, is);
+            }
+            else if(type.compareTo("baaa") == 0){
+               rpgPlaya.setHealReadiness(true);
+               is.setType(Material.WHEAT);
+               playa.getInventory().setItem(4, is);
+            }
+         }
+     }, delay * 20); // Multiplied by 20 to turn the delay time into seconds
    }
 }

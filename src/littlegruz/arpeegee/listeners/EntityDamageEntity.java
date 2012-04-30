@@ -19,6 +19,7 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.inventory.ItemStack;
 
 /* This class contains melee damage methods...apart from arrow damage and heal.*/
 public class EntityDamageEntity implements Listener {
@@ -39,12 +40,30 @@ public class EntityDamageEntity implements Listener {
          if(playa.getItemInHand().getData().toString().contains("WHITE DYE")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null){
             event.setCancelled(true);
+            if(!plugin.getMagicPlayerMap().get(playa.getName()).isTeleportReady()){
+               playa.sendMessage("Heal is still on cooldown");
+               return;
+            }
+            else{
+               ItemStack is = new ItemStack(351,1);
+               is.setDurability((short)15);
+               playa.getInventory().remove(is);
+               plugin.giveCooldown(playa, "heal", 5);
+            }
             healSpell(playa, victim, 1);
          }
          // Advanced heal spell
          else if(playa.getItemInHand().getData().toString().contains("BONE")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null){
             event.setCancelled(true);
+            if(!plugin.getMagicPlayerMap().get(playa.getName()).isTeleportReady()){
+               playa.sendMessage("Advanced heal is still on cooldown");
+               return;
+            }
+            else{
+               playa.getInventory().remove(Material.BONE);
+               plugin.giveCooldown(playa, "advHeal", 5);
+            }
             healSpell(playa, victim, 2);
          }
          // Damaged by a diamond sword (crit sword)

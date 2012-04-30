@@ -17,7 +17,7 @@ public class RPGRangedPlayer extends RPGPlayer{
       return egg;
    }
    
-   public void setEggReadiness(boolean cool){
-      egg = cool;
+   public void setEggReadiness(boolean egg){
+      this.egg = egg;
    }
 }
