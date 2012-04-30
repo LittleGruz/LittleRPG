@@ -17,8 +17,9 @@ import java.util.logging.Logger;
 
 import littlegruz.arpeegee.commands.Begin;
 import littlegruz.arpeegee.commands.Display;
-import littlegruz.arpeegee.entities.RPGClass;
-import littlegruz.arpeegee.entities.RPGPlayer;
+import littlegruz.arpeegee.entities.RPGMagicPlayer;
+import littlegruz.arpeegee.entities.RPGMeleePlayer;
+import littlegruz.arpeegee.entities.RPGRangedPlayer;
 import littlegruz.arpeegee.entities.RPGSubClass;
 import littlegruz.arpeegee.listeners.EnemyDeath;
 import littlegruz.arpeegee.listeners.EntityDamageEntity;
@@ -57,13 +58,11 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Egg can occasionally explode DONE
  * A certain armour equip can make user run faster
  * Cooldowns for spells
- * Levels
+ * Levels PARTIAL
  * Reduced damage taken by Warriors
- * Weapon assignment PARTIAL (initial assignment, not levels)
- * 
- * */
+ * Weapon assignment DONE */
 
-/*The file which the classes are stored would have a format like the following
+/* The file which the classes are stored would have a format like the following
  * Name [name]
  * Strength [modifier]
  * Accuracy [modifier]
@@ -78,7 +77,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Strength influences health and it (as well as the other 2) determines the
  * levelling of the sub-class skills*/
 
-/*And then for the sub-classes
+/* And then for the sub-classes
  * Name [name]
  * Archery [modifier]
  * Blade [modifier]
@@ -99,11 +98,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ArpeegeeMain extends JavaPlugin {
    private Logger log = Logger.getLogger("This is MINECRAFT!");
-   private File playerFile;
-   private File classFile;
+   private File meleePlayerFile;
+   private File rangedPlayerFile;
+   private File magicPlayerFile;
    private File subClassFile;
-   private HashMap<String, RPGPlayer> playerMap;
-   private HashMap<String, RPGClass> classMap;
+   private HashMap<String, RPGMeleePlayer> meleePlayerMap;
+   private HashMap<String, RPGRangedPlayer> rangedPlayerMap;
+   private HashMap<String, RPGMagicPlayer> magicPlayerMap;
    private HashMap<String, RPGSubClass> subClassMap;
    private HashMap<String, String> berserkMap;
    private HashMap<Entity, String> projMap;
@@ -115,35 +116,10 @@ public class ArpeegeeMain extends JavaPlugin {
       
       // Create the directory if needed
       new File(getDataFolder().toString()).mkdir();
-      playerFile = new File(getDataFolder().toString() + "/player.txt");
-      classFile = new File(getDataFolder().toString() + "/classes.txt");
+      meleePlayerFile = new File(getDataFolder().toString() + "/meleePlayer.txt");
+      rangedPlayerFile = new File(getDataFolder().toString() + "/rangedPlayer.txt");
+      magicPlayerFile = new File(getDataFolder().toString() + "/magicPlayer.txt");
       subClassFile = new File(getDataFolder().toString() + "/subclasses.txt");
-      
-
-      classMap = new HashMap<String, RPGClass>();
-      // Load up the classes from file
-      try{
-         br = new BufferedReader(new FileReader(classFile));
-         
-         // Load class file data into the class HashMap
-         while((input = br.readLine()) != null){
-            String name;
-            st = new StringTokenizer(input, " ");
-            name = st.nextToken();
-            classMap.put(name, new RPGClass(name,
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken())));
-         }
-         br.close();
-
-      }catch(FileNotFoundException e){
-         log.info("No original Arpeegy class file found. One will be created for you");
-      }catch(IOException e){
-         log.info("Error reading Arpeegy class file");
-      }catch(Exception e){
-         log.info("Incorrectly formatted Arpeegy class file");
-      }
 
       subClassMap = new HashMap<String, RPGSubClass>();
       // Load up the sub-classes from file
@@ -172,20 +148,18 @@ public class ArpeegeeMain extends JavaPlugin {
          log.info("Incorrectly formatted Arpeegy sub-class file");
       }
 
-      playerMap = new HashMap<String, RPGPlayer>();
-      // Load up the players from file
+      meleePlayerMap = new HashMap<String, RPGMeleePlayer>();
+      // Load up the melee players from file
       try{
-         br = new BufferedReader(new FileReader(playerFile));
+         br = new BufferedReader(new FileReader(meleePlayerFile));
          
          // Load player file data into the player HashMap
          while((input = br.readLine()) != null){
             String name;
-            String rpgClass;
             RPGSubClass rpgSubClass;
             
             st = new StringTokenizer(input, " ");
             name = st.nextToken();
-            rpgClass = st.nextToken();
             rpgSubClass = new RPGSubClass(st.nextToken(),
                   Double.parseDouble(st.nextToken()),
                   Double.parseDouble(st.nextToken()),
@@ -193,23 +167,91 @@ public class ArpeegeeMain extends JavaPlugin {
                   Double.parseDouble(st.nextToken()),
                   Double.parseDouble(st.nextToken()));
             
-            if(classMap.get(rpgClass) == null)
-               log.warning("Player " + name + " has an unfound class name. Please fix this before they login.");
             if(subClassMap.get(rpgSubClass.getName()) == null)
                log.warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");
             
-            playerMap.put(name, new RPGPlayer(name, rpgClass, rpgSubClass,
+            meleePlayerMap.put(name, new RPGMeleePlayer(name, rpgSubClass,
                   Integer.parseInt(st.nextToken()),
                   Integer.parseInt(st.nextToken())));
          }
          br.close();
          
       }catch(FileNotFoundException e){
-         log.info("No original Arpeegy player file found. One will be created for you");
+         log.info("No original Arpeegy melee player file found. One will be created for you");
       }catch(IOException e){
-         log.info("Error reading Arpeegy player file");
+         log.info("Error reading Arpeegy melee player file");
       }catch(Exception e){
-         log.info("Incorrectly formatted Arpeegy player file");
+         log.info("Incorrectly formatted Arpeegy melee player file");
+      }
+
+      rangedPlayerMap = new HashMap<String, RPGRangedPlayer>();
+      // Load up the ranged players from file
+      try{
+         br = new BufferedReader(new FileReader(rangedPlayerFile));
+         
+         // Load ranged player file data into the ranged player HashMap
+         while((input = br.readLine()) != null){
+            String name;
+            RPGSubClass rpgSubClass;
+            
+            st = new StringTokenizer(input, " ");
+            name = st.nextToken();
+            rpgSubClass = new RPGSubClass(st.nextToken(),
+                  Double.parseDouble(st.nextToken()),
+                  Double.parseDouble(st.nextToken()),
+                  Double.parseDouble(st.nextToken()),
+                  Double.parseDouble(st.nextToken()),
+                  Double.parseDouble(st.nextToken()));
+            
+            if(subClassMap.get(rpgSubClass.getName()) == null)
+               log.warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");
+            
+            rangedPlayerMap.put(name, new RPGRangedPlayer(name, rpgSubClass,
+                  Integer.parseInt(st.nextToken())));
+         }
+         br.close();
+         
+      }catch(FileNotFoundException e){
+         log.info("No original Arpeegy ranged player file found. One will be created for you");
+      }catch(IOException e){
+         log.info("Error reading Arpeegy ranged player file");
+      }catch(Exception e){
+         log.info("Incorrectly formatted Arpeegy ranged player file");
+      }
+
+      magicPlayerMap = new HashMap<String, RPGMagicPlayer>();
+      // Load up the magic players from file
+      try{
+         br = new BufferedReader(new FileReader(magicPlayerFile));
+         
+         // Load magic player file data into the magic player HashMap
+         while((input = br.readLine()) != null){
+            String name;
+            RPGSubClass rpgSubClass;
+            
+            st = new StringTokenizer(input, " ");
+            name = st.nextToken();
+            rpgSubClass = new RPGSubClass(st.nextToken(),
+                  Double.parseDouble(st.nextToken()),
+                  Double.parseDouble(st.nextToken()),
+                  Double.parseDouble(st.nextToken()),
+                  Double.parseDouble(st.nextToken()),
+                  Double.parseDouble(st.nextToken()));
+            
+            if(subClassMap.get(rpgSubClass.getName()) == null)
+               log.warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");
+            
+            magicPlayerMap.put(name, new RPGMagicPlayer(name, rpgSubClass,
+                  Integer.parseInt(st.nextToken())));
+         }
+         br.close();
+         
+      }catch(FileNotFoundException e){
+         log.info("No original Arpeegy magic player file found. One will be created for you");
+      }catch(IOException e){
+         log.info("Error reading Arpeegy magic player file");
+      }catch(Exception e){
+         log.info("Incorrectly formatted Arpeegy magic player file");
       }
 
       //Set up listeners
@@ -220,7 +262,6 @@ public class ArpeegeeMain extends JavaPlugin {
       getServer().getPluginManager().registerEvents(new PlayerProjectile(this), this);
       getServer().getPluginManager().registerEvents(new PlayerSpeed(), this);
 
-      getCommand("displayclass").setExecutor(new Display(this));
       getCommand("displaysubclass").setExecutor(new Display(this));
       getCommand("iammelee").setExecutor(new Begin(this));
       getCommand("iamranged").setExecutor(new Begin(this));
@@ -237,14 +278,13 @@ public class ArpeegeeMain extends JavaPlugin {
       // Save ALL the data!
       BufferedWriter bw;
       try{
-         bw = new BufferedWriter(new FileWriter(playerFile));
+         bw = new BufferedWriter(new FileWriter(meleePlayerFile));
          
-         // Save all players to file
-         Iterator<Map.Entry<String, RPGPlayer>> it = playerMap.entrySet().iterator();
+         // Save all melee players to file
+         Iterator<Map.Entry<String, RPGMeleePlayer>> it = meleePlayerMap.entrySet().iterator();
          while(it.hasNext()){
-            Entry<String, RPGPlayer> player = it.next();
+            Entry<String, RPGMeleePlayer> player = it.next();
             bw.write(player.getKey() + " "
-                  + player.getValue().getClassName() + " "
                   + player.getValue().getSubClassObject().getName() + " "
                   + Double.toString(player.getValue().getSubClassObject().getArch()) + " "
                   + Double.toString(player.getValue().getSubClassObject().getBlade()) + " "
@@ -256,24 +296,49 @@ public class ArpeegeeMain extends JavaPlugin {
          }
          bw.close();
       }catch(IOException e){
-         log.info("Error saving Arpeegy players");
+         log.info("Error saving Arpeegy melee players");
       }
       
       try{
-         bw = new BufferedWriter(new FileWriter(classFile));
+         bw = new BufferedWriter(new FileWriter(rangedPlayerFile));
          
-         // Save classes to file
-         Iterator<Map.Entry<String, RPGClass>> it = classMap.entrySet().iterator();
+         // Save all ranged players to file
+         Iterator<Map.Entry<String, RPGRangedPlayer>> it = rangedPlayerMap.entrySet().iterator();
          while(it.hasNext()){
-            Entry<String, RPGClass> classIter = it.next();
-            bw.write(classIter.getKey() + " "
-                  + Double.toString(classIter.getValue().getStr()) + " "
-                  + Double.toString(classIter.getValue().getAcc()) + " "
-                  + Double.toString(classIter.getValue().getIntel()) + "\n");
+            Entry<String, RPGRangedPlayer> player = it.next();
+            bw.write(player.getKey() + " "
+                  + player.getValue().getSubClassObject().getName() + " "
+                  + Double.toString(player.getValue().getSubClassObject().getArch()) + " "
+                  + Double.toString(player.getValue().getSubClassObject().getBlade()) + " "
+                  + Double.toString(player.getValue().getSubClassObject().getBlock()) + " "
+                  + Double.toString(player.getValue().getSubClassObject().getEgg()) + " "
+                  + Double.toString(player.getValue().getSubClassObject().getSpell()) + " "
+                  + Integer.toString(player.getValue().getLevel()) + "\n");
          }
          bw.close();
       }catch(IOException e){
-         log.info("Error saving Arpeegy classes");
+         log.info("Error saving Arpeegy ranged players");
+      }
+      
+      try{
+         bw = new BufferedWriter(new FileWriter(magicPlayerFile));
+         
+         // Save all magic players to file
+         Iterator<Map.Entry<String, RPGMagicPlayer>> it = magicPlayerMap.entrySet().iterator();
+         while(it.hasNext()){
+            Entry<String, RPGMagicPlayer> player = it.next();
+            bw.write(player.getKey() + " "
+                  + player.getValue().getSubClassObject().getName() + " "
+                  + Double.toString(player.getValue().getSubClassObject().getArch()) + " "
+                  + Double.toString(player.getValue().getSubClassObject().getBlade()) + " "
+                  + Double.toString(player.getValue().getSubClassObject().getBlock()) + " "
+                  + Double.toString(player.getValue().getSubClassObject().getEgg()) + " "
+                  + Double.toString(player.getValue().getSubClassObject().getSpell()) + " "
+                  + Integer.toString(player.getValue().getLevel()) + "\n");
+         }
+         bw.close();
+      }catch(IOException e){
+         log.info("Error saving Arpeegy magic players");
       }
 
       try{
@@ -298,12 +363,16 @@ public class ArpeegeeMain extends JavaPlugin {
       log.info("LittleRPG v0.1 disabled");
    }
 
-   public HashMap<String, RPGPlayer> getPlayerMap() {
-      return playerMap;
+   public HashMap<String, RPGMeleePlayer> getMeleePlayerMap() {
+      return meleePlayerMap;
    }
-   
-   public HashMap<String, RPGClass> getClassMap() {
-      return classMap;
+
+   public HashMap<String, RPGRangedPlayer> getRangedPlayerMap() {
+      return rangedPlayerMap;
+   }
+
+   public HashMap<String, RPGMagicPlayer> getMagicPlayerMap() {
+      return magicPlayerMap;
    }
    
    public HashMap<String, RPGSubClass> getSubClassMap() {

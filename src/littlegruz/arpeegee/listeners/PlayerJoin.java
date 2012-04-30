@@ -18,7 +18,9 @@ public class PlayerJoin implements Listener{
    @EventHandler
    public void onPlayerJoin(PlayerJoinEvent event){
       Player playa = event.getPlayer();
-      if(plugin.getPlayerMap().get(event.getPlayer().getName()) == null){
+      if(plugin.getMeleePlayerMap().get(event.getPlayer().getName()) == null
+            && plugin.getRangedPlayerMap().get(event.getPlayer().getName()) == null
+            && plugin.getMagicPlayerMap().get(event.getPlayer().getName()) == null){
          playa.sendMessage("Welcome, " + playa.getName() + ", to LittleRPG.");
          playa.sendMessage("Before you begin your adventure, you should pick a class.");
          delayMessage(playa, "For those who wish to be able to converse with their prey, the melee class would be suitable. Type: '/iammelee'", 150);

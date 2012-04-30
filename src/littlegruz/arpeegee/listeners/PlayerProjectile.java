@@ -24,20 +24,22 @@ public class PlayerProjectile implements Listener{
          Player playa = (Player) event.getEntity();
 
          //event.setProjectile(playa.getWorld().spawnCreature(playa.getLocation(), EntityType.SHEEP));
-         plugin.getProjMap().put(event.getProjectile(),
-               Double.toString(plugin.getPlayerMap().get(playa.getName()).getSubClassObject().getArch()));
+         if(plugin.getRangedPlayerMap().get(playa.getName()) != null)
+            plugin.getProjMap().put(event.getProjectile(),
+                  Double.toString(plugin.getRangedPlayerMap().get(playa.getName()).getSubClassObject().getArch()));
          
       }
    }
    
    @EventHandler
    public void onEggThrow(PlayerEggThrowEvent event){
-      event.setHatching(false);
-      
       // Determining explosion chance by egg skill
-      int egg = (int) plugin.getPlayerMap().get(event.getPlayer().getName()).getSubClassObject().getEgg();
-      if(plugin.probabilityRoll(5 * egg)){
-         event.getEgg().getLocation().getWorld().createExplosion(event.getEgg().getLocation(), 1F, false);
+      if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null){
+         event.setHatching(false);
+         int egg = (int) plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getSubClassObject().getEgg();
+         if(plugin.probabilityRoll(5 * egg)){
+            event.getEgg().getLocation().getWorld().createExplosion(event.getEgg().getLocation(), 1F, false);
+         }
       }
    }
    

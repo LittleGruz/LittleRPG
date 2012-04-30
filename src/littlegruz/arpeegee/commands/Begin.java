@@ -1,7 +1,9 @@
 package littlegruz.arpeegee.commands;
 
 import littlegruz.arpeegee.ArpeegeeMain;
-import littlegruz.arpeegee.entities.RPGPlayer;
+import littlegruz.arpeegee.entities.RPGMagicPlayer;
+import littlegruz.arpeegee.entities.RPGMeleePlayer;
+import littlegruz.arpeegee.entities.RPGRangedPlayer;
 import littlegruz.arpeegee.entities.RPGSubClass;
 
 import org.bukkit.Material;
@@ -23,14 +25,14 @@ public class Begin implements CommandExecutor{
          String commandLabel, String[] args){
       if(sender.hasPermission("arpeegee.begin") && sender instanceof Player){
          if(cmd.getName().compareToIgnoreCase("iammelee") == 0){
-            plugin.getPlayerMap().put(sender.getName(), new RPGPlayer(sender.getName(), "Melee", new RPGSubClass("Warrior",1,0,0,1,0)));
+            plugin.getMeleePlayerMap().put(sender.getName(), new RPGMeleePlayer(sender.getName(), new RPGSubClass("Warrior",1,0,0,1,0)));
             plugin.getServer().broadcastMessage("Go forth to hack and slash to your hearts content! This weapon may help.");
             plugin.getServer().broadcastMessage("*pocketed*");
             //Give player iron sword
             ((Player) sender).getInventory().setItem(0, new ItemStack(Material.IRON_SWORD,1));
          }
          else if(cmd.getName().compareToIgnoreCase("iamranged") == 0){
-            plugin.getPlayerMap().put(sender.getName(), new RPGPlayer(sender.getName(), "Ranged", new RPGSubClass("Archer",1,0,0,1,0)));
+            plugin.getRangedPlayerMap().put(sender.getName(), new RPGRangedPlayer(sender.getName(), new RPGSubClass("Archer",1,0,0,1,0)));
             plugin.getServer().broadcastMessage("Time to prescribe some fatal acupuncture!");
             plugin.getServer().broadcastMessage("...Hey! Give me back my bow!");
             //Give player bow and arrows
@@ -39,7 +41,7 @@ public class Begin implements CommandExecutor{
             ((Player) sender).getInventory().setItem(10, new ItemStack(Material.ARROW,64));
          }
          else if(cmd.getName().compareToIgnoreCase("iammagic") == 0){
-            plugin.getPlayerMap().put(sender.getName(), new RPGPlayer(sender.getName(), "Magic", new RPGSubClass("Wizard",1,0,0,1,0)));
+            plugin.getMagicPlayerMap().put(sender.getName(), new RPGMagicPlayer(sender.getName(), new RPGSubClass("Wizard",1,0,0,1,0)));
             plugin.getServer().broadcastMessage("Aight, you put on your robe and wizard hat.");
             plugin.getServer().broadcastMessage("*knowledged*");
             //Give player yellow dye

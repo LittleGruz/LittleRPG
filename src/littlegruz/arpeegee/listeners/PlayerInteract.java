@@ -39,13 +39,14 @@ public class PlayerInteract implements Listener{
 
       // Casting weapon for "Flash"
       if(playa.getItemInHand().getData().toString().contains("MAGENTA DYE")
-            && event.getAction().toString().contains("RIGHT_CLICK")){
+            && event.getAction().toString().contains("RIGHT_CLICK")
+            && plugin.getMagicPlayerMap().get(playa.getName()) != null){
          HashSet<Byte> hs = new HashSet<Byte>();
          int spell;
          Block block;
          Location loc;
          
-         spell = (int) plugin.getPlayerMap().get(playa.getName()).getSubClassObject().getSpell();
+         spell = (int) plugin.getMagicPlayerMap().get(playa.getName()).getSubClassObject().getSpell();
    
          hs.add((byte)0); //Air
          hs.add((byte)8); //Flowing water
@@ -84,23 +85,26 @@ public class PlayerInteract implements Listener{
          event.setCancelled(true);
       }
       // Lightning (single target) spell
-      else if(playa.getItemInHand().getData().toString().contains("YELLOW DYE")){
+      else if(playa.getItemInHand().getData().toString().contains("YELLOW DYE")
+            && plugin.getMagicPlayerMap().get(playa.getName()) != null){
          callThor(playa, false);
          event.setCancelled(true);
       }
       // Lightning (area) spell
-      else if(playa.getItemInHand().getType().compareTo(Material.BLAZE_ROD) == 0){
+      else if(playa.getItemInHand().getType().compareTo(Material.BLAZE_ROD) == 0
+            && plugin.getMagicPlayerMap().get(playa.getName()) != null){
          callThor(playa, true);
          event.setCancelled(true);
       }
-      // Melancholy (high intelligence only version of rage). Spawns sheep around mage.
+      // Melancholy. Spawns sheep around mage.
       else if(playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
-            && event.getAction().toString().contains("RIGHT_CLICK")){
+            && event.getAction().toString().contains("RIGHT_CLICK")
+            && plugin.getMagicPlayerMap().get(playa.getName()) != null){
          int level;
          
          Location loc = event.getPlayer().getLocation();
          
-         level = (int) plugin.getPlayerMap().get(playa.getName()).getLevel();
+         level = (int) plugin.getMagicPlayerMap().get(playa.getName()).getLevel();
          if(level >= 10){
             loc.setY(loc.getY() + 1.5);
             loc.setX(loc.getX() + 1);
@@ -118,7 +122,8 @@ public class PlayerInteract implements Listener{
       // This fireball creation code is based off MadMatt199's code (https://github.com/madmatt199/GhastBlast)
       // Casting weapon to launch a fireball
       else if(playa.getItemInHand().getData().toString().contains("RED DYE")
-            && event.getAction().toString().contains("RIGHT_CLICK")){
+            && event.getAction().toString().contains("RIGHT_CLICK")
+            && plugin.getMagicPlayerMap().get(playa.getName()) != null){
          Vector dir = playa.getLocation().getDirection().multiply(10);
          Location loc = playa.getLocation();
          
@@ -140,33 +145,42 @@ public class PlayerInteract implements Listener{
       }
       // Active berserk mode if player has gained enough rage
       else if(event.getAction().toString().contains("RIGHT_CLICK")
+            && plugin.getMeleePlayerMap().get(playa.getName()) != null
             && (playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
                   || playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0)){
          final String pName = playa.getName();
          
-         if(plugin.getPlayerMap().get(pName).getRage() == 100){
-            playa.sendMessage("RAAAAGE (Berserker mode activated)");
-            plugin.getPlayerMap().get(pName).setRage(0);
-            plugin.getBerserkMap().put(pName, pName);
-            
-            // 10 seconds of Berserker mode (increased damage and sword bonuses)
-            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-               public void run() {
-                  plugin.getBerserkMap().remove(pName);
-                  plugin.getServer().getPlayer(pName).sendMessage("Berserker mode deactivated");
-               }
-           }, 200L);
+         if(plugin.getMeleePlayerMap().get(pName) != null){
+            if(plugin.getMeleePlayerMap().get(pName).getRage() == 100){
+               playa.sendMessage("RAAAAGE (Berserker mode activated)");
+               plugin.getMeleePlayerMap().get(pName).setRage(0);
+               plugin.getBerserkMap().put(pName, pName);
+               
+               // 10 seconds of Berserker mode (increased damage and sword bonuses)
+               plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                  public void run() {
+                     plugin.getBerserkMap().remove(pName);
+                     plugin.getServer().getPlayer(pName).sendMessage("Berserker mode deactivated");
+                  }
+              }, 200L);
+            }
+            else
+               playa.sendMessage("Not enough rage. Current rage: " + Integer.toString(plugin.getMeleePlayerMap().get(pName).getRage()));
          }
          else
-            playa.sendMessage("Not enough rage. Current rage: " + Integer.toString(plugin.getPlayerMap().get(playa.getName()).getRage()));
+            playa.sendMessage("Your class does not use rage...so why do you have this weapon?");
       }
-      else if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0)
+      else if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
+            && plugin.getMeleePlayerMap().get(playa.getName()) != null)
          event.getPlayer().getInventory().setItem(playa.getInventory().getHeldItemSlot(), new ItemStack(Material.IRON_SWORD,1));
-      else if(playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0)
+      else if(playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0
+            && plugin.getMeleePlayerMap().get(playa.getName()) != null)
          event.getPlayer().getInventory().setItem(playa.getInventory().getHeldItemSlot(), new ItemStack(Material.DIAMOND_SWORD,1));
-      else if(playa.getItemInHand().getType().compareTo(Material.BOW) == 0)
+      else if(playa.getItemInHand().getType().compareTo(Material.BOW) == 0
+            && plugin.getRangedPlayerMap().get(playa.getName()) != null)
          event.getPlayer().getInventory().setItem(playa.getInventory().getHeldItemSlot(), new ItemStack(Material.BOW,1));
-      else if(playa.getItemInHand().getType().compareTo(Material.EGG) == 0)
+      else if(playa.getItemInHand().getType().compareTo(Material.EGG) == 0
+            && plugin.getRangedPlayerMap().get(playa.getName()) != null)
          event.getPlayer().getInventory().setItem(playa.getInventory().getHeldItemSlot(), new ItemStack(Material.EGG,1));
       
    }
@@ -183,7 +197,7 @@ public class PlayerInteract implements Listener{
       ArrayList<LivingEntity> enemies = new ArrayList<LivingEntity>();
       
       // Base range is 10 blocks plus the casters spell ability
-      spell = (int) plugin.getPlayerMap().get(playa.getName()).getSubClassObject().getSpell();
+      spell = (int) plugin.getMagicPlayerMap().get(playa.getName()).getSubClassObject().getSpell();
       range = 10 + spell;
       
       for(Entity e : playa.getNearbyEntities(range, range, range)) {

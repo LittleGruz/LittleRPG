@@ -1,7 +1,9 @@
 package littlegruz.arpeegee.listeners;
 
 import littlegruz.arpeegee.ArpeegeeMain;
-import littlegruz.arpeegee.entities.RPGPlayer;
+import littlegruz.arpeegee.entities.RPGMagicPlayer;
+import littlegruz.arpeegee.entities.RPGMeleePlayer;
+import littlegruz.arpeegee.entities.RPGRangedPlayer;
 
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -15,27 +17,31 @@ public class PlayerLevel implements Listener{
    public PlayerLevel(ArpeegeeMain instance){
       plugin = instance;
    }
-   
+
+   // Give new weapons if the necessary level is reached
    @EventHandler
    public void onPlayerLevel(PlayerLevelChangeEvent event){
-      RPGPlayer rpgPlaya;
-      
-      rpgPlaya = plugin.getPlayerMap().get(event.getPlayer().getName());
-      rpgPlaya.setLevel(event.getNewLevel());
-      
-      // Give new weapons if the necessary level is reached
       // New weapon for the melee class
-      if(rpgPlaya.getClassName().compareTo("Melee") == 0){
-         if(rpgPlaya.getLevel() == 5)
+      if(plugin.getMeleePlayerMap().get(event.getPlayer().getName()) != null){
+         RPGMeleePlayer rpgPlaya = plugin.getMeleePlayerMap().get(event.getPlayer().getName());
+         rpgPlaya.setLevel(event.getNewLevel());
+         
+         if(plugin.getMeleePlayerMap().get(event.getPlayer().getName()).getLevel() == 5)
             event.getPlayer().getInventory().setItem(1, new ItemStack(Material.DIAMOND_SWORD,1));
       }
       // New weapon for the ranged class
-      else if(rpgPlaya.getClassName().compareTo("Ranged") == 0){
-         if(rpgPlaya.getLevel() == 7)
+      else if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null){
+         RPGRangedPlayer rpgPlaya = plugin.getRangedPlayerMap().get(event.getPlayer().getName());
+         rpgPlaya.setLevel(event.getNewLevel());
+         
+         if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getLevel() == 7)
             event.getPlayer().getInventory().setItem(1, new ItemStack(Material.EGG,1));
       }
       // New weapons for the magic class
-      else if(rpgPlaya.getClassName().compareTo("Magic") == 0){
+      else if(plugin.getMagicPlayerMap().get(event.getPlayer().getName()) != null){
+         RPGMagicPlayer rpgPlaya = plugin.getMagicPlayerMap().get(event.getPlayer().getName());
+         rpgPlaya.setLevel(event.getNewLevel());
+         
          // Create the base dye type first
          ItemStack is = new ItemStack(351,1);
          if(rpgPlaya.getLevel() == 3){

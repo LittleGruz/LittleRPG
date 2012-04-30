@@ -18,15 +18,8 @@ public class Remove implements CommandExecutor {
    public boolean onCommand(CommandSender sender, Command cmd,
          String commandLabel, String[] args) {
       if(sender.hasPermission("arpeegee.remove")){
-         // Remove a class
-         if(cmd.getName().compareToIgnoreCase("removeclass") == 0){
-            if(plugin.getClassMap().remove(args[0]) == null)
-               sender.sendMessage("A class with the name \"" + args[0] + "\" does not exist");
-            else
-               sender.sendMessage("Removal successful");
-         }
          // Remove a sub-class
-         else if(cmd.getName().compareToIgnoreCase("removesubclass") == 0){
+         if(cmd.getName().compareToIgnoreCase("removesubclass") == 0){
             if(plugin.getSubClassMap().remove(args[0]) == null)
                sender.sendMessage("A sub-class with the name \"" + args[0] + "\" does not exist");
             else

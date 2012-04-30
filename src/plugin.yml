@@ -3,9 +3,6 @@ main: littlegruz.arpeegee.ArpeegeeMain
 version: 0.1
 
 commands:
-   displayclass:
-      description: Displays all classes or the stats of just one
-      usage: /dispayclass [name]
    displaysubclass:
       description: Displays all sub-classes or the stats of just one
       usage: /displaysubclass [name]

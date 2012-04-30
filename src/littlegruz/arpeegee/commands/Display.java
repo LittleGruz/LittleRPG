@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import littlegruz.arpeegee.ArpeegeeMain;
-import littlegruz.arpeegee.entities.RPGClass;
 import littlegruz.arpeegee.entities.RPGSubClass;
 
 import org.bukkit.command.Command;
@@ -22,33 +21,11 @@ public class Display implements CommandExecutor{
    @Override
    public boolean onCommand(CommandSender sender, Command cmd,
          String commandLabel, String[] args){
-      RPGClass rpgClass;
       RPGSubClass rpgSubClass;
       
       if(sender.hasPermission("arpeegee.display")){
-         // Display class info
-         if(cmd.getName().compareToIgnoreCase("displayclass") == 0){
-            // Just display the names of the classes
-            if(args.length == 0){
-               sender.sendMessage("List of all the classes:");
-               Iterator<Map.Entry<String, RPGClass>> it = plugin.getClassMap().entrySet().iterator();
-               while(it.hasNext()){
-                  Entry<String, RPGClass> classIter = it.next();
-                  sender.sendMessage(classIter.getKey());
-               }
-               sender.sendMessage("Use /displayclass [name] to see the stats");
-            }
-            // Display the statistics of the selected class
-            else{
-               rpgClass = plugin.getClassMap().get(args[0]);
-               sender.sendMessage("The " + args[0] + " class stats:");
-               sender.sendMessage("Strength: " + rpgClass.getStr());
-               sender.sendMessage("Accuracy: " + rpgClass.getAcc());
-               sender.sendMessage("Intelligence: " + rpgClass.getIntel());
-            }
-         }
          // Display sub-class info
-         else if(cmd.getName().compareToIgnoreCase("displaysubclass") == 0){
+         if(cmd.getName().compareToIgnoreCase("displaysubclass") == 0){
             // Just display the names of the sub-classes
             if(args.length == 0){
                sender.sendMessage("List of all the sub-classes:");

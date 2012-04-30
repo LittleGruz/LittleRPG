@@ -36,22 +36,25 @@ public class EntityDamageEntity implements Listener {
          LivingEntity victim = (LivingEntity) event.getEntity();
          
          // Heal spell
-         if(playa.getItemInHand().getData().toString().contains("WHITE DYE")){
+         if(playa.getItemInHand().getData().toString().contains("WHITE DYE")
+               && plugin.getMagicPlayerMap().get(playa.getName()) != null){
             event.setCancelled(true);
             healSpell(playa, victim, 1);
          }
          // Advanced heal spell
-         else if(playa.getItemInHand().getData().toString().contains("BONE")){
+         else if(playa.getItemInHand().getData().toString().contains("BONE")
+               && plugin.getMagicPlayerMap().get(playa.getName()) != null){
             event.setCancelled(true);
             healSpell(playa, victim, 2);
          }
          // Damaged by a diamond sword (crit sword)
-         else if(playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0){
+         else if(playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0
+               && plugin.getMeleePlayerMap().get(playa.getName()) != null){
             int blade, crit, level;
             
             event.setCancelled(true);
-            blade = (int) plugin.getPlayerMap().get(playa.getName()).getSubClassObject().getBlade();
-            level = (int) plugin.getPlayerMap().get(playa.getName()).getLevel();
+            blade = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlade();
+            level = (int) plugin.getMeleePlayerMap().get(playa.getName()).getLevel();
             
             /* If player is in Berserk mode, attack has an increased chance of
              * crit (double damage) otherwise the crit is (5 * blade skill)%*/
@@ -68,36 +71,37 @@ public class EntityDamageEntity implements Listener {
                else
                   crit = 1;
                victim.damage(blade * crit);
-               plugin.getPlayerMap().get(playa.getName()).addRage(5);
+               plugin.getMeleePlayerMap().get(playa.getName()).addRage(5);
             }
             if(crit == 2)
                playa.sendMessage("*crit*");
             
-            playa.getItemInHand().setDurability((short) 0);
+            //playa.getItemInHand().setDurability((short) 0);
          }
          // Damaged by an iron sword (block sword)
          else if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0){
             int blade;
             
             event.setCancelled(true);
-            blade = (int) plugin.getPlayerMap().get(playa.getName()).getSubClassObject().getBlade();
+            blade = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlade();
 
             victim.damage(blade);
 
             if(plugin.getBerserkMap().get(playa.getName()) == null)
-               plugin.getPlayerMap().get(playa.getName()).addRage(5);
+               plugin.getMeleePlayerMap().get(playa.getName()).addRage(5);
             
-            playa.getItemInHand().setDurability((short) 0);
+            //playa.getItemInHand().setDurability((short) 0);
             
          }
       }
       // Player blocking an attack
       else if(event.getEntity() instanceof Player){
          Player playa = (Player) event.getEntity();
-         if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0){
+         if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
+               && plugin.getMeleePlayerMap().get(playa.getName()) != null){
             int block;
             
-            block = (int) plugin.getPlayerMap().get(playa.getName()).getSubClassObject().getBlock();
+            block = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlock();
             if(plugin.probabilityRoll(5 * block)){
                event.setCancelled(true);
                playa.sendMessage("*blocked*");
@@ -148,9 +152,9 @@ public class EntityDamageEntity implements Listener {
    }
    
    private void healSpell(Player playa, LivingEntity fortunate, int adv){
-      int spell = (int) plugin.getPlayerMap().get(playa.getName()).getSubClassObject().getSpell();
-      if(fortunate instanceof Animals){
-         playa.playEffect(fortunate.getLocation(), Effect.SMOKE, 1); //Change when Pig is changed to Player
+      int spell = (int) plugin.getMagicPlayerMap().get(playa.getName()).getSubClassObject().getSpell();
+      if(fortunate instanceof Animals){ //Change on release
+         playa.playEffect(fortunate.getLocation(), Effect.SMOKE, 1);
          if(fortunate.getHealth() + (spell * adv) > fortunate.getMaxHealth())
             fortunate.setHealth(fortunate.getMaxHealth());
          else
