@@ -51,7 +51,8 @@ public class PlayerInteract implements Listener{
             ItemStack is = new ItemStack(351,1);
             is.setDurability((short)13);
             playa.getInventory().remove(is);
-            plugin.giveCooldown(playa, "tele", 5);
+            plugin.giveCooldown(playa, "tele", 10);
+            plugin.getMagicPlayerMap().get(playa.getName()).setTeleportReadiness(false);
          }
          
          HashSet<Byte> hs = new HashSet<Byte>();
@@ -108,7 +109,8 @@ public class PlayerInteract implements Listener{
             ItemStack is = new ItemStack(351,1);
             is.setDurability((short)11);
             playa.getInventory().remove(is);
-            plugin.giveCooldown(playa, "light", 5);
+            plugin.giveCooldown(playa, "light", 1.5);
+            plugin.getMagicPlayerMap().get(playa.getName()).setLightningReadiness(false);
          }
          
          callThor(playa, false);
@@ -124,7 +126,8 @@ public class PlayerInteract implements Listener{
          }
          else{
             playa.getInventory().remove(Material.BLAZE_ROD);
-            plugin.giveCooldown(playa, "advLight", 5);
+            plugin.giveCooldown(playa, "advLight", 4);
+            plugin.getMagicPlayerMap().get(playa.getName()).setAdvLightningReadiness(false);
          }
          
          callThor(playa, true);
@@ -141,7 +144,8 @@ public class PlayerInteract implements Listener{
          }
          else{
             playa.getInventory().remove(Material.WHEAT);
-            plugin.giveCooldown(playa, "baaa", 5);
+            plugin.giveCooldown(playa, "baaa", 15);
+            plugin.getMagicPlayerMap().get(playa.getName()).setSheepReadiness(false);
          }
          
          int level;
@@ -177,6 +181,7 @@ public class PlayerInteract implements Listener{
             is.setDurability((short)1);
             playa.getInventory().remove(is);
             plugin.giveCooldown(playa, "fire", 5);
+            plugin.getMagicPlayerMap().get(playa.getName()).setFireballReadiness(false);
          }
          
          Vector dir = playa.getLocation().getDirection().multiply(10);
@@ -237,8 +242,10 @@ public class PlayerInteract implements Listener{
             && plugin.getRangedPlayerMap().get(playa.getName()) != null){
          if(!plugin.getRangedPlayerMap().get(playa.getName()).isEggReady())
             playa.sendMessage("Egg is still on cooldown");
-         else
+         else{
             plugin.giveCooldown(playa, 5);
+            plugin.getRangedPlayerMap().get(playa.getName()).setEggReadiness(false);
+         }
       }
       
    }

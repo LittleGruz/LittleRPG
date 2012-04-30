@@ -25,7 +25,7 @@ public class Begin implements CommandExecutor{
          String commandLabel, String[] args){
       if(sender.hasPermission("arpeegee.begin") && sender instanceof Player){
          if(cmd.getName().compareToIgnoreCase("iammelee") == 0){
-            plugin.getMeleePlayerMap().put(sender.getName(), new RPGMeleePlayer(sender.getName(), new RPGSubClass("Warrior",1,0,0,1,0)));
+            plugin.getMeleePlayerMap().put(sender.getName(), new RPGMeleePlayer(sender.getName(), new RPGSubClass("Warrior",0,1,1,0,0)));
             plugin.getServer().broadcastMessage("Go forth to hack and slash to your hearts content! This weapon may help.");
             plugin.getServer().broadcastMessage("*pocketed*");
             //Give player iron sword
@@ -41,7 +41,7 @@ public class Begin implements CommandExecutor{
             ((Player) sender).getInventory().setItem(10, new ItemStack(Material.ARROW,64));
          }
          else if(cmd.getName().compareToIgnoreCase("iammagic") == 0){
-            plugin.getMagicPlayerMap().put(sender.getName(), new RPGMagicPlayer(sender.getName(), new RPGSubClass("Wizard",1,0,0,1,0)));
+            plugin.getMagicPlayerMap().put(sender.getName(), new RPGMagicPlayer(sender.getName(), new RPGSubClass("Wizard",0,0,0,0,1)));
             plugin.getServer().broadcastMessage("Aight, you put on your robe and wizard hat.");
             plugin.getServer().broadcastMessage("*knowledged*");
             //Give player yellow dye

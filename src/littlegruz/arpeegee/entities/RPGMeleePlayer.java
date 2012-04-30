@@ -2,16 +2,19 @@ package littlegruz.arpeegee.entities;
 
 public class RPGMeleePlayer extends RPGPlayer{
    private int rage;
+   private boolean attack;
    
    public RPGMeleePlayer(String name, RPGSubClass subClassObj){
       super(name, subClassObj);
       rage = 0;
+      attack = true;
    }
 
    public RPGMeleePlayer(String name, RPGSubClass subClassObj,
          int level, int rage){
       super(name, subClassObj, level);
       this.rage = rage;
+      attack = true;
    }
 
    public int getRage(){
@@ -29,4 +32,11 @@ public class RPGMeleePlayer extends RPGPlayer{
          rage += add;
    }
 
+   public boolean isAttackReady(){
+      return attack;
+   }
+
+   public void setAttackReadiness(boolean attack){
+      this.attack = attack;
+   }
 }

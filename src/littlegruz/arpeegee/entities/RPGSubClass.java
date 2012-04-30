@@ -37,4 +37,24 @@ public class RPGSubClass {
    public double getSpell() {
       return spell;
    }
+
+   public void setArch(double arch){
+      this.arch = arch;
+   }
+
+   public void setBlade(double blade){
+      this.blade = blade;
+   }
+
+   public void setBlock(double block){
+      this.block = block;
+   }
+
+   public void setEgg(double egg){
+      this.egg = egg;
+   }
+
+   public void setSpell(double spell){
+      this.spell = spell;
+   }
 }

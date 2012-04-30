@@ -27,8 +27,9 @@ public class PlayerJoin implements Listener{
          delayMessage(playa, "If you would rather pick enemies off from a perch where they can not hit you, the ranged class is most appropriate. Type: '/iamranged'", 300);
          delayMessage(playa, "But if spewing arcane energies from your fingertips appeals to you, the magic class is your best bet. Type: '/iammagic'", 450);
       }
-      else
+      else{
          playa.sendMessage("Welcome back, brave adventurer.");
+      }
    }
    
    private void delayMessage(final Player playa, final String msg, long delay){

@@ -49,6 +49,7 @@ public class EntityDamageEntity implements Listener {
                is.setDurability((short)15);
                playa.getInventory().remove(is);
                plugin.giveCooldown(playa, "heal", 5);
+               plugin.getMagicPlayerMap().get(playa.getName()).setHealReadiness(false);
             }
             healSpell(playa, victim, 1);
          }
@@ -62,16 +63,26 @@ public class EntityDamageEntity implements Listener {
             }
             else{
                playa.getInventory().remove(Material.BONE);
-               plugin.giveCooldown(playa, "advHeal", 5);
+               plugin.giveCooldown(playa, "advHeal", 6);
+               plugin.getMagicPlayerMap().get(playa.getName()).setAdvHealReadiness(false);
             }
             healSpell(playa, victim, 2);
          }
-         // Damaged by a diamond sword (crit sword)
+         // Damage by a diamond sword (crit sword)
          else if(playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0
                && plugin.getMeleePlayerMap().get(playa.getName()) != null){
             int blade, crit, level;
             
             event.setCancelled(true);
+            
+            // Check if the player can swing yet
+            if(plugin.getMeleePlayerMap().get(playa.getName()).isAttackReady()){
+               plugin.giveCooldown(plugin.getMeleePlayerMap().get(playa.getName()), 1);
+               plugin.getMeleePlayerMap().get(playa.getName()).setAttackReadiness(false);
+            }
+            else
+               return;
+            
             blade = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlade();
             level = (int) plugin.getMeleePlayerMap().get(playa.getName()).getLevel();
             
@@ -97,11 +108,20 @@ public class EntityDamageEntity implements Listener {
             
             //playa.getItemInHand().setDurability((short) 0);
          }
-         // Damaged by an iron sword (block sword)
+         // Damage by an iron sword (block sword)
          else if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0){
             int blade;
             
             event.setCancelled(true);
+
+            // Check if the player can swing yet
+            if(plugin.getMeleePlayerMap().get(playa.getName()).isAttackReady()){
+               plugin.giveCooldown(plugin.getMeleePlayerMap().get(playa.getName()), 1);
+               plugin.getMeleePlayerMap().get(playa.getName()).setAttackReadiness(false);
+            }
+            else
+               return;
+            
             blade = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlade();
 
             victim.damage(blade);
