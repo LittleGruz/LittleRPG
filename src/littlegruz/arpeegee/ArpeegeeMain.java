@@ -21,11 +21,12 @@ import littlegruz.arpeegee.entities.RPGMagicPlayer;
 import littlegruz.arpeegee.entities.RPGMeleePlayer;
 import littlegruz.arpeegee.entities.RPGRangedPlayer;
 import littlegruz.arpeegee.entities.RPGSubClass;
-import littlegruz.arpeegee.listeners.EnemyDeath;
+import littlegruz.arpeegee.listeners.EnemyDeaths;
 import littlegruz.arpeegee.listeners.EntityDamageEntity;
 import littlegruz.arpeegee.listeners.PlayerInteract;
 import littlegruz.arpeegee.listeners.PlayerJoin;
 import littlegruz.arpeegee.listeners.PlayerProjectile;
+import littlegruz.arpeegee.listeners.PlayerRespawn;
 import littlegruz.arpeegee.listeners.PlayerSpeed;
 
 import org.bukkit.Material;
@@ -62,7 +63,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * A certain armour equip can make user run faster
  * Cooldowns for spells DONE
  * Levels PARTIAL (no balancing)
- * Reduced damage taken by Warriors
+ * Reduced damage taken by Warriors DONE
  * Weapon assignment DONE */
 
 /* The file which the classes are stored would have a format like the following
@@ -258,11 +259,12 @@ public class ArpeegeeMain extends JavaPlugin {
       }
 
       //Set up listeners
-      getServer().getPluginManager().registerEvents(new EnemyDeath(), this);
+      getServer().getPluginManager().registerEvents(new EnemyDeaths(), this);
       getServer().getPluginManager().registerEvents(new EntityDamageEntity(this), this);
       getServer().getPluginManager().registerEvents(new PlayerInteract(this), this);
       getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
       getServer().getPluginManager().registerEvents(new PlayerProjectile(this), this);
+      getServer().getPluginManager().registerEvents(new PlayerRespawn(this), this);
       getServer().getPluginManager().registerEvents(new PlayerSpeed(), this);
 
       getCommand("displaysubclass").setExecutor(new Display(this));

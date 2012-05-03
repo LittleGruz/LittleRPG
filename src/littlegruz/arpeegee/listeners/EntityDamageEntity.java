@@ -133,17 +133,29 @@ public class EntityDamageEntity implements Listener {
             
          }
       }
-      // Player blocking an attack
+      // Melee player taking (possibly reduced) damage and blocking an attack
       else if(event.getEntity() instanceof Player){
          Player playa = (Player) event.getEntity();
-         if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
-               && plugin.getMeleePlayerMap().get(playa.getName()) != null){
-            int block;
+         if(plugin.getMeleePlayerMap().get(playa.getName()) != null){
+            int dmg;
+            if(playa.getLevel() < 5)
+               dmg = event.getDamage();
+            else if(playa.getLevel() < 10)
+               dmg = (int) (event.getDamage() * (event.getDamage() * 0.67) / event.getDamage());
+            else
+               dmg = (int) (event.getDamage() * (event.getDamage() * 0.5) / event.getDamage());
+            event.setDamage(dmg);
             
-            block = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlock();
-            if(plugin.probabilityRoll(5 * block)){
-               event.setCancelled(true);
-               playa.sendMessage("*blocked*");
+            // Damage block check
+            if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0){
+               int block;
+               
+               block = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlock();
+               if(plugin.probabilityRoll(5 * block)){
+                  event.setCancelled(true);
+                  playa.sendMessage("*blocked*");
+                  return;
+               }
             }
          }
       }

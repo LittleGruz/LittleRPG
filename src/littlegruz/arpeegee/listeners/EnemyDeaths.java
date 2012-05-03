@@ -21,7 +21,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-public class EnemyDeath implements Listener{
+public class EnemyDeaths implements Listener{
    @EventHandler
    public void onEnemyDeath(EntityDeathEvent event){
       if(event.getEntity() instanceof Animals
@@ -30,7 +30,7 @@ public class EnemyDeath implements Listener{
          
          event.setDroppedExp(0);
          
-         //TODO Determine base exp values for creatures here
+         //Base exp values for creatures here
          exp = (float) 0.10;
          if(event.getEntity() instanceof Animals)
             exp = (float) 0.05;
