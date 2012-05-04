@@ -42,7 +42,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 /* Create a custom RPG where the admin creates classes with the desired power
  * levels along with wizz-bang spells and attributes
  * 
- * If blade/archery/egg is high enough, chance (or increase chance) of crit
+ * If blade/archery/egg is high enough, chance (or increase chance) of crit DONE
  * Add spells which get opened up as the player levels DONE
  * 
  * Spells (so far): DONE
@@ -55,7 +55,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * 
  * Diamond sword gives chance for critical hits DONE
  * Iron sword gives chance for dodge DONE
- * Rage mechanic gives increased sword bonuses and extra damage DONE
+ * Rage mechanic gives increased sword bonuses, extra damage and speed DONE
  * Right click with sword will activate rage if rage meter is full DONE
  * 
  * Can fire bow quicker than egg but with less damage than egg DONE
@@ -65,21 +65,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Levels PARTIAL (no balancing)
  * Reduced damage taken by Warriors DONE
  * Weapon assignment DONE */
-
-/* The file which the classes are stored would have a format like the following
- * Name [name]
- * Strength [modifier]
- * Accuracy [modifier]
- * Intelligence [modifier]
- * 
- * e.g. For a warrior class it may look like this (after a few levels)
- * Name Warrior
- * Strength 3
- * Accuracy 0.5
- * Intelligence 0.5
- * 
- * Strength influences health and it (as well as the other 2) determines the
- * levelling of the sub-class skills*/
 
 /* And then for the sub-classes
  * Name [name]

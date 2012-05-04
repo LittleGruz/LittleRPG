@@ -48,7 +48,7 @@ public class EntityDamageEntity implements Listener {
                ItemStack is = new ItemStack(351,1);
                is.setDurability((short)15);
                playa.getInventory().remove(is);
-               plugin.giveCooldown(playa, "heal", 5);
+               plugin.giveCooldown(playa, "heal", 7);
                plugin.getMagicPlayerMap().get(playa.getName()).setHealReadiness(false);
             }
             healSpell(playa, victim, 1);
@@ -63,7 +63,7 @@ public class EntityDamageEntity implements Listener {
             }
             else{
                playa.getInventory().remove(Material.BONE);
-               plugin.giveCooldown(playa, "advHeal", 6);
+               plugin.giveCooldown(playa, "advHeal", 11);
                plugin.getMagicPlayerMap().get(playa.getName()).setAdvHealReadiness(false);
             }
             healSpell(playa, victim, 2);
@@ -96,7 +96,7 @@ public class EntityDamageEntity implements Listener {
                victim.damage((blade + (level / 2)) * crit);
             }
             else{
-               if(plugin.probabilityRoll(5 * (blade)))
+               if(plugin.probabilityRoll(5 * blade))
                   crit = 2;
                else
                   crit = 1;
@@ -133,11 +133,14 @@ public class EntityDamageEntity implements Listener {
             
          }
       }
-      // Melee player taking (possibly reduced) damage and blocking an attack
+      // Melee player taking (reduced) damage and possibly blocking an attack
       else if(event.getEntity() instanceof Player){
          Player playa = (Player) event.getEntity();
          if(plugin.getMeleePlayerMap().get(playa.getName()) != null){
             int dmg;
+            
+            /* The amount that is decreased from the damage to be taken depends
+             * on the players level */
             if(playa.getLevel() < 5)
                dmg = event.getDamage();
             else if(playa.getLevel() < 10)

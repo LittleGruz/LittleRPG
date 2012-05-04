@@ -19,8 +19,11 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.SheepDyeWoolEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
@@ -217,7 +220,9 @@ public class PlayerInteract implements Listener{
                plugin.getMeleePlayerMap().get(pName).setRage(0);
                plugin.getBerserkMap().put(pName, pName);
                
-               // 10 seconds of Berserker mode (increased damage and sword bonuses)
+               /* 10 seconds of Berserker mode (increased damage, speed and
+                * sword bonuses) */
+               event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 200, 1));
                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                   public void run() {
                      plugin.getBerserkMap().remove(pName);
@@ -250,6 +255,11 @@ public class PlayerInteract implements Listener{
          }
       }
       
+   }
+   
+   @EventHandler
+   public void cancelSheepDye(SheepDyeWoolEvent event){
+      event.setCancelled(true);
    }
    
    /* The ranged entity seeking code is borrowed from code listed by

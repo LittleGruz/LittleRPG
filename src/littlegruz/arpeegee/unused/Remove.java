@@ -1,4 +1,4 @@
-package littlegruz.arpeegee.commands;
+package littlegruz.arpeegee.unused;
 
 import littlegruz.arpeegee.ArpeegeeMain;
 

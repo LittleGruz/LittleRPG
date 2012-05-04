@@ -19,13 +19,17 @@ public class PlayerLevel implements Listener{
       plugin = instance;
    }
 
-   // Give new weapons if the necessary level is reached
+   // Give new weapons if the necessary level is reached TODO Increase sub-class stats
    @EventHandler
    public void onPlayerLevel(PlayerLevelChangeEvent event){
       // New weapon for the melee class
       if(plugin.getMeleePlayerMap().get(event.getPlayer().getName()) != null){
          RPGMeleePlayer rpgPlaya = plugin.getMeleePlayerMap().get(event.getPlayer().getName());
+
+         // Increase player stats
          levelUp(rpgPlaya, event);
+         rpgPlaya.getSubClassObject().setBlade(rpgPlaya.getSubClassObject().getBlade() + 0.2);
+         rpgPlaya.getSubClassObject().setBlock(rpgPlaya.getSubClassObject().getBlock() + 0.5);
          
          if(rpgPlaya.getLevel() >= 5)
             event.getPlayer().getInventory().setItem(1, new ItemStack(Material.DIAMOND_SWORD,1));
@@ -33,7 +37,11 @@ public class PlayerLevel implements Listener{
       // New weapon for the ranged class
       else if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null){
          RPGRangedPlayer rpgPlaya = plugin.getRangedPlayerMap().get(event.getPlayer().getName());
+         
+         // Increase player stats
          levelUp(rpgPlaya, event);
+         rpgPlaya.getSubClassObject().setArch(rpgPlaya.getSubClassObject().getArch() + 0.2);
+         rpgPlaya.getSubClassObject().setEgg(rpgPlaya.getSubClassObject().getEgg() + 0.4);
          
          if(rpgPlaya.getLevel() >= 7)
             event.getPlayer().getInventory().setItem(1, new ItemStack(Material.EGG,1));
@@ -41,7 +49,10 @@ public class PlayerLevel implements Listener{
       // New weapons for the magic class
       else if(plugin.getMagicPlayerMap().get(event.getPlayer().getName()) != null){
          RPGMagicPlayer rpgPlaya = plugin.getMagicPlayerMap().get(event.getPlayer().getName());
+         
+         // Increase player stats
          levelUp(rpgPlaya, event);
+         rpgPlaya.getSubClassObject().setSpell(rpgPlaya.getSubClassObject().getSpell() + 0.3);
          
          // Create the base dye type first
          ItemStack is = new ItemStack(351,1);

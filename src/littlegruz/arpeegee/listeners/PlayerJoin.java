@@ -30,7 +30,7 @@ public class PlayerJoin implements Listener{
          delayMessage(playa, ChatColor.LIGHT_PURPLE + "But if spewing arcane energies from your fingertips appeals  to you best, then the magic class is your best bet. Type: '/iammagic'", 500);
       }
       else{
-         event.setJoinMessage("Welcome back, brave adventurer.");
+         event.setJoinMessage(ChatColor.RED + "Welcome back, brave adventurer.");
       }
    }
    

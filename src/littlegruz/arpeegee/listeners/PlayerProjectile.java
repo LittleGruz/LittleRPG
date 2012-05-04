@@ -1,6 +1,5 @@
 package littlegruz.arpeegee.listeners;
 
-import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -49,7 +48,7 @@ public class PlayerProjectile implements Listener{
    public void onProjectileHit(ProjectileHitEvent event){
       // Projectile hitting something
       Entity ent = event.getEntity();
-      if(plugin.getProjMap().get(ent) != null && !(ent instanceof Egg)){
+      if(plugin.getProjMap().get(ent) != null){
          plugin.getProjMap().put(ent, plugin.getProjMap().get(ent) + "grounded");
          return;
       }
