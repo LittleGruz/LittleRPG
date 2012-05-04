@@ -42,8 +42,7 @@ private ArpeegeeMain plugin;
 
          // Give player back their base weapon
          event.getPlayer().getInventory().setItem(0, new ItemStack(Material.BOW,1));
-         event.getPlayer().getInventory().setItem(9, new ItemStack(Material.ARROW,64));
-         event.getPlayer().getInventory().setItem(10, new ItemStack(Material.ARROW,64));
+         event.getPlayer().getInventory().setItem(9, new ItemStack(Material.ARROW,10));
          
          if(rpgPlaya.getLevel() >= 7)
             event.getPlayer().getInventory().setItem(1, new ItemStack(Material.EGG,1));

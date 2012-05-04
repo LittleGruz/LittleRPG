@@ -23,27 +23,31 @@ public class Begin implements CommandExecutor{
    @Override
    public boolean onCommand(CommandSender sender, Command cmd,
          String commandLabel, String[] args){
-      if(sender.hasPermission("arpeegee.begin") && sender instanceof Player){
+      if(sender.hasPermission("arpeegee.begin") && sender instanceof Player
+            && plugin.getMeleePlayerMap().get(sender.getName()) == null
+            && plugin.getRangedPlayerMap().get(sender.getName()) == null
+            && plugin.getMagicPlayerMap().get(sender.getName()) == null){
          if(cmd.getName().compareToIgnoreCase("iammelee") == 0){
             plugin.getMeleePlayerMap().put(sender.getName(), new RPGMeleePlayer(sender.getName(), new RPGSubClass("Warrior",0,1,1,0,0)));
-            plugin.getServer().broadcastMessage("Go forth to hack and slash to your hearts content! This weapon may help.");
-            plugin.getServer().broadcastMessage("*pocketed*");
+            sender.sendMessage("Go forth to hack and slash to your hearts content!");
+            sender.sendMessage("This weapon may help.");
+            sender.sendMessage("*pocketed*");
             //Give player iron sword
             ((Player) sender).getInventory().setItem(0, new ItemStack(Material.IRON_SWORD,1));
          }
          else if(cmd.getName().compareToIgnoreCase("iamranged") == 0){
             plugin.getRangedPlayerMap().put(sender.getName(), new RPGRangedPlayer(sender.getName(), new RPGSubClass("Archer",1,0,0,1,0)));
-            plugin.getServer().broadcastMessage("Time to prescribe some fatal acupuncture!");
-            plugin.getServer().broadcastMessage("...Hey! Give me back my bow!");
+            sender.sendMessage("Ah! You also like to attack from afar.");
+            sender.sendMessage("I have a fantastic bow kept at my house over there.");
+            sender.sendMessage("...Hey! Come back! Give me back my bow!");
             //Give player bow and arrows
             ((Player) sender).getInventory().setItem(0, new ItemStack(Material.BOW,1));
-            ((Player) sender).getInventory().setItem(9, new ItemStack(Material.ARROW,64));
-            ((Player) sender).getInventory().setItem(10, new ItemStack(Material.ARROW,64));
+            ((Player) sender).getInventory().setItem(9, new ItemStack(Material.ARROW,10));
          }
          else if(cmd.getName().compareToIgnoreCase("iammagic") == 0){
             plugin.getMagicPlayerMap().put(sender.getName(), new RPGMagicPlayer(sender.getName(), new RPGSubClass("Wizard",0,0,0,0,1)));
-            plugin.getServer().broadcastMessage("Aight, you put on your robe and wizard hat.");
-            plugin.getServer().broadcastMessage("*knowledged*");
+            sender.sendMessage("Aight, you put on your robe and wizard hat.");
+            sender.sendMessage("*knowledged*");
             //Give player yellow dye
             ItemStack is = new ItemStack(351,1);
             is.setDurability((short) 11);

@@ -23,10 +23,12 @@ public class PlayerProjectile implements Listener{
       if(event.getEntity() instanceof Player){
          Player playa = (Player) event.getEntity();
 
-         //event.setProjectile(playa.getWorld().spawnCreature(playa.getLocation(), EntityType.SHEEP));
-         if(plugin.getRangedPlayerMap().get(playa.getName()) != null)
+         if(plugin.getRangedPlayerMap().get(playa.getName()) != null){
             plugin.getProjMap().put(event.getProjectile(),
                   Double.toString(plugin.getRangedPlayerMap().get(playa.getName()).getSubClassObject().getArch()));
+            if(playa.getInventory().getItem(9).getAmount() < 2)
+               playa.getInventory().getItem(9).setAmount(10);
+         }
          
       }
    }
