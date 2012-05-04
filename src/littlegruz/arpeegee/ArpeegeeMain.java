@@ -62,7 +62,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Egg can occasionally explode DONE
  * A certain armour equip can make user run faster
  * Cooldowns for spells DONE
- * Levels PARTIAL (no balancing)
+ * Levels and stat increase DONE (but no tested balancing)
  * Reduced damage taken by Warriors DONE
  * Weapon assignment DONE */
 

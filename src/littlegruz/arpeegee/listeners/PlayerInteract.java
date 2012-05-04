@@ -17,9 +17,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.SheepDyeWoolEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -42,6 +43,9 @@ public class PlayerInteract implements Listener{
       if(playa.getItemInHand().getData().toString().contains("MAGENTA DYE")
             && event.getAction().toString().contains("RIGHT_CLICK")
             && plugin.getMagicPlayerMap().get(playa.getName()) != null){
+         ItemStack is = new ItemStack(351,1);
+         is.setDurability((short)13);
+         
          event.setCancelled(true);
          
          if(!plugin.getMagicPlayerMap().get(playa.getName()).isTeleportReady()){
@@ -49,9 +53,6 @@ public class PlayerInteract implements Listener{
             return;
          }
          else{
-            ItemStack is = new ItemStack(351,1);
-            is.setDurability((short)13);
-            playa.getInventory().remove(is);
             plugin.giveCooldown(playa, "tele", 10);
             plugin.getMagicPlayerMap().get(playa.getName()).setTeleportReadiness(false);
          }
@@ -90,6 +91,7 @@ public class PlayerInteract implements Listener{
                      loc.getY(), loc.getZ(), playa.getLocation().getYaw(),
                      playa.getLocation().getPitch()));
                playa.sendMessage("*Zoom*");
+               playa.getInventory().remove(is);
             }
             else
                playa.sendMessage("You can not flash to there");
@@ -257,9 +259,39 @@ public class PlayerInteract implements Listener{
       
    }
    
+   /* Return the dye or wheat to the player if they are within range of
+    * interacting with a sheep. Note: This does not work the way I want since
+    * giving one item causes the player to still not get the item back, and 
+    * giving them two items causes the player to get two. I choose two because
+    * it will reset when the player uses the ability again.*/
    @EventHandler
-   public void cancelSheepDye(SheepDyeWoolEvent event){
-      event.setCancelled(true);
+   public void onPlayerDyeWool(PlayerInteractEntityEvent event){
+      if(event.getRightClicked() instanceof Sheep
+            && plugin.getMagicPlayerMap().get(event.getPlayer().getName()) != null){
+         event.setCancelled(true);
+         ItemStack is = new ItemStack(351,2);
+         
+         if(event.getPlayer().getItemInHand().getData().toString().contains("YELLOW DYE")){
+            is.setDurability((short)11);
+            event.getPlayer().getInventory().setItem(0, is);
+         }
+         else if(event.getPlayer().getItemInHand().getData().toString().contains("RED DYE")){
+            is.setDurability((short)1);
+            event.getPlayer().getInventory().setItem(2, is);
+         }
+         else if(event.getPlayer().getItemInHand().getData().toString().contains("WHITE DYE")){
+            is.setDurability((short)15);
+            event.getPlayer().getInventory().setItem(1, is);
+         }
+         else if(event.getPlayer().getItemInHand().getData().toString().contains("MAGENTA DYE")){
+            is.setDurability((short)13);
+            event.getPlayer().getInventory().setItem(3, is);
+         }
+         else if(event.getPlayer().getItemInHand().getType().compareTo(Material.WHEAT) == 0){
+            is.setType(Material.WHEAT);
+            event.getPlayer().getInventory().setItem(4, is);
+         }
+      }
    }
    
    /* The ranged entity seeking code is borrowed from code listed by
