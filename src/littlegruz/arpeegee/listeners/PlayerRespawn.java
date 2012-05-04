@@ -23,7 +23,6 @@ private ArpeegeeMain plugin;
    @EventHandler
    public void onPlayerRespawn(PlayerRespawnEvent event){
       // Restore weapons and levels for the melee class
-      event.getPlayer().sendMessage(Integer.toString(event.getPlayer().getLevel()));
       if(plugin.getMeleePlayerMap().get(event.getPlayer().getName()) != null){
          RPGMeleePlayer rpgPlaya = plugin.getMeleePlayerMap().get(event.getPlayer().getName());
 

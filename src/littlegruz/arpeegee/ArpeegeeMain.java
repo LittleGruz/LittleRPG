@@ -25,6 +25,7 @@ import littlegruz.arpeegee.listeners.EnemyDeaths;
 import littlegruz.arpeegee.listeners.EntityDamageEntity;
 import littlegruz.arpeegee.listeners.PlayerInteract;
 import littlegruz.arpeegee.listeners.PlayerJoin;
+import littlegruz.arpeegee.listeners.PlayerLevel;
 import littlegruz.arpeegee.listeners.PlayerProjectile;
 import littlegruz.arpeegee.listeners.PlayerRespawn;
 import littlegruz.arpeegee.listeners.PlayerSpeed;
@@ -42,8 +43,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * levels along with wizz-bang spells and attributes
  * 
  * If blade/archery/egg is high enough, chance (or increase chance) of crit
- * Add spells which get opened up as the player levels
- * Attributes like health and mana will be linked to strength and intelligence
+ * Add spells which get opened up as the player levels DONE
  * 
  * Spells (so far): DONE
  * Heal
@@ -263,6 +263,7 @@ public class ArpeegeeMain extends JavaPlugin {
       getServer().getPluginManager().registerEvents(new EntityDamageEntity(this), this);
       getServer().getPluginManager().registerEvents(new PlayerInteract(this), this);
       getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
+      getServer().getPluginManager().registerEvents(new PlayerLevel(this), this);
       getServer().getPluginManager().registerEvents(new PlayerProjectile(this), this);
       getServer().getPluginManager().registerEvents(new PlayerRespawn(this), this);
       getServer().getPluginManager().registerEvents(new PlayerSpeed(), this);

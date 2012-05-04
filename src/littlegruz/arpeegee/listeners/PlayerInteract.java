@@ -99,7 +99,7 @@ public class PlayerInteract implements Listener{
             && plugin.getMagicPlayerMap().get(playa.getName()) != null){
          event.setCancelled(true);
          playa.setLevel(playa.getLevel() - 1);
-         plugin.getMagicPlayerMap().get(playa.getName()).setLevel(plugin.getMagicPlayerMap().get(playa.getName()).getLevel() - 1);
+         plugin.getMagicPlayerMap().get(playa.getName()).setLevel(playa.getLevel());
          
          if(!plugin.getMagicPlayerMap().get(playa.getName()).isLightningReady()){
             playa.sendMessage("Lightning is still on cooldown");
@@ -119,8 +119,8 @@ public class PlayerInteract implements Listener{
       else if(playa.getItemInHand().getType().compareTo(Material.BLAZE_ROD) == 0
             && plugin.getMagicPlayerMap().get(playa.getName()) != null){
          event.setCancelled(true);
-         playa.setLevel(playa.getLevel() + 2);
-         plugin.getMagicPlayerMap().get(playa.getName()).setLevel(playa.getLevel() + 2);
+         playa.setLevel(playa.getLevel() + 1);
+         plugin.getMagicPlayerMap().get(playa.getName()).setLevel(playa.getLevel());
          
          if(!plugin.getMagicPlayerMap().get(playa.getName()).isAdvLightningReady()){
             playa.sendMessage("Advanced lightning is still on cooldown");
@@ -166,7 +166,6 @@ public class PlayerInteract implements Listener{
             loc.setZ(loc.getZ() - 2);
             loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
          }
-         loc.getWorld().spawnCreature(loc, EntityType.ZOMBIE);
       }
       // This fireball creation code is based off MadMatt199's code (https://github.com/madmatt199/GhastBlast)
       // Casting weapon to launch a fireball
