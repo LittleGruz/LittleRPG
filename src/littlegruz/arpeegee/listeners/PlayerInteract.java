@@ -161,7 +161,7 @@ public class PlayerInteract implements Listener{
          level = (int) plugin.getMagicPlayerMap().get(playa.getName()).getLevel();
          if(level >= 10){
             loc.setY(loc.getY() + 1.5);
-            loc.setX(loc.getX() + 1);
+            loc.setX(loc.getX() + 2);
             loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
             loc.setX(loc.getX() - 2);
             loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
@@ -306,7 +306,7 @@ public class PlayerInteract implements Listener{
       ArrayList<LivingEntity> enemies = new ArrayList<LivingEntity>();
       
       // Base range is 10 blocks plus the casters spell ability
-      spell = (int) plugin.getMagicPlayerMap().get(playa.getName()).getSubClassObject().getSpell();
+      spell = 3;
       range = 10 + spell;
       
       for(Entity e : playa.getNearbyEntities(range, range, range)) {
