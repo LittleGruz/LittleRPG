@@ -8,13 +8,13 @@ commands:
       usage: /displaysubclass [name]
    iammelee:
       description: Sets your class as melee
-      usage: /iammelee
+      usage: /ichoosemelee
    iamranged:
       description: Sets your class as ranged
-      usage: /iamranged
+      usage: /ichooseranged
    iammagic:
       description: Makes it all complete
-      usage: /iammagic
+      usage: /ichoosemagic
       
 permissions:
    arpeegee.create:

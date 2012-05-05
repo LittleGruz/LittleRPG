@@ -25,9 +25,9 @@ public class PlayerJoin implements Listener{
          event.setJoinMessage(ChatColor.RED + "Welcome, " + playa.getName() + ", to LittleRPG.");
          
          delayMessage(playa, ChatColor.YELLOW + "Before you begin your adventure, you should pick a class.", 5);
-         delayMessage(playa, ChatColor.GREEN + "If you are one that desires to get close enough to taunt their prey, the melee class would be most suitable. Type: '/iammelee'", 150);
-         delayMessage(playa, ChatColor.BLUE + "If you would rather pick enemies off from a perch where they can not hit you, the ranged class is most appropriate. Type: '/iamranged'", 350);
-         delayMessage(playa, ChatColor.LIGHT_PURPLE + "But if spewing arcane energies from your fingertips appeals  to you best, then the magic class is your best bet. Type: '/iammagic'", 500);
+         delayMessage(playa, ChatColor.GREEN + "If you are one that desires to get close enough to taunt their prey, the melee class would be most suitable. Type: '/ichoosemelee'", 150);
+         delayMessage(playa, ChatColor.BLUE + "If you would rather pick enemies off from a perch where they can not hit you, the ranged class is most appropriate. Type: '/ichooseranged'", 350);
+         delayMessage(playa, ChatColor.LIGHT_PURPLE + "But if spewing arcane energies from your fingertips appeals  to you best, then the magic class is your best bet. Type: '/ichoosemagic'", 500);
       }
       else{
          event.setJoinMessage(ChatColor.RED + "Welcome back, brave adventurer.");

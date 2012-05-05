@@ -27,7 +27,8 @@ public class Begin implements CommandExecutor{
             && plugin.getMeleePlayerMap().get(sender.getName()) == null
             && plugin.getRangedPlayerMap().get(sender.getName()) == null
             && plugin.getMagicPlayerMap().get(sender.getName()) == null){
-         if(cmd.getName().compareToIgnoreCase("iammelee") == 0){
+         // Sets the players class as melee
+         if(cmd.getName().compareToIgnoreCase("ichoosemelee") == 0){
             plugin.getMeleePlayerMap().put(sender.getName(), new RPGMeleePlayer(sender.getName(), new RPGSubClass("Warrior",0,1,1,0,0)));
             sender.sendMessage("Go forth to hack and slash to your hearts content!");
             sender.sendMessage("This weapon may help.");
@@ -35,7 +36,8 @@ public class Begin implements CommandExecutor{
             //Give player iron sword
             ((Player) sender).getInventory().setItem(0, new ItemStack(Material.IRON_SWORD,1));
          }
-         else if(cmd.getName().compareToIgnoreCase("iamranged") == 0){
+         // Sets the players class as ranged
+         else if(cmd.getName().compareToIgnoreCase("ichooseranged") == 0){
             plugin.getRangedPlayerMap().put(sender.getName(), new RPGRangedPlayer(sender.getName(), new RPGSubClass("Archer",1,0,0,1,0)));
             sender.sendMessage("Ah! You also like to attack from afar.");
             sender.sendMessage("I have a fantastic bow kept at my house over there.");
@@ -44,7 +46,8 @@ public class Begin implements CommandExecutor{
             ((Player) sender).getInventory().setItem(0, new ItemStack(Material.BOW,1));
             ((Player) sender).getInventory().setItem(9, new ItemStack(Material.ARROW,10));
          }
-         else if(cmd.getName().compareToIgnoreCase("iammagic") == 0){
+         // Makes it all complete
+         else if(cmd.getName().compareToIgnoreCase("ichoosemagic") == 0){
             plugin.getMagicPlayerMap().put(sender.getName(), new RPGMagicPlayer(sender.getName(), new RPGSubClass("Wizard",0,0,0,0,1)));
             sender.sendMessage("Aight, you put on your robe and wizard hat.");
             sender.sendMessage("*knowledged*");

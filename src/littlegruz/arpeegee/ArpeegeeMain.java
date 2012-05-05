@@ -60,7 +60,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * 
  * Can fire bow quicker than egg but with less damage than egg DONE
  * Egg can occasionally explode DONE
- * A certain armour equip can make user run faster
+ * A ranged armour equip can make user run faster DONE
  * Cooldowns for spells DONE
  * Levels and stat increase DONE (but no tested balancing)
  * Reduced damage taken by Warriors DONE
@@ -261,7 +261,7 @@ public class ArpeegeeMain extends JavaPlugin {
       berserkMap = new HashMap<String, String>();
       projMap = new HashMap<Entity, String>();
 
-      log.info("LittleRPG v0.1 enabled");
+      log.info("LittleRPG v0.5 beta enabled");
    }
    
    public void onDisable(){
@@ -351,7 +351,7 @@ public class ArpeegeeMain extends JavaPlugin {
          log.info("Error saving Arpeegy sub-classes");
       }
       
-      log.info("LittleRPG v0.1 disabled");
+      log.info("LittleRPG v0.5 beta disabled");
    }
 
    public HashMap<String, RPGMeleePlayer> getMeleePlayerMap() {
