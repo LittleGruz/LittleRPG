@@ -6,13 +6,13 @@ commands:
    displaysubclass:
       description: Displays all sub-classes or the stats of just one
       usage: /displaysubclass [name]
-   iammelee:
+   ichoosemelee:
       description: Sets your class as melee
       usage: /ichoosemelee
-   iamranged:
+   ichooseranged:
       description: Sets your class as ranged
       usage: /ichooseranged
-   iammagic:
+   ichoosemagic:
       description: Makes it all complete
       usage: /ichoosemagic
       

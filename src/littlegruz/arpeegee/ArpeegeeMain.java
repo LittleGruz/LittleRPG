@@ -39,10 +39,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-/* Create a custom RPG where the admin creates classes with the desired power
- * levels along with wizz-bang spells and attributes
- * 
- * If blade/archery/egg is high enough, chance (or increase chance) of crit DONE
+/* If blade/archery/egg is high enough, chance (or increase chance) of crit DONE
  * Add spells which get opened up as the player levels DONE
  * 
  * Spells (so far): DONE
@@ -254,9 +251,9 @@ public class ArpeegeeMain extends JavaPlugin {
       getServer().getPluginManager().registerEvents(new PlayerSpeed(), this);
 
       getCommand("displaysubclass").setExecutor(new Display(this));
-      getCommand("iammelee").setExecutor(new Begin(this));
-      getCommand("iamranged").setExecutor(new Begin(this));
-      getCommand("iammagic").setExecutor(new Begin(this));
+      getCommand("ichoosemelee").setExecutor(new Begin(this));
+      getCommand("ichooseranged").setExecutor(new Begin(this));
+      getCommand("ichoosemagic").setExecutor(new Begin(this));
 
       berserkMap = new HashMap<String, String>();
       projMap = new HashMap<Entity, String>();
