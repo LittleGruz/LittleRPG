@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 import littlegruz.arpeegee.commands.Begin;
 import littlegruz.arpeegee.commands.Display;
+import littlegruz.arpeegee.commands.Worlds;
 import littlegruz.arpeegee.entities.RPGMagicPlayer;
 import littlegruz.arpeegee.entities.RPGMeleePlayer;
 import littlegruz.arpeegee.entities.RPGRangedPlayer;
@@ -50,8 +51,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Fireball
  * Teleport
  * 
- * TODO Stop fists dealing damage
- * 
  * Diamond sword gives chance for critical hits DONE
  * Iron sword gives chance for dodge DONE
  * Rage mechanic gives increased sword bonuses, extra damage and speed DONE
@@ -62,7 +61,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * A ranged armour equip can make user run faster DONE
  * Cooldowns for spells DONE
  * Levels and stat increase DONE (but no tested balancing)
- * Reduced damage taken by Warriors DONE
+ * Reduced damage taken by Melee class DONE
  * Weapon assignment DONE */
 
 /* And then for the sub-classes
@@ -90,12 +89,14 @@ public class ArpeegeeMain extends JavaPlugin {
    private File rangedPlayerFile;
    private File magicPlayerFile;
    private File subClassFile;
+   private File worldsFile;
    private HashMap<String, RPGMeleePlayer> meleePlayerMap;
    private HashMap<String, RPGRangedPlayer> rangedPlayerMap;
    private HashMap<String, RPGMagicPlayer> magicPlayerMap;
    private HashMap<String, RPGSubClass> subClassMap;
    private HashMap<String, String> berserkMap;
    private HashMap<Entity, String> projMap;
+   private HashMap<String, String> worldsMap;
    
    public void onEnable(){
       BufferedReader br;
@@ -108,6 +109,7 @@ public class ArpeegeeMain extends JavaPlugin {
       rangedPlayerFile = new File(getDataFolder().toString() + "/rangedPlayer.txt");
       magicPlayerFile = new File(getDataFolder().toString() + "/magicPlayer.txt");
       subClassFile = new File(getDataFolder().toString() + "/subclasses.txt");
+      worldsFile = new File(getDataFolder().toString() + "/worlds.txt");
 
       subClassMap = new HashMap<String, RPGSubClass>();
       // Load up the sub-classes from file
@@ -129,11 +131,11 @@ public class ArpeegeeMain extends JavaPlugin {
          br.close();
 
       }catch(FileNotFoundException e){
-         log.info("No original Arpeegy sub-class file found. One will be created for you");
+         log.info("No original LittleRPG sub-class file found. One will be created for you");
       }catch(IOException e){
-         log.info("Error reading Arpeegy sub-class file");
+         log.info("Error reading LittleRPG sub-class file");
       }catch(Exception e){
-         log.info("Incorrectly formatted Arpeegy sub-class file");
+         log.info("Incorrectly formatted LittleRPG sub-class file");
       }
 
       meleePlayerMap = new HashMap<String, RPGMeleePlayer>();
@@ -165,11 +167,11 @@ public class ArpeegeeMain extends JavaPlugin {
          br.close();
          
       }catch(FileNotFoundException e){
-         log.info("No original Arpeegy melee player file found. One will be created for you");
+         log.info("No original LittleRPG melee player file found. One will be created for you");
       }catch(IOException e){
-         log.info("Error reading Arpeegy melee player file");
+         log.info("Error reading LittleRPG melee player file");
       }catch(Exception e){
-         log.info("Incorrectly formatted Arpeegy melee player file");
+         log.info("Incorrectly formatted LittleRPG melee player file");
       }
 
       rangedPlayerMap = new HashMap<String, RPGRangedPlayer>();
@@ -200,11 +202,11 @@ public class ArpeegeeMain extends JavaPlugin {
          br.close();
          
       }catch(FileNotFoundException e){
-         log.info("No original Arpeegy ranged player file found. One will be created for you");
+         log.info("No original LittleRPG ranged player file found. One will be created for you");
       }catch(IOException e){
-         log.info("Error reading Arpeegy ranged player file");
+         log.info("Error reading LittleRPG ranged player file");
       }catch(Exception e){
-         log.info("Incorrectly formatted Arpeegy ranged player file");
+         log.info("Incorrectly formatted LittleRPG ranged player file");
       }
 
       magicPlayerMap = new HashMap<String, RPGMagicPlayer>();
@@ -235,27 +237,48 @@ public class ArpeegeeMain extends JavaPlugin {
          br.close();
          
       }catch(FileNotFoundException e){
-         log.info("No original Arpeegy magic player file found. One will be created for you");
+         log.info("No original LittleRPG magic player file found. One will be created for you");
       }catch(IOException e){
-         log.info("Error reading Arpeegy magic player file");
+         log.info("Error reading LittleRPG magic player file");
       }catch(Exception e){
-         log.info("Incorrectly formatted Arpeegy magic player file");
+         log.info("Incorrectly formatted LittleRPG magic player file");
+      }
+      
+      worldsMap = new HashMap<String, String>();
+      // Load up the worlds from file
+      try{
+         br = new BufferedReader(new FileReader(worldsFile));
+         
+         // Load world file data into the world HashMap
+         while((input = br.readLine()) != null){
+            worldsMap.put(input, input);
+         }
+         br.close();
+         
+      }catch(FileNotFoundException e){
+         log.info("No original LittleRPG world file found. One will be created for you");
+      }catch(IOException e){
+         log.info("Error reading LittleRPG world file");
+      }catch(Exception e){
+         log.info("Incorrectly formatted LittleRPG world file");
       }
 
       //Set up listeners
-      getServer().getPluginManager().registerEvents(new EnemyDeaths(), this);
+      getServer().getPluginManager().registerEvents(new EnemyDeaths(this), this);
       getServer().getPluginManager().registerEvents(new EntityDamageEntity(this), this);
       getServer().getPluginManager().registerEvents(new PlayerInteract(this), this);
       getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
       getServer().getPluginManager().registerEvents(new PlayerLevel(this), this);
       getServer().getPluginManager().registerEvents(new PlayerProjectile(this), this);
       getServer().getPluginManager().registerEvents(new PlayerRespawn(this), this);
-      getServer().getPluginManager().registerEvents(new PlayerSpeed(), this);
+      getServer().getPluginManager().registerEvents(new PlayerSpeed(this), this);
 
       getCommand("displaysubclass").setExecutor(new Display(this));
       getCommand("ichoosemelee").setExecutor(new Begin(this));
       getCommand("ichooseranged").setExecutor(new Begin(this));
       getCommand("ichoosemagic").setExecutor(new Begin(this));
+      getCommand("addrpgworld").setExecutor(new Worlds(this));
+      getCommand("removerpgworld").setExecutor(new Worlds(this));
 
       berserkMap = new HashMap<String, String>();
       projMap = new HashMap<Entity, String>();
@@ -286,7 +309,7 @@ public class ArpeegeeMain extends JavaPlugin {
          }
          bw.close();
       }catch(IOException e){
-         log.info("Error saving Arpeegy melee players");
+         log.info("Error saving LittleRPG melee players");
       }
       
       try{
@@ -307,7 +330,7 @@ public class ArpeegeeMain extends JavaPlugin {
          }
          bw.close();
       }catch(IOException e){
-         log.info("Error saving Arpeegy ranged players");
+         log.info("Error saving LittleRPG ranged players");
       }
       
       try{
@@ -328,7 +351,7 @@ public class ArpeegeeMain extends JavaPlugin {
          }
          bw.close();
       }catch(IOException e){
-         log.info("Error saving Arpeegy magic players");
+         log.info("Error saving LittleRPG magic players");
       }
 
       try{
@@ -347,7 +370,21 @@ public class ArpeegeeMain extends JavaPlugin {
          }
          bw.close();
       }catch(IOException e){
-         log.info("Error saving Arpeegy sub-classes");
+         log.info("Error saving LittleRPG sub-classes");
+      }
+      
+      try{
+         bw = new BufferedWriter(new FileWriter(worldsFile));
+         Iterator<Map.Entry<String, String>> it = worldsMap.entrySet().iterator();
+         
+         // Save all world names to file
+         while(it.hasNext()){
+            Entry<String, String> mp = it.next();
+            bw.write(mp.getValue() + "\n");
+         }
+         bw.close();
+      }catch(IOException e){
+         log.info("Error saving LittleRPG worlds");
       }
       
       log.info("LittleRPG v0.5 beta disabled");
@@ -375,6 +412,10 @@ public class ArpeegeeMain extends JavaPlugin {
    
    public HashMap<Entity, String> getProjMap() {
       return projMap;
+   }
+
+   public HashMap<String, String> getWorldsMap(){
+      return worldsMap;
    }
    
    /* Returns true if the RNG smiles upon the user*/

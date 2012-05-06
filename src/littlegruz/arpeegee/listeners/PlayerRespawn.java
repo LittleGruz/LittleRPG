@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class PlayerRespawn implements Listener{
-private ArpeegeeMain plugin;
+   private ArpeegeeMain plugin;
    
    public PlayerRespawn(ArpeegeeMain instance){
       plugin = instance;
@@ -22,104 +22,108 @@ private ArpeegeeMain plugin;
    
    @EventHandler
    public void onPlayerRespawn(PlayerRespawnEvent event){
-      // Restore weapons and levels for the melee class
-      if(plugin.getMeleePlayerMap().get(event.getPlayer().getName()) != null){
-         RPGMeleePlayer rpgPlaya = plugin.getMeleePlayerMap().get(event.getPlayer().getName());
-
-         event.getPlayer().setLevel(newLevel(rpgPlaya, event.getPlayer().getLevel()));
-
-         // Give player back their base weapon
-         event.getPlayer().getInventory().setItem(0, new ItemStack(Material.IRON_SWORD,1));
-         
-         if(rpgPlaya.getLevel() >= 3)
-            event.getPlayer().getInventory().setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
-         if(rpgPlaya.getLevel() >= 5)
-            event.getPlayer().getInventory().setItem(1, new ItemStack(Material.DIAMOND_SWORD,1));
-         if(rpgPlaya.getLevel() >= 6)
-            event.getPlayer().getInventory().setBoots(new ItemStack(Material.IRON_BOOTS));
-         if(rpgPlaya.getLevel() >= 9)
-            event.getPlayer().getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
-         if(rpgPlaya.getLevel() >= 12)
-            event.getPlayer().getInventory().setHelmet(new ItemStack(Material.IRON_HELMET));
-      }
-      // Restore weapons and levels for the ranged class
-      else if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null){
-         RPGRangedPlayer rpgPlaya = plugin.getRangedPlayerMap().get(event.getPlayer().getName());
-
-         event.getPlayer().setLevel(newLevel(rpgPlaya, event.getPlayer().getLevel()));
-
-         // Give player back their base weapon
-         event.getPlayer().getInventory().setItem(0, new ItemStack(Material.BOW,1));
-         event.getPlayer().getInventory().setItem(9, new ItemStack(Material.ARROW,10));
-         
-         if(rpgPlaya.getLevel() >= 2)
-            event.getPlayer().getInventory().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
-         if(rpgPlaya.getLevel() >= 4)
-            event.getPlayer().getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS));
-         if(rpgPlaya.getLevel() >= 6)
-            event.getPlayer().getInventory().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
-         if(rpgPlaya.getLevel() >= 7)
-            event.getPlayer().getInventory().setItem(1, new ItemStack(Material.EGG,1));
-         if(rpgPlaya.getLevel() >= 8)
-            event.getPlayer().getInventory().setHelmet(new ItemStack(Material.LEATHER_HELMET));
-      }
-      // Restore weapons and levels for the magic class
-      else if(plugin.getMagicPlayerMap().get(event.getPlayer().getName()) != null){
-         RPGMagicPlayer rpgPlaya = plugin.getMagicPlayerMap().get(event.getPlayer().getName());
-
-         event.getPlayer().setLevel(newLevel(rpgPlaya, rpgPlaya.getLevel()));
-         
-         // Create the base dye type first
-         ItemStack is = new ItemStack(351,1);
-         
-         // Lightning
-         is.setDurability((short)11);
-         event.getPlayer().getInventory().setItem(0, is);
-         
-         // Heal
-         if(rpgPlaya.getLevel() >= 3){
-            is.setDurability((short)15);
-            event.getPlayer().getInventory().setItem(1, is);
+      if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getUID().toString())){
+         // Restore weapons and levels for the melee class
+         if(plugin.getMeleePlayerMap().get(event.getPlayer().getName()) != null){
+            RPGMeleePlayer rpgPlaya = plugin.getMeleePlayerMap().get(event.getPlayer().getName());
+   
+            event.getPlayer().setLevel(newLevel(rpgPlaya, event.getPlayer().getLevel()));
+   
+            // Give player back their base weapon
+            event.getPlayer().getInventory().setItem(0, new ItemStack(Material.IRON_SWORD,1));
+            
+            if(rpgPlaya.getLevel() >= 3)
+               event.getPlayer().getInventory().setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
+            if(rpgPlaya.getLevel() >= 5)
+               event.getPlayer().getInventory().setItem(1, new ItemStack(Material.DIAMOND_SWORD,1));
+            if(rpgPlaya.getLevel() >= 6)
+               event.getPlayer().getInventory().setBoots(new ItemStack(Material.IRON_BOOTS));
+            if(rpgPlaya.getLevel() >= 9)
+               event.getPlayer().getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
+            if(rpgPlaya.getLevel() >= 12)
+               event.getPlayer().getInventory().setHelmet(new ItemStack(Material.IRON_HELMET));
          }
-         // Wizard robe
-         if(rpgPlaya.getLevel() >= 4)
-            event.getPlayer().getInventory().setChestplate(new ItemStack(Material.GOLD_CHESTPLATE));
-         // Fireball
-         if(rpgPlaya.getLevel() >= 5){
-            is.setDurability((short)1);
-            event.getPlayer().getInventory().setItem(2, is);
+         // Restore weapons and levels for the ranged class
+         else if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null){
+            RPGRangedPlayer rpgPlaya = plugin.getRangedPlayerMap().get(event.getPlayer().getName());
+   
+            event.getPlayer().setLevel(newLevel(rpgPlaya, event.getPlayer().getLevel()));
+   
+            // Give player back their base weapon
+            event.getPlayer().getInventory().setItem(0, new ItemStack(Material.BOW,1));
+            event.getPlayer().getInventory().setItem(9, new ItemStack(Material.ARROW,10));
+            
+            if(rpgPlaya.getLevel() >= 2)
+               event.getPlayer().getInventory().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
+            if(rpgPlaya.getLevel() >= 4)
+               event.getPlayer().getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS));
+            if(rpgPlaya.getLevel() >= 6)
+               event.getPlayer().getInventory().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
+            if(rpgPlaya.getLevel() >= 7)
+               event.getPlayer().getInventory().setItem(1, new ItemStack(Material.EGG,1));
+            if(rpgPlaya.getLevel() >= 8)
+               event.getPlayer().getInventory().setHelmet(new ItemStack(Material.LEATHER_HELMET));
          }
-         // Teleport
-         if(rpgPlaya.getLevel() >= 8){
-            is.setDurability((short)13);
-            event.getPlayer().getInventory().setItem(3, is);
-         }
-         // Wizard hat
-         if(rpgPlaya.getLevel() >= 9)
-            event.getPlayer().getInventory().setHelmet(new ItemStack(Material.GOLD_HELMET));
-         // Sheep summon
-         if(rpgPlaya.getLevel() >= 10){
-            is.setType(Material.WHEAT);
-            event.getPlayer().getInventory().setItem(4, is);
-         }
-         // Advanced heal
-         if(rpgPlaya.getLevel() >= 11){
-            is.setType(Material.BONE);
-            event.getPlayer().getInventory().setItem(5, is);
-         }
-         // Advanced lightning
-         if(rpgPlaya.getLevel() >= 13){
-            is.setType(Material.BLAZE_ROD);
-            event.getPlayer().getInventory().setItem(6, is);
+         // Restore weapons and levels for the magic class
+         else if(plugin.getMagicPlayerMap().get(event.getPlayer().getName()) != null){
+            RPGMagicPlayer rpgPlaya = plugin.getMagicPlayerMap().get(event.getPlayer().getName());
+   
+            event.getPlayer().setLevel(newLevel(rpgPlaya, rpgPlaya.getLevel()));
+            
+            // Create the base dye type first
+            ItemStack is = new ItemStack(351,1);
+            
+            // Lightning
+            is.setDurability((short)11);
+            event.getPlayer().getInventory().setItem(0, is);
+            
+            // Heal
+            if(rpgPlaya.getLevel() >= 3){
+               is.setDurability((short)15);
+               event.getPlayer().getInventory().setItem(1, is);
+            }
+            // Wizard robe
+            if(rpgPlaya.getLevel() >= 4)
+               event.getPlayer().getInventory().setChestplate(new ItemStack(Material.GOLD_CHESTPLATE));
+            // Fireball
+            if(rpgPlaya.getLevel() >= 5){
+               is.setDurability((short)1);
+               event.getPlayer().getInventory().setItem(2, is);
+            }
+            // Teleport
+            if(rpgPlaya.getLevel() >= 8){
+               is.setDurability((short)13);
+               event.getPlayer().getInventory().setItem(3, is);
+            }
+            // Wizard hat
+            if(rpgPlaya.getLevel() >= 9)
+               event.getPlayer().getInventory().setHelmet(new ItemStack(Material.GOLD_HELMET));
+            // Sheep summon
+            if(rpgPlaya.getLevel() >= 10){
+               is.setType(Material.WHEAT);
+               event.getPlayer().getInventory().setItem(4, is);
+            }
+            // Advanced heal
+            if(rpgPlaya.getLevel() >= 11){
+               is.setType(Material.BONE);
+               event.getPlayer().getInventory().setItem(5, is);
+            }
+            // Advanced lightning
+            if(rpgPlaya.getLevel() >= 13){
+               is.setType(Material.BLAZE_ROD);
+               event.getPlayer().getInventory().setItem(6, is);
+            }
          }
       }
    }
 
    @EventHandler
    public void onPlayerDeath(PlayerDeathEvent event){
-      event.setDroppedExp(0);
-      event.setKeepLevel(true);
-      event.getDrops().removeAll(event.getDrops());
+      if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getUID().toString())){
+         event.setDroppedExp(0);
+         event.setKeepLevel(true);
+         event.getDrops().removeAll(event.getDrops());
+      }
    }
    
    // Determines how many levels the player looses upon respawning

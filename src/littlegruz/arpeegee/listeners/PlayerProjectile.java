@@ -19,40 +19,45 @@ public class PlayerProjectile implements Listener{
    
    @EventHandler
    public void onPlayerBowShoot(EntityShootBowEvent event){
-      if(event.getEntity() instanceof Player){
-         Player playa = (Player) event.getEntity();
-
-         if(plugin.getRangedPlayerMap().get(playa.getName()) != null){
-            plugin.getProjMap().put(event.getProjectile(),
-                  Double.toString(plugin.getRangedPlayerMap().get(playa.getName()).getSubClassObject().getArch()));
-            if(playa.getInventory().getItem(9).getAmount() < 2)
-               playa.getInventory().getItem(9).setAmount(10);
+      if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getUID().toString())){
+         if(event.getEntity() instanceof Player){
+            Player playa = (Player) event.getEntity();
+   
+            if(plugin.getRangedPlayerMap().get(playa.getName()) != null){
+               plugin.getProjMap().put(event.getProjectile(),
+                     Double.toString(plugin.getRangedPlayerMap().get(playa.getName()).getSubClassObject().getArch()));
+               if(playa.getInventory().getItem(9).getAmount() < 2)
+                  playa.getInventory().getItem(9).setAmount(10);
+            }
          }
-         
       }
    }
    
    @EventHandler
    public void onEggThrow(PlayerEggThrowEvent event){
-      // Determining explosion chance by egg skill
-      if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null){
-         event.setHatching(false);
-         int egg = (int) plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getSubClassObject().getEgg();
-         if(plugin.probabilityRoll(5 * egg)){
-            event.getEgg().getLocation().getWorld().createExplosion(event.getEgg().getLocation(), 1F, false);
+      if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getUID().toString())){
+         // Determining explosion chance by egg skill
+         if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null){
+            event.setHatching(false);
+            int egg = (int) plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getSubClassObject().getEgg();
+            if(plugin.probabilityRoll(5 * egg)){
+               event.getEgg().getLocation().getWorld().createExplosion(event.getEgg().getLocation(), 1F, false);
+            }
          }
       }
    }
    
    @EventHandler
    public void onProjectileHit(ProjectileHitEvent event){
-      // Projectile hitting something
-      Entity ent = event.getEntity();
-      if(plugin.getProjMap().get(ent) != null){
-         plugin.getProjMap().put(ent, plugin.getProjMap().get(ent) + "grounded");
-         return;
+      if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getUID().toString())){
+         // Projectile hitting something
+         Entity ent = event.getEntity();
+         if(plugin.getProjMap().get(ent) != null){
+            plugin.getProjMap().put(ent, plugin.getProjMap().get(ent) + "grounded");
+            return;
+         }
+         /*else if(ent instanceof CraftSmallFireball)
+            return;*/
       }
-      /*else if(ent instanceof CraftSmallFireball)
-         return;*/
    }
 }

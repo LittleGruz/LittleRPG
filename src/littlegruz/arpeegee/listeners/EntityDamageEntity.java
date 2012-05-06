@@ -30,197 +30,199 @@ public class EntityDamageEntity implements Listener {
 
    @EventHandler
    public void onEntityDamageEntity(EntityDamageByEntityEvent event){
-      if(event.getDamager() instanceof Player
-            && event.getEntity() instanceof LivingEntity){
-         Player playa = (Player) event.getDamager();
-         LivingEntity victim = (LivingEntity) event.getEntity();
-         
-         event.setCancelled(true);
-         
-         if(playa.getItemInHand().getTypeId() == 0)
-            playa.sendMessage("Fist bump");
-         
-         // Heal spell
-         if(playa.getItemInHand().getData().toString().contains("WHITE DYE")
-               && plugin.getMagicPlayerMap().get(playa.getName()) != null){
-            if(!plugin.getMagicPlayerMap().get(playa.getName()).isTeleportReady()){
-               playa.sendMessage("Heal is still on cooldown");
-               return;
-            }
-            else{
-               ItemStack is = new ItemStack(351,1);
-               is.setDurability((short)15);
-               playa.getInventory().remove(is);
-               plugin.giveCooldown(playa, "heal", 7);
-               plugin.getMagicPlayerMap().get(playa.getName()).setHealReadiness(false);
-            }
-            healSpell(playa, victim, 1);
-         }
-         // Advanced heal spell
-         else if(playa.getItemInHand().getData().toString().contains("BONE")
-               && plugin.getMagicPlayerMap().get(playa.getName()) != null){
-            if(!plugin.getMagicPlayerMap().get(playa.getName()).isTeleportReady()){
-               playa.sendMessage("Advanced heal is still on cooldown");
-               return;
-            }
-            else{
-               playa.getInventory().remove(Material.BONE);
-               plugin.giveCooldown(playa, "advHeal", 11);
-               plugin.getMagicPlayerMap().get(playa.getName()).setAdvHealReadiness(false);
-            }
-            healSpell(playa, victim, 2);
-         }
-         // Damage by a diamond sword (crit sword)
-         else if(playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0
-               && plugin.getMeleePlayerMap().get(playa.getName()) != null){
-            int blade, crit, level;
+      if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getUID().toString())){
+         if(event.getDamager() instanceof Player
+               && event.getEntity() instanceof LivingEntity){
+            Player playa = (Player) event.getDamager();
+            LivingEntity victim = (LivingEntity) event.getEntity();
             
-            event.setCancelled(false);
+            event.setCancelled(true);
             
-            // Check if the player can swing yet
-            if(plugin.getMeleePlayerMap().get(playa.getName()).isAttackReady()){
-               plugin.giveCooldown(plugin.getMeleePlayerMap().get(playa.getName()), 1);
-               plugin.getMeleePlayerMap().get(playa.getName()).setAttackReadiness(false);
-            }
-            else
-               return;
+            if(playa.getItemInHand().getTypeId() == 0)
+               playa.sendMessage("Fist bump");
             
-            blade = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlade();
-            level = (int) plugin.getMeleePlayerMap().get(playa.getName()).getLevel();
-            
-            /* If player is in Berserk mode, attack has an increased chance of
-             * crit (double damage) otherwise the crit is (5 * blade skill)%*/
-            if(plugin.getBerserkMap().get(playa.getName()) != null){
-               if(plugin.probabilityRoll(5 * blade + level))
-                  crit = 2;
-               else
-                  crit = 1;
-               event.setDamage((blade + (level / 2)) * crit);
-               
-            }
-            else{
-               if(plugin.probabilityRoll(5 * blade))
-                  crit = 2;
-               else
-                  crit = 1;
-               event.setDamage(blade * crit);
-               plugin.getMeleePlayerMap().get(playa.getName()).addRage(5);
-            }
-            if(crit == 2)
-               playa.sendMessage("*crit*");
-            
-            //playa.getItemInHand().setDurability((short) 0);
-         }
-         // Damage by an iron sword (block sword)
-         else if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
-               && plugin.getMeleePlayerMap().get(playa.getName()) != null){
-            int blade;
-            
-            event.setCancelled(false);
-
-            // Check if the player can swing yet
-            if(plugin.getMeleePlayerMap().get(playa.getName()).isAttackReady()){
-               plugin.giveCooldown(plugin.getMeleePlayerMap().get(playa.getName()), 1);
-               plugin.getMeleePlayerMap().get(playa.getName()).setAttackReadiness(false);
-            }
-            else
-               return;
-            
-            blade = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlade();
-
-            event.setDamage(blade);
-
-            if(plugin.getBerserkMap().get(playa.getName()) == null)
-               plugin.getMeleePlayerMap().get(playa.getName()).addRage(5);
-            
-            //playa.getItemInHand().setDurability((short) 0);
-            
-         }
-         // Damage by a bow
-         else if(playa.getItemInHand().getType().compareTo(Material.BOW) == 0
-               && plugin.getRangedPlayerMap().get(playa.getName()) != null){
-            event.setCancelled(false);
-
-            event.setDamage(0);
-         }
-      }
-      // Melee player taking (reduced) damage and possibly blocking an attack
-      else if(event.getEntity() instanceof Player){
-         Player playa = (Player) event.getEntity();
-         if(plugin.getMeleePlayerMap().get(playa.getName()) != null){
-            int dmg;
-            
-            /* The amount that is decreased from the damage to be taken depends
-             * on the players level */
-            if(playa.getLevel() < 5)
-               dmg = event.getDamage();
-            else if(playa.getLevel() < 10)
-               dmg = (int) (event.getDamage() * (event.getDamage() * 0.67) / event.getDamage());
-            else
-               dmg = (int) (event.getDamage() * (event.getDamage() * 0.5) / event.getDamage());
-            event.setDamage(dmg);
-            
-            // Damage block check
-            if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0){
-               int block;
-               
-               block = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlock();
-               if(plugin.probabilityRoll(5 * block)){
-                  event.setCancelled(true);
-                  playa.sendMessage("*blocked*");
+            // Heal spell
+            if(playa.getItemInHand().getData().toString().contains("WHITE DYE")
+                  && plugin.getMagicPlayerMap().get(playa.getName()) != null){
+               if(!plugin.getMagicPlayerMap().get(playa.getName()).isTeleportReady()){
+                  playa.sendMessage("Heal is still on cooldown");
                   return;
+               }
+               else{
+                  ItemStack is = new ItemStack(351,1);
+                  is.setDurability((short)15);
+                  playa.getInventory().remove(is);
+                  plugin.giveCooldown(playa, "heal", 7);
+                  plugin.getMagicPlayerMap().get(playa.getName()).setHealReadiness(false);
+               }
+               healSpell(playa, victim, 1);
+            }
+            // Advanced heal spell
+            else if(playa.getItemInHand().getData().toString().contains("BONE")
+                  && plugin.getMagicPlayerMap().get(playa.getName()) != null){
+               if(!plugin.getMagicPlayerMap().get(playa.getName()).isTeleportReady()){
+                  playa.sendMessage("Advanced heal is still on cooldown");
+                  return;
+               }
+               else{
+                  playa.getInventory().remove(Material.BONE);
+                  plugin.giveCooldown(playa, "advHeal", 11);
+                  plugin.getMagicPlayerMap().get(playa.getName()).setAdvHealReadiness(false);
+               }
+               healSpell(playa, victim, 2);
+            }
+            // Damage by a diamond sword (crit sword)
+            else if(playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0
+                  && plugin.getMeleePlayerMap().get(playa.getName()) != null){
+               int blade, crit, level;
+               
+               event.setCancelled(false);
+               
+               // Check if the player can swing yet
+               if(plugin.getMeleePlayerMap().get(playa.getName()).isAttackReady()){
+                  plugin.giveCooldown(plugin.getMeleePlayerMap().get(playa.getName()), 1);
+                  plugin.getMeleePlayerMap().get(playa.getName()).setAttackReadiness(false);
+               }
+               else
+                  return;
+               
+               blade = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlade();
+               level = (int) plugin.getMeleePlayerMap().get(playa.getName()).getLevel();
+               
+               /* If player is in Berserk mode, attack has an increased chance of
+                * crit (double damage) otherwise the crit is (5 * blade skill)%*/
+               if(plugin.getBerserkMap().get(playa.getName()) != null){
+                  if(plugin.probabilityRoll(5 * blade + level))
+                     crit = 2;
+                  else
+                     crit = 1;
+                  event.setDamage((blade + (level / 2)) * crit);
+                  
+               }
+               else{
+                  if(plugin.probabilityRoll(5 * blade))
+                     crit = 2;
+                  else
+                     crit = 1;
+                  event.setDamage(blade * crit);
+                  plugin.getMeleePlayerMap().get(playa.getName()).addRage(5);
+               }
+               if(crit == 2)
+                  playa.sendMessage("*crit*");
+               
+               //playa.getItemInHand().setDurability((short) 0);
+            }
+            // Damage by an iron sword (block sword)
+            else if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
+                  && plugin.getMeleePlayerMap().get(playa.getName()) != null){
+               int blade;
+               
+               event.setCancelled(false);
+   
+               // Check if the player can swing yet
+               if(plugin.getMeleePlayerMap().get(playa.getName()).isAttackReady()){
+                  plugin.giveCooldown(plugin.getMeleePlayerMap().get(playa.getName()), 1);
+                  plugin.getMeleePlayerMap().get(playa.getName()).setAttackReadiness(false);
+               }
+               else
+                  return;
+               
+               blade = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlade();
+   
+               event.setDamage(blade);
+   
+               if(plugin.getBerserkMap().get(playa.getName()) == null)
+                  plugin.getMeleePlayerMap().get(playa.getName()).addRage(5);
+               
+               //playa.getItemInHand().setDurability((short) 0);
+               
+            }
+            // Damage by a bow
+            else if(playa.getItemInHand().getType().compareTo(Material.BOW) == 0
+                  && plugin.getRangedPlayerMap().get(playa.getName()) != null){
+               event.setCancelled(false);
+   
+               event.setDamage(0);
+            }
+         }
+         // Melee player taking (reduced) damage and possibly blocking an attack
+         else if(event.getEntity() instanceof Player){
+            Player playa = (Player) event.getEntity();
+            if(plugin.getMeleePlayerMap().get(playa.getName()) != null){
+               int dmg;
+               
+               /* The amount that is decreased from the damage to be taken depends
+                * on the players level */
+               if(playa.getLevel() < 5)
+                  dmg = event.getDamage();
+               else if(playa.getLevel() < 10)
+                  dmg = (int) (event.getDamage() * (event.getDamage() * 0.67) / event.getDamage());
+               else
+                  dmg = (int) (event.getDamage() * (event.getDamage() * 0.5) / event.getDamage());
+               event.setDamage(dmg);
+               
+               // Damage block check
+               if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0){
+                  int block;
+                  
+                  block = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlock();
+                  if(plugin.probabilityRoll(5 * block)){
+                     event.setCancelled(true);
+                     playa.sendMessage("*blocked*");
+                     return;
+                  }
                }
             }
          }
-      }
-      // Player arrow hit
-      else if(event.getDamager() instanceof Arrow){
-         // Check that it came from a player
-         if(plugin.getProjMap().get(event.getDamager()) != null){
-            //Location loc;
-            LivingEntity le;
-            ArrayList<Entity> ent = new ArrayList<Entity>();
-            int arch, i;
-            
-            /* Since cancelling the event causes the arrow to bounce of, it
-             * gets removed manually */
-            event.setCancelled(true);
-            event.getDamager().remove();
-
-            le = (LivingEntity) event.getEntity();
-            //loc = le.getLocation();
-            
-            arch = (int) Double.parseDouble(plugin.getProjMap().get(event.getDamager()).replace("grounded", ""));
-
-            // If crit, do double damage
-            if(plugin.probabilityRoll(5 * arch)){
-               //loc.getWorld().strikeLightningEffect(loc);
-               le.damage(1 * arch * 2);
-            }
-            else
-               le.damage(1 * arch);
-            
-            // Remove all arrows that have hit the ground from hashmap
-            // The removal is separate to stop concurrency issues
-            Iterator<Map.Entry<Entity, String>> it = plugin.getProjMap().entrySet().iterator();
-            while(it.hasNext()){
-               Entry<Entity, String> arrow = it.next();
-               if(arrow.getValue().contains("grounded"))
-                  ent.add(arrow.getKey());
-            }
-            for(i = ent.size() - 1; ent.size() > 0; i--){
-               plugin.getProjMap().remove(ent.get(i));
-               ent.remove(i);
+         // Player arrow hit
+         else if(event.getDamager() instanceof Arrow){
+            // Check that it came from a player
+            if(plugin.getProjMap().get(event.getDamager()) != null){
+               //Location loc;
+               LivingEntity le;
+               ArrayList<Entity> ent = new ArrayList<Entity>();
+               int arch, i;
+               
+               /* Since cancelling the event causes the arrow to bounce of, it
+                * gets removed manually */
+               event.setCancelled(true);
+               event.getDamager().remove();
+   
+               le = (LivingEntity) event.getEntity();
+               //loc = le.getLocation();
+               
+               arch = (int) Double.parseDouble(plugin.getProjMap().get(event.getDamager()).replace("grounded", ""));
+   
+               // If crit, do double damage
+               if(plugin.probabilityRoll(5 * arch)){
+                  //loc.getWorld().strikeLightningEffect(loc);
+                  le.damage(1 * arch * 2);
+               }
+               else
+                  le.damage(1 * arch);
+               
+               // Remove all arrows that have hit the ground from hashmap
+               // The removal is separate to stop concurrency issues
+               Iterator<Map.Entry<Entity, String>> it = plugin.getProjMap().entrySet().iterator();
+               while(it.hasNext()){
+                  Entry<Entity, String> arrow = it.next();
+                  if(arrow.getValue().contains("grounded"))
+                     ent.add(arrow.getKey());
+               }
+               for(i = ent.size() - 1; ent.size() > 0; i--){
+                  plugin.getProjMap().remove(ent.get(i));
+                  ent.remove(i);
+               }
             }
          }
-      }
-      // Fist bump!
-      else if(event.getEntity() instanceof Player
-            && event.getDamager() instanceof Player){
-         Player playa = (Player) event.getEntity();
-         if(playa.getItemInHand().getTypeId() == 0){
-            ((Player) event.getEntity()).sendMessage("*fist bumped by " + playa.getName() + "*");
-            playa.sendMessage("*fist bump*");
+         // Fist bump!
+         else if(event.getEntity() instanceof Player
+               && event.getDamager() instanceof Player){
+            Player playa = (Player) event.getEntity();
+            if(playa.getItemInHand().getTypeId() == 0){
+               ((Player) event.getEntity()).sendMessage("*fist bumped by " + playa.getName() + "*");
+               playa.sendMessage("*fist bump*");
+            }
          }
       }
    }
