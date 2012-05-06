@@ -21,7 +21,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-/* This class contains melee damage methods...apart from arrow damage and heal.*/
 public class EntityDamageEntity implements Listener {
    private ArpeegeeMain plugin;
    
@@ -36,10 +35,14 @@ public class EntityDamageEntity implements Listener {
          Player playa = (Player) event.getDamager();
          LivingEntity victim = (LivingEntity) event.getEntity();
          
+         event.setCancelled(true);
+         
+         if(playa.getItemInHand().getTypeId() == 0)
+            playa.sendMessage("Fist bump");
+         
          // Heal spell
          if(playa.getItemInHand().getData().toString().contains("WHITE DYE")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null){
-            event.setCancelled(true);
             if(!plugin.getMagicPlayerMap().get(playa.getName()).isTeleportReady()){
                playa.sendMessage("Heal is still on cooldown");
                return;
@@ -56,7 +59,6 @@ public class EntityDamageEntity implements Listener {
          // Advanced heal spell
          else if(playa.getItemInHand().getData().toString().contains("BONE")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null){
-            event.setCancelled(true);
             if(!plugin.getMagicPlayerMap().get(playa.getName()).isTeleportReady()){
                playa.sendMessage("Advanced heal is still on cooldown");
                return;
@@ -73,7 +75,7 @@ public class EntityDamageEntity implements Listener {
                && plugin.getMeleePlayerMap().get(playa.getName()) != null){
             int blade, crit, level;
             
-            event.setCancelled(true);
+            event.setCancelled(false);
             
             // Check if the player can swing yet
             if(plugin.getMeleePlayerMap().get(playa.getName()).isAttackReady()){
@@ -93,14 +95,15 @@ public class EntityDamageEntity implements Listener {
                   crit = 2;
                else
                   crit = 1;
-               victim.damage((blade + (level / 2)) * crit);
+               event.setDamage((blade + (level / 2)) * crit);
+               
             }
             else{
                if(plugin.probabilityRoll(5 * blade))
                   crit = 2;
                else
                   crit = 1;
-               victim.damage(blade * crit);
+               event.setDamage(blade * crit);
                plugin.getMeleePlayerMap().get(playa.getName()).addRage(5);
             }
             if(crit == 2)
@@ -109,10 +112,11 @@ public class EntityDamageEntity implements Listener {
             //playa.getItemInHand().setDurability((short) 0);
          }
          // Damage by an iron sword (block sword)
-         else if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0){
+         else if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
+               && plugin.getMeleePlayerMap().get(playa.getName()) != null){
             int blade;
             
-            event.setCancelled(true);
+            event.setCancelled(false);
 
             // Check if the player can swing yet
             if(plugin.getMeleePlayerMap().get(playa.getName()).isAttackReady()){
@@ -124,13 +128,20 @@ public class EntityDamageEntity implements Listener {
             
             blade = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlade();
 
-            victim.damage(blade);
+            event.setDamage(blade);
 
             if(plugin.getBerserkMap().get(playa.getName()) == null)
                plugin.getMeleePlayerMap().get(playa.getName()).addRage(5);
             
             //playa.getItemInHand().setDurability((short) 0);
             
+         }
+         // Damage by a bow
+         else if(playa.getItemInHand().getType().compareTo(Material.BOW) == 0
+               && plugin.getRangedPlayerMap().get(playa.getName()) != null){
+            event.setCancelled(false);
+
+            event.setDamage(0);
          }
       }
       // Melee player taking (reduced) damage and possibly blocking an attack
@@ -201,6 +212,15 @@ public class EntityDamageEntity implements Listener {
                plugin.getProjMap().remove(ent.get(i));
                ent.remove(i);
             }
+         }
+      }
+      // Fist bump!
+      else if(event.getEntity() instanceof Player
+            && event.getDamager() instanceof Player){
+         Player playa = (Player) event.getEntity();
+         if(playa.getItemInHand().getTypeId() == 0){
+            ((Player) event.getEntity()).sendMessage("*fist bumped by " + playa.getName() + "*");
+            playa.sendMessage("*fist bump*");
          }
       }
    }

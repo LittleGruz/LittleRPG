@@ -50,6 +50,8 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Fireball
  * Teleport
  * 
+ * TODO Stop fists dealing damage
+ * 
  * Diamond sword gives chance for critical hits DONE
  * Iron sword gives chance for dodge DONE
  * Rage mechanic gives increased sword bonuses, extra damage and speed DONE

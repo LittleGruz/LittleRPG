@@ -19,10 +19,12 @@ public class PlayerLevel implements Listener{
       plugin = instance;
    }
 
-   // Give new weapons if the necessary level is reached TODO Increase sub-class stats
+   // Give new weapons if the necessary level is reached
    @EventHandler
    public void onPlayerLevel(PlayerLevelChangeEvent event){
-      event.getPlayer().sendMessage("Level up!");
+      if(event.getNewLevel() > event.getOldLevel())
+         event.getPlayer().sendMessage("Level up!");
+      
       // New weapon for the melee class
       if(plugin.getMeleePlayerMap().get(event.getPlayer().getName()) != null){
          RPGMeleePlayer rpgPlaya = plugin.getMeleePlayerMap().get(event.getPlayer().getName());
@@ -78,7 +80,7 @@ public class PlayerLevel implements Listener{
             is.setDurability((short)15);
             event.getPlayer().getInventory().setItem(1, is);
          }
-         // Wizard robe
+         // Robe
          if(rpgPlaya.getLevel() >= 4)
             event.getPlayer().getInventory().setChestplate(new ItemStack(Material.GOLD_CHESTPLATE));
          // Fireball
