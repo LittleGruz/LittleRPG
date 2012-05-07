@@ -30,15 +30,21 @@ public class EntityDamageEntity implements Listener {
    @EventHandler
    public void onEntityDamageEntity(EntityDamageByEntityEvent event){
       if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getUID().toString())){
-         if(event.getDamager() instanceof Player
+         // Fist bump!
+         if(event.getEntity() instanceof Player
+               && event.getDamager() instanceof Player){
+            Player playa = (Player) event.getEntity();
+            if(playa.getItemInHand().getTypeId() == 0){
+               ((Player) event.getEntity()).sendMessage("*fist bumped by " + playa.getName() + "*");
+               playa.sendMessage("*fist bump*");
+            }
+         }
+         else if(event.getDamager() instanceof Player
                && event.getEntity() instanceof LivingEntity){
             Player playa = (Player) event.getDamager();
             LivingEntity victim = (LivingEntity) event.getEntity();
             
             event.setDamage(0);
-            
-            if(playa.getItemInHand().getTypeId() == 0)
-               playa.sendMessage("Fist bump");
             
             // Heal spell
             if(playa.getItemInHand().getData().toString().contains("WHITE DYE")
@@ -194,15 +200,6 @@ public class EntityDamageEntity implements Listener {
                   plugin.getProjMap().remove(ent.get(i));
                   ent.remove(i);
                }
-            }
-         }
-         // Fist bump!
-         else if(event.getEntity() instanceof Player
-               && event.getDamager() instanceof Player){
-            Player playa = (Player) event.getEntity();
-            if(playa.getItemInHand().getTypeId() == 0){
-               ((Player) event.getEntity()).sendMessage("*fist bumped by " + playa.getName() + "*");
-               playa.sendMessage("*fist bump*");
             }
          }
       }
