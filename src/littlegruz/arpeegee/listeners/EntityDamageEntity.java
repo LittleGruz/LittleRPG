@@ -10,7 +10,6 @@ import littlegruz.arpeegee.ArpeegeeMain;
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
 import org.bukkit.Material;
-import org.bukkit.entity.Animals;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -211,7 +210,7 @@ public class EntityDamageEntity implements Listener {
    
    private void healSpell(Player playa, LivingEntity fortunate, int adv){
       int spell = (int) plugin.getMagicPlayerMap().get(playa.getName()).getSubClassObject().getSpell();
-      if(fortunate instanceof Animals){ //Change on release
+      if(fortunate instanceof Player){ //Change on release
          playa.playEffect(fortunate.getLocation(), Effect.SMOKE, 1);
          if(fortunate.getHealth() + (spell * adv) > fortunate.getMaxHealth())
             fortunate.setHealth(fortunate.getMaxHealth());
