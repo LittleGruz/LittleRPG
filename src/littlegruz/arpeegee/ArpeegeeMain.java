@@ -40,48 +40,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-/* If blade/archery/egg is high enough, chance (or increase chance) of crit DONE
- * Add spells which get opened up as the player levels DONE
- * 
- * Spells (so far): DONE
- * Heal
- * Adv. Heal
- * Lightning (single)
- * Lightning (area)
- * Fireball
- * Teleport
- * 
- * Diamond sword gives chance for critical hits DONE
- * Iron sword gives chance for dodge DONE
- * Rage mechanic gives increased sword bonuses, extra damage and speed DONE
- * Right click with sword will activate rage if rage meter is full DONE
- * 
- * Can fire bow quicker than egg but with less damage than egg DONE
- * Egg can occasionally explode DONE
- * A ranged armour equip can make user run faster DONE
- * Cooldowns for spells DONE
- * Levels and stat increase DONE (but no tested balancing)
- * Reduced damage taken by Melee class DONE
- * Weapon assignment DONE */
-
-/* And then for the sub-classes
- * Name [name]
- * Archery [modifier]
- * Blade [modifier]
- * Block [modifier]
- * Egg [modifier]
- * Spells [modifier]
- * 
- * e.g. For a Eggman sub-class it may look like this
- * Name Eggman
- * Archery 0.5
- * Blade 0.5
- * Block 0.5
- * Egg 5
- * Spells 0
- * 
- * The modifiers change the normal damage done by those weapons or activates
- * certain perks*/
+/* Make armour degrade and then be dropped by mobs
+ * Levels and stat increase DONE (but no tested balancing)*/
 
 public class ArpeegeeMain extends JavaPlugin {
    private Logger log = Logger.getLogger("This is MINECRAFT!");

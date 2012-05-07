@@ -36,9 +36,10 @@ public class PlayerProjectile implements Listener{
    @EventHandler
    public void onEggThrow(PlayerEggThrowEvent event){
       if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getUID().toString())){
+         event.setHatching(false);
          // Determining explosion chance by egg skill
-         if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null){
-            event.setHatching(false);
+         if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null
+               && event.getPlayer().getLevel() >= 7){
             int egg = (int) plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getSubClassObject().getEgg();
             if(plugin.probabilityRoll(5 * egg)){
                event.getEgg().getLocation().getWorld().createExplosion(event.getEgg().getLocation(), 1F, false);

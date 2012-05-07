@@ -36,14 +36,15 @@ public class EntityDamageEntity implements Listener {
             Player playa = (Player) event.getDamager();
             LivingEntity victim = (LivingEntity) event.getEntity();
             
-            event.setCancelled(true);
+            event.setDamage(0);
             
             if(playa.getItemInHand().getTypeId() == 0)
                playa.sendMessage("Fist bump");
             
             // Heal spell
             if(playa.getItemInHand().getData().toString().contains("WHITE DYE")
-                  && plugin.getMagicPlayerMap().get(playa.getName()) != null){
+                  && plugin.getMagicPlayerMap().get(playa.getName()) != null
+                  && playa.getLevel() >= 3){
                if(!plugin.getMagicPlayerMap().get(playa.getName()).isTeleportReady()){
                   playa.sendMessage("Heal is still on cooldown");
                   return;
@@ -59,7 +60,8 @@ public class EntityDamageEntity implements Listener {
             }
             // Advanced heal spell
             else if(playa.getItemInHand().getData().toString().contains("BONE")
-                  && plugin.getMagicPlayerMap().get(playa.getName()) != null){
+                  && plugin.getMagicPlayerMap().get(playa.getName()) != null
+                  && playa.getLevel() >= 11){
                if(!plugin.getMagicPlayerMap().get(playa.getName()).isTeleportReady()){
                   playa.sendMessage("Advanced heal is still on cooldown");
                   return;
@@ -73,10 +75,9 @@ public class EntityDamageEntity implements Listener {
             }
             // Damage by a diamond sword (crit sword)
             else if(playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0
-                  && plugin.getMeleePlayerMap().get(playa.getName()) != null){
+                  && plugin.getMeleePlayerMap().get(playa.getName()) != null
+                  && playa.getLevel() >= 5){
                int blade, crit, level;
-               
-               event.setCancelled(false);
                
                // Check if the player can swing yet
                if(plugin.getMeleePlayerMap().get(playa.getName()).isAttackReady()){
@@ -116,8 +117,6 @@ public class EntityDamageEntity implements Listener {
             else if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
                   && plugin.getMeleePlayerMap().get(playa.getName()) != null){
                int blade;
-               
-               event.setCancelled(false);
    
                // Check if the player can swing yet
                if(plugin.getMeleePlayerMap().get(playa.getName()).isAttackReady()){
@@ -136,13 +135,6 @@ public class EntityDamageEntity implements Listener {
                
                //playa.getItemInHand().setDurability((short) 0);
                
-            }
-            // Damage by a bow
-            else if(playa.getItemInHand().getType().compareTo(Material.BOW) == 0
-                  && plugin.getRangedPlayerMap().get(playa.getName()) != null){
-               event.setCancelled(false);
-   
-               event.setDamage(0);
             }
          }
          // Melee player taking (reduced) damage and possibly blocking an attack
@@ -178,28 +170,18 @@ public class EntityDamageEntity implements Listener {
          else if(event.getDamager() instanceof Arrow){
             // Check that it came from a player
             if(plugin.getProjMap().get(event.getDamager()) != null){
-               //Location loc;
-               LivingEntity le;
                ArrayList<Entity> ent = new ArrayList<Entity>();
                int arch, i;
                
-               /* Since cancelling the event causes the arrow to bounce of, it
-                * gets removed manually */
-               event.setCancelled(true);
-               event.getDamager().remove();
-   
-               le = (LivingEntity) event.getEntity();
-               //loc = le.getLocation();
-               
                arch = (int) Double.parseDouble(plugin.getProjMap().get(event.getDamager()).replace("grounded", ""));
-   
+               
                // If crit, do double damage
                if(plugin.probabilityRoll(5 * arch)){
-                  //loc.getWorld().strikeLightningEffect(loc);
-                  le.damage(1 * arch * 2);
+                  event.getEntity().getWorld().strikeLightningEffect(event.getEntity().getLocation());
+                  event.setDamage(1 * arch * 2);
                }
                else
-                  le.damage(1 * arch);
+                  event.setDamage(1 * arch);
                
                // Remove all arrows that have hit the ground from hashmap
                // The removal is separate to stop concurrency issues

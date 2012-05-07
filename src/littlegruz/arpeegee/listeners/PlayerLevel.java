@@ -52,7 +52,7 @@ public class PlayerLevel implements Listener{
             
             // Increase player stats
             levelUp(rpgPlaya, event);
-            rpgPlaya.getSubClassObject().setArch(rpgPlaya.getSubClassObject().getArch() + 0.2);
+            rpgPlaya.getSubClassObject().setArch(rpgPlaya.getSubClassObject().getArch() + 0.3);
             rpgPlaya.getSubClassObject().setEgg(rpgPlaya.getSubClassObject().getEgg() + 0.4);
    
             if(rpgPlaya.getLevel() >= 2)

@@ -43,7 +43,8 @@ public class PlayerInteract implements Listener{
          // Casting weapon for "Flash"
          if(playa.getItemInHand().getData().toString().contains("MAGENTA DYE")
                && event.getAction().toString().contains("RIGHT_CLICK")
-               && plugin.getMagicPlayerMap().get(playa.getName()) != null){
+               && plugin.getMagicPlayerMap().get(playa.getName()) != null
+               && playa.getLevel() >= 8){
             ItemStack is = new ItemStack(351,1);
             is.setDurability((short)13);
             
@@ -114,7 +115,8 @@ public class PlayerInteract implements Listener{
          }
          // Lightning (area) spell
          else if(playa.getItemInHand().getType().compareTo(Material.BLAZE_ROD) == 0
-               && plugin.getMagicPlayerMap().get(playa.getName()) != null){
+               && plugin.getMagicPlayerMap().get(playa.getName()) != null
+               && playa.getLevel() >= 13){
             event.setCancelled(true);
             /*playa.setLevel(playa.getLevel() + 1);
             plugin.getMagicPlayerMap().get(playa.getName()).setLevel(playa.getLevel());*/
@@ -129,7 +131,8 @@ public class PlayerInteract implements Listener{
          // Melancholy. Spawns sheep around mage.
          else if(playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
                && event.getAction().toString().contains("RIGHT_CLICK")
-               && plugin.getMagicPlayerMap().get(playa.getName()) != null){
+               && plugin.getMagicPlayerMap().get(playa.getName()) != null
+               && playa.getLevel() >= 10){
             event.setCancelled(true);
             
             if(!plugin.getMagicPlayerMap().get(playa.getName()).isSheepReady()){
@@ -142,28 +145,25 @@ public class PlayerInteract implements Listener{
                plugin.getMagicPlayerMap().get(playa.getName()).setSheepReadiness(false);
             }
             
-            int level;
             Location loc = event.getPlayer().getLocation();
             
-            level = (int) plugin.getMagicPlayerMap().get(playa.getName()).getLevel();
-            if(level >= 10){
-               loc.setY(loc.getY() + 1.5);
-               loc.setX(loc.getX() + 1);
-               loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
-               loc.setX(loc.getX() - 2);
-               loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
-               loc.setX(loc.getX() + 1);
-               loc.setZ(loc.getZ() + 1);
-               loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
-               loc.setZ(loc.getZ() - 2);
-               loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
-            }
+            loc.setY(loc.getY() + 1.5);
+            loc.setX(loc.getX() + 1);
+            loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
+            loc.setX(loc.getX() - 2);
+            loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
+            loc.setX(loc.getX() + 1);
+            loc.setZ(loc.getZ() + 1);
+            loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
+            loc.setZ(loc.getZ() - 2);
+            loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
          }
          // This fireball creation code is based off MadMatt199's code (https://github.com/madmatt199/GhastBlast)
          // Casting weapon to launch a fireball
          else if(playa.getItemInHand().getData().toString().contains("RED DYE")
                && event.getAction().toString().contains("RIGHT_CLICK")
-               && plugin.getMagicPlayerMap().get(playa.getName()) != null){
+               && plugin.getMagicPlayerMap().get(playa.getName()) != null
+               && playa.getLevel() >= 5){
             event.setCancelled(true);
             
             if(!plugin.getMagicPlayerMap().get(playa.getName()).isFireballReady()){
