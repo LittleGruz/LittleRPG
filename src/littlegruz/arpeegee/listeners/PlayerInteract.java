@@ -235,7 +235,8 @@ public class PlayerInteract implements Listener{
                && plugin.getRangedPlayerMap().get(playa.getName()) != null)
             event.getPlayer().getInventory().setItem(playa.getInventory().getHeldItemSlot(), new ItemStack(Material.BOW,1));
          else if(playa.getItemInHand().getType().compareTo(Material.EGG) == 0
-               && plugin.getRangedPlayerMap().get(playa.getName()) != null){
+               && plugin.getRangedPlayerMap().get(playa.getName()) != null
+               && playa.getLevel() >= 7){
             if(!plugin.getRangedPlayerMap().get(playa.getName()).isEggReady())
                playa.sendMessage("Egg is still on cooldown");
             else{
