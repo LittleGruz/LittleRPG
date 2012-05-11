@@ -1,5 +1,7 @@
 package littlegruz.arpeegee.listeners;
 
+import java.util.List;
+
 import littlegruz.arpeegee.ArpeegeeMain;
 
 import org.bukkit.entity.Animals;
@@ -22,6 +24,7 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class EnemyDeaths implements Listener{
    private ArpeegeeMain plugin;
@@ -41,38 +44,64 @@ public class EnemyDeaths implements Listener{
             
             //Base exp values for creatures here
             exp = (float) 0.15;
-            if(event.getEntity() instanceof Animals)
+            if(event.getEntity() instanceof Animals){
                exp = (float) 0.05;
-            else if(event.getEntity() instanceof PigZombie)
+               itemDrops(event.getDrops(), 2);
+            }
+            else if(event.getEntity() instanceof PigZombie){
                exp = (float) 0.25;
-            else if(event.getEntity() instanceof Zombie)
+               itemDrops(event.getDrops(), 5);
+            }
+            else if(event.getEntity() instanceof Zombie){
                exp = (float) 0.15;
-            else if(event.getEntity() instanceof Silverfish)
+               itemDrops(event.getDrops(), 5);
+            }
+            else if(event.getEntity() instanceof Silverfish){
                exp = (float) 0.15;
-            else if(event.getEntity() instanceof CaveSpider)
+               itemDrops(event.getDrops(), 5);
+            }
+            else if(event.getEntity() instanceof CaveSpider){
                exp = (float) 0.30;
-            else if(event.getEntity() instanceof Spider)
-               exp = (float) 0.15;
-            else if(event.getEntity() instanceof Skeleton)
+               itemDrops(event.getDrops(), 7);
+            }
+            else if(event.getEntity() instanceof Spider){
+               exp = (float) 0.17;
+               itemDrops(event.getDrops(), 5);
+            }
+            else if(event.getEntity() instanceof Skeleton){
                exp = (float) 0.20;
-            else if(event.getEntity() instanceof Ghast)
+               itemDrops(event.getDrops(), 5);
+            }
+            else if(event.getEntity() instanceof Ghast){
                exp = (float) 0.30;
+               itemDrops(event.getDrops(), 8);
+            }
             else if(event.getEntity() instanceof MagmaCube){
                //if(((MagmaCube) event.getEntity()).getSize() > 1)
                exp = (float) 0.17;
+               itemDrops(event.getDrops(), 8);
             }
             else if(event.getEntity() instanceof Slime){
                //if(((Slime) event.getEntity()).getSize() > 1)
                exp = (float) 0.15;
+               itemDrops(event.getDrops(), 8);
             }
-            else if(event.getEntity() instanceof Creeper)
+            else if(event.getEntity() instanceof Creeper){
                exp = (float) 0.20;
-            else if(event.getEntity() instanceof Enderman)
+               itemDrops(event.getDrops(), 5);
+            }
+            else if(event.getEntity() instanceof Enderman){
                exp = (float) 0.25;
-            else if(event.getEntity() instanceof Blaze)
+               itemDrops(event.getDrops(), 7);
+            }
+            else if(event.getEntity() instanceof Blaze){
                exp = (float) 0.25;
-            else if(event.getEntity() instanceof EnderDragon)
+               itemDrops(event.getDrops(), 7);
+            }
+            else if(event.getEntity() instanceof EnderDragon){
                exp = (float) 1.50;
+               itemDrops(event.getDrops(), 100);
+            }
             
             for(Entity e : event.getEntity().getNearbyEntities(20, 20, 20)) {
                if (e instanceof Player) {
@@ -93,5 +122,10 @@ public class EnemyDeaths implements Listener{
             }
          }
       }
+   }
+   
+   private void itemDrops(List<ItemStack> drops, int baseChance){
+      drops.removeAll(drops);
+      //TODO: Probability code for drops here
    }
 }
