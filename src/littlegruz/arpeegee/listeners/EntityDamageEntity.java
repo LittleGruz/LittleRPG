@@ -39,7 +39,7 @@ public class EntityDamageEntity implements Listener {
                playa.sendMessage("*fist bump*");
             }
          }
-         else if(event.getDamager() instanceof Player
+         if(event.getDamager() instanceof Player
                && event.getEntity() instanceof LivingEntity){
             Player playa = (Player) event.getDamager();
             LivingEntity victim = (LivingEntity) event.getEntity();

@@ -40,37 +40,37 @@ public class EnemyDeaths implements Listener{
             event.setDroppedExp(0);
             
             //Base exp values for creatures here
-            exp = (float) 0.10;
+            exp = (float) 0.15;
             if(event.getEntity() instanceof Animals)
                exp = (float) 0.05;
             else if(event.getEntity() instanceof PigZombie)
-               exp = (float) 0.20;
+               exp = (float) 0.25;
             else if(event.getEntity() instanceof Zombie)
-               exp = (float) 0.10;
-            else if(event.getEntity() instanceof Silverfish)
-               exp = (float) 0.10;
-            else if(event.getEntity() instanceof CaveSpider)
-               exp = (float) 0.20;
-            else if(event.getEntity() instanceof Spider)
-               exp = (float) 0.10;
-            else if(event.getEntity() instanceof Skeleton)
                exp = (float) 0.15;
-            else if(event.getEntity() instanceof Ghast)
+            else if(event.getEntity() instanceof Silverfish)
+               exp = (float) 0.15;
+            else if(event.getEntity() instanceof CaveSpider)
+               exp = (float) 0.30;
+            else if(event.getEntity() instanceof Spider)
+               exp = (float) 0.15;
+            else if(event.getEntity() instanceof Skeleton)
                exp = (float) 0.20;
+            else if(event.getEntity() instanceof Ghast)
+               exp = (float) 0.30;
             else if(event.getEntity() instanceof MagmaCube){
                //if(((MagmaCube) event.getEntity()).getSize() > 1)
-               exp = (float) 0.12;
+               exp = (float) 0.17;
             }
             else if(event.getEntity() instanceof Slime){
                //if(((Slime) event.getEntity()).getSize() > 1)
-               exp = (float) 0.10;
+               exp = (float) 0.15;
             }
             else if(event.getEntity() instanceof Creeper)
-               exp = (float) 0.12;
+               exp = (float) 0.20;
             else if(event.getEntity() instanceof Enderman)
-               exp = (float) 0.20;
+               exp = (float) 0.25;
             else if(event.getEntity() instanceof Blaze)
-               exp = (float) 0.20;
+               exp = (float) 0.25;
             else if(event.getEntity() instanceof EnderDragon)
                exp = (float) 1.50;
             

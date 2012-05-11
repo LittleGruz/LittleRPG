@@ -32,6 +32,12 @@ public class PlayerJoin implements Listener{
          }
          else{
             event.setJoinMessage(ChatColor.RED + "Welcome back, brave adventurer.");
+            if(plugin.getMeleePlayerMap().get(event.getPlayer().getName()) != null)
+               event.getPlayer().setLevel(plugin.getMeleePlayerMap().get(event.getPlayer().getName()).getLevel());
+            else if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null)
+               event.getPlayer().setLevel(plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getLevel());
+            else if(plugin.getMagicPlayerMap().get(event.getPlayer().getName()) != null)
+               event.getPlayer().setLevel(plugin.getMagicPlayerMap().get(event.getPlayer().getName()).getLevel());
          }
       }
    }
