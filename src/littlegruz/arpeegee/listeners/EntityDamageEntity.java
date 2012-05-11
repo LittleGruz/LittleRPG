@@ -142,9 +142,10 @@ public class EntityDamageEntity implements Listener {
                
             }
          }
-         // Melee player taking (reduced) damage and possibly blocking an attack
+         // Player taking damage
          else if(event.getEntity() instanceof Player){
             Player playa = (Player) event.getEntity();
+            // Melee player taking (reduced) damage and possibly blocking an attack
             if(plugin.getMeleePlayerMap().get(playa.getName()) != null){
                int dmg;
                
@@ -156,7 +157,9 @@ public class EntityDamageEntity implements Listener {
                   dmg = (int) (event.getDamage() * (event.getDamage() * 0.67) / event.getDamage());
                else
                   dmg = (int) (event.getDamage() * (event.getDamage() * 0.5) / event.getDamage());
+               
                event.setDamage(dmg);
+               armourDamage(playa,3);
                
                // Damage block check
                if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0){
@@ -169,6 +172,12 @@ public class EntityDamageEntity implements Listener {
                      return;
                   }
                }
+            }
+            else if(plugin.getRangedPlayerMap().get(playa.getName()) != null){
+               armourDamage(playa,1);
+            }
+            else if(plugin.getMagicPlayerMap().get(playa.getName()) != null){
+               armourDamage(playa,2);
             }
          }
          // Player arrow hit
@@ -221,5 +230,16 @@ public class EntityDamageEntity implements Listener {
          fortunate.damage(spell * adv);
          playa.sendMessage("Undead damage!");
       }
+   }
+   
+   private void armourDamage(Player playa, int dmg){
+      if(playa.getInventory().getBoots() != null)
+         playa.getInventory().getBoots().setDurability((short) (playa.getInventory().getBoots().getDurability() + dmg));
+      if(playa.getInventory().getChestplate() != null)
+         playa.getInventory().getChestplate().setDurability((short) (playa.getInventory().getChestplate().getDurability() + dmg));
+      if(playa.getInventory().getHelmet() != null)
+         playa.getInventory().getHelmet().setDurability((short) (playa.getInventory().getHelmet().getDurability() + dmg));
+      if(playa.getInventory().getLeggings() != null)
+         playa.getInventory().getLeggings().setDurability((short) (playa.getInventory().getLeggings().getDurability() + dmg));
    }
 }

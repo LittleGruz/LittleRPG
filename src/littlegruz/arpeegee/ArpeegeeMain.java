@@ -43,6 +43,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 /* Make armour degrade and then be dropped by mobs
  * Levels and stat increase DONE (but no tested balancing)*/
 
+/* TODO: Feather falling potion effect for ranged?*/
+
 public class ArpeegeeMain extends JavaPlugin {
    private Logger log = Logger.getLogger("This is MINECRAFT!");
    private File meleePlayerFile;
