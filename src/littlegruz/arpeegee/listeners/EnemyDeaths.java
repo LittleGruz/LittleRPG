@@ -1,9 +1,11 @@
 package littlegruz.arpeegee.listeners;
 
 import java.util.List;
+import java.util.Random;
 
 import littlegruz.arpeegee.ArpeegeeMain;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Blaze;
 import org.bukkit.entity.CaveSpider;
@@ -46,7 +48,7 @@ public class EnemyDeaths implements Listener{
             exp = (float) 0.15;
             if(event.getEntity() instanceof Animals){
                exp = (float) 0.05;
-               itemDrops(event.getDrops(), 2);
+               itemDrops(event.getDrops(), 0);
             }
             else if(event.getEntity() instanceof PigZombie){
                exp = (float) 0.25;
@@ -54,7 +56,7 @@ public class EnemyDeaths implements Listener{
             }
             else if(event.getEntity() instanceof Zombie){
                exp = (float) 0.15;
-               itemDrops(event.getDrops(), 5);
+               itemDrops(event.getDrops(), 3);
             }
             else if(event.getEntity() instanceof Silverfish){
                exp = (float) 0.15;
@@ -66,7 +68,7 @@ public class EnemyDeaths implements Listener{
             }
             else if(event.getEntity() instanceof Spider){
                exp = (float) 0.17;
-               itemDrops(event.getDrops(), 5);
+               itemDrops(event.getDrops(), 4);
             }
             else if(event.getEntity() instanceof Skeleton){
                exp = (float) 0.20;
@@ -74,7 +76,7 @@ public class EnemyDeaths implements Listener{
             }
             else if(event.getEntity() instanceof Ghast){
                exp = (float) 0.30;
-               itemDrops(event.getDrops(), 8);
+               itemDrops(event.getDrops(), 7);
             }
             else if(event.getEntity() instanceof MagmaCube){
                //if(((MagmaCube) event.getEntity()).getSize() > 1)
@@ -103,7 +105,7 @@ public class EnemyDeaths implements Listener{
                itemDrops(event.getDrops(), 100);
             }
             
-            for(Entity e : event.getEntity().getNearbyEntities(20, 20, 20)) {
+            for(Entity e : event.getEntity().getNearbyEntities(15, 15, 15)) {
                if (e instanceof Player) {
                   Player p = (Player) e;
                   
@@ -125,7 +127,46 @@ public class EnemyDeaths implements Listener{
    }
    
    private void itemDrops(List<ItemStack> drops, int baseChance){
+      int totalDrops, randNum;
+      Random rand = new Random();
+
       drops.removeAll(drops);
-      //TODO: Probability code for drops here
+      totalDrops = 0;
+      
+      if(plugin.probabilityRoll(baseChance)){
+         totalDrops = 1;
+         // Chance for a double drop
+         if(plugin.probabilityRoll(3))
+            totalDrops++;
+      }
+      // Increased total drops for big bosses
+      if(baseChance == 100)
+         totalDrops += 4;
+      
+      // Set the drops
+      while(totalDrops > 0){
+         randNum = rand.nextInt() % 100;
+         if(randNum < 10)
+            drops.add(new ItemStack(Material.GOLD_CHESTPLATE,1));
+         else if(randNum < 20)
+            drops.add(new ItemStack(Material.GOLD_HELMET,1));
+         else if(randNum < 30)
+            drops.add(new ItemStack(Material.LEATHER_BOOTS,1));
+         else if(randNum < 40)
+            drops.add(new ItemStack(Material.LEATHER_CHESTPLATE,1));
+         else if(randNum < 50)
+            drops.add(new ItemStack(Material.LEATHER_HELMET,1));
+         else if(randNum < 60)
+            drops.add(new ItemStack(Material.LEATHER_LEGGINGS,1));
+         else if(randNum < 70)
+            drops.add(new ItemStack(Material.IRON_BOOTS,1));
+         else if(randNum < 80)
+            drops.add(new ItemStack(Material.IRON_CHESTPLATE,1));
+         else if(randNum < 90)
+            drops.add(new ItemStack(Material.IRON_HELMET,1));
+         else if(randNum < 100)
+            drops.add(new ItemStack(Material.IRON_LEGGINGS,1));
+         totalDrops--;
+      }
    }
 }

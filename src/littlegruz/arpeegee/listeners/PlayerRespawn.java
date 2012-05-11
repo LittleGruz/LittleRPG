@@ -20,6 +20,8 @@ public class PlayerRespawn implements Listener{
       plugin = instance;
    }
    
+   
+   //TODO: Y NO CAN DAMAGE ARMOUR?
    @EventHandler
    public void onPlayerRespawn(PlayerRespawnEvent event){
       if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getUID().toString())){
@@ -32,16 +34,21 @@ public class PlayerRespawn implements Listener{
             // Give player back their base weapon
             event.getPlayer().getInventory().setItem(0, new ItemStack(Material.IRON_SWORD,1));
             
-            if(rpgPlaya.getLevel() >= 3)
-               event.getPlayer().getInventory().setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
+            // Return armour (at half durability) and weapons if at the required level
+            if(rpgPlaya.getLevel() >= 3){
+               event.getPlayer().getInventory().setChestplate(new ItemStack(Material.IRON_CHESTPLATE,1,(short) 121));
+            }
             if(rpgPlaya.getLevel() >= 5)
                event.getPlayer().getInventory().setItem(1, new ItemStack(Material.DIAMOND_SWORD,1));
-            if(rpgPlaya.getLevel() >= 6)
-               event.getPlayer().getInventory().setBoots(new ItemStack(Material.IRON_BOOTS));
-            if(rpgPlaya.getLevel() >= 9)
-               event.getPlayer().getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
-            if(rpgPlaya.getLevel() >= 12)
-               event.getPlayer().getInventory().setHelmet(new ItemStack(Material.IRON_HELMET));
+            if(rpgPlaya.getLevel() >= 6){
+               event.getPlayer().getInventory().setBoots(new ItemStack(Material.IRON_BOOTS,1,(short) 98));
+            }
+            if(rpgPlaya.getLevel() >= 9){
+               event.getPlayer().getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS,1,(short) 113));
+            }
+            if(rpgPlaya.getLevel() >= 12){
+               event.getPlayer().getInventory().setHelmet(new ItemStack(Material.IRON_HELMET,1,(short) 83));
+            }
          }
          // Restore weapons and levels for the ranged class
          else if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null){
@@ -52,17 +59,22 @@ public class PlayerRespawn implements Listener{
             // Give player back their base weapon
             event.getPlayer().getInventory().setItem(0, new ItemStack(Material.BOW,1));
             event.getPlayer().getInventory().setItem(9, new ItemStack(Material.ARROW,10));
-            
-            if(rpgPlaya.getLevel() >= 2)
-               event.getPlayer().getInventory().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
-            if(rpgPlaya.getLevel() >= 4)
-               event.getPlayer().getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS));
-            if(rpgPlaya.getLevel() >= 6)
-               event.getPlayer().getInventory().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
+
+            // Return armour (at half durability) and weapons if at the required level
+            if(rpgPlaya.getLevel() >= 2){
+               event.getPlayer().getInventory().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE,1,(short) 41));
+            }
+            if(rpgPlaya.getLevel() >= 4){
+               event.getPlayer().getInventory().setChestplate(new ItemStack(Material.LEATHER_BOOTS,1,(short) 33));
+            }
+            if(rpgPlaya.getLevel() >= 6){
+               event.getPlayer().getInventory().setChestplate(new ItemStack(Material.LEATHER_LEGGINGS,1,(short) 38));
+            }
             if(rpgPlaya.getLevel() >= 7)
                event.getPlayer().getInventory().setItem(1, new ItemStack(Material.EGG,1));
-            if(rpgPlaya.getLevel() >= 8)
-               event.getPlayer().getInventory().setHelmet(new ItemStack(Material.LEATHER_HELMET));
+            if(rpgPlaya.getLevel() >= 8){
+               event.getPlayer().getInventory().setChestplate(new ItemStack(Material.LEATHER_HELMET,1,(short) 28));
+            }
          }
          // Restore weapons and levels for the magic class
          else if(plugin.getMagicPlayerMap().get(event.getPlayer().getName()) != null){
@@ -83,8 +95,9 @@ public class PlayerRespawn implements Listener{
                event.getPlayer().getInventory().setItem(1, is);
             }
             // Wizard robe
-            if(rpgPlaya.getLevel() >= 4)
-               event.getPlayer().getInventory().setChestplate(new ItemStack(Material.GOLD_CHESTPLATE));
+            if(rpgPlaya.getLevel() >= 4){
+               event.getPlayer().getInventory().setChestplate(new ItemStack(Material.GOLD_CHESTPLATE,1,(short) 57));
+            }
             // Fireball
             if(rpgPlaya.getLevel() >= 5){
                is.setDurability((short)1);
@@ -96,8 +109,9 @@ public class PlayerRespawn implements Listener{
                event.getPlayer().getInventory().setItem(3, is);
             }
             // Wizard hat
-            if(rpgPlaya.getLevel() >= 9)
-               event.getPlayer().getInventory().setHelmet(new ItemStack(Material.GOLD_HELMET));
+            if(rpgPlaya.getLevel() >= 9){
+               event.getPlayer().getInventory().setChestplate(new ItemStack(Material.GOLD_CHESTPLATE,1,(short) 39));
+            }
             // Sheep summon
             if(rpgPlaya.getLevel() >= 10){
                is.setType(Material.WHEAT);

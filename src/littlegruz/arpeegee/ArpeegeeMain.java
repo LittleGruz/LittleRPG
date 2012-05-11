@@ -245,7 +245,7 @@ public class ArpeegeeMain extends JavaPlugin {
       berserkMap = new HashMap<String, String>();
       projMap = new HashMap<Entity, String>();
 
-      log.info("LittleRPG v1.0 beta enabled");
+      log.info("LittleRPG v1.1 beta enabled");
    }
    
    public void onDisable(){
@@ -349,7 +349,7 @@ public class ArpeegeeMain extends JavaPlugin {
          log.info("Error saving LittleRPG worlds");
       }
       
-      log.info("LittleRPG v1.0 beta disabled");
+      log.info("LittleRPG v1.1 beta disabled");
    }
 
    public HashMap<String, RPGMeleePlayer> getMeleePlayerMap() {
