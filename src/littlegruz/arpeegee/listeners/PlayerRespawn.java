@@ -67,11 +67,13 @@ public class PlayerRespawn implements Listener{
             if(rpgPlaya.getLevel() >= 4){
                event.getPlayer().getInventory().setChestplate(new ItemStack(Material.LEATHER_BOOTS,1,(short) 33));
             }
+            if(rpgPlaya.getLevel() >= 5)
+               event.getPlayer().getInventory().setItem(1, new ItemStack(Material.BOW,1));
             if(rpgPlaya.getLevel() >= 6){
                event.getPlayer().getInventory().setChestplate(new ItemStack(Material.LEATHER_LEGGINGS,1,(short) 38));
             }
             if(rpgPlaya.getLevel() >= 7)
-               event.getPlayer().getInventory().setItem(1, new ItemStack(Material.EGG,1));
+               event.getPlayer().getInventory().setItem(2, new ItemStack(Material.EGG,1));
             if(rpgPlaya.getLevel() >= 8){
                event.getPlayer().getInventory().setChestplate(new ItemStack(Material.LEATHER_HELMET,1,(short) 28));
             }

@@ -24,8 +24,20 @@ public class PlayerProjectile implements Listener{
             Player playa = (Player) event.getEntity();
    
             if(plugin.getRangedPlayerMap().get(playa.getName()) != null){
+               // Normal arrow
+               if(playa.getInventory().getHeldItemSlot() == 0){
                plugin.getProjMap().put(event.getProjectile(),
-                     Double.toString(plugin.getRangedPlayerMap().get(playa.getName()).getSubClassObject().getArch()));
+                     Double.toString(plugin.getRangedPlayerMap().get(playa.getName()).getSubClassObject().getArch()) + "|1");
+               }
+               // Fire arrow
+               else if(playa.getInventory().getHeldItemSlot() == 1
+                     /*&& playa.getLevel() >= 5*/){
+                  plugin.getProjMap().put(event.getProjectile(),
+                        Double.toString(plugin.getRangedPlayerMap().get(playa.getName()).getSubClassObject().getArch()) + "|2");
+                  playa.getInventory().setItemInHand(null);
+                  plugin.getRangedPlayerMap().get(playa.getName()).setFireBowReadiness(false);
+                  plugin.giveCooldown(playa, "fire", "ranged", 3);
+               }
                if(playa.getInventory().getItem(9).getAmount() < 2)
                   playa.getInventory().getItem(9).setAmount(10);
             }

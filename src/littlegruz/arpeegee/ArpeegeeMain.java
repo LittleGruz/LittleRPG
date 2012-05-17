@@ -400,17 +400,7 @@ public class ArpeegeeMain extends JavaPlugin {
          return true;
       return false;
    }
-   
-   /* Sets a task to turn off a ranged ability's cooldown*/
-   public void giveCooldown(final Player playa, int delay){
-      getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-         public void run() {
-            rangedPlayerMap.get(playa.getName()).setEggReadiness(true);
-            playa.getInventory().setItem(1, new ItemStack(Material.EGG,1));
-         }
-     }, delay * 20); // Multiplied by 20 to turn the delay time into seconds
-   }
-   
+
    /* Sets a task to turn off a melee ability to attack*/
    public void giveCooldown(final RPGMeleePlayer playa, int delay){
       getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
@@ -420,49 +410,68 @@ public class ArpeegeeMain extends JavaPlugin {
      }, (delay * 20) - playa.getLevel());
    }
    
-   /* Sets a task to turn off a magical ability's cooldown*/
-   public void giveCooldown(final Player playa, final String type, double delay){
-      getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-         public void run() {
-            RPGMagicPlayer rpgPlaya = magicPlayerMap.get(playa.getName());
-            ItemStack is = new ItemStack(351,1);
-            
-            if(type.compareTo("heal") == 0){
-               rpgPlaya.setHealReadiness(true);
-               is.setDurability((short)15);
-               playa.getInventory().setItem(1, is);
+   public void giveCooldown(final Player playa, final String type, String classType, double delay){
+      /* Sets a task to turn off a magical ability's cooldown*/
+      if(classType.compareTo("magic") == 0){
+         getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            public void run() {
+               RPGMagicPlayer rpgPlaya = magicPlayerMap.get(playa.getName());
+               ItemStack is = new ItemStack(351,1);
+               
+               if(type.compareTo("heal") == 0){
+                  rpgPlaya.setHealReadiness(true);
+                  is.setDurability((short)15);
+                  playa.getInventory().setItem(1, is);
+               }
+               else if(type.compareTo("advHeal") == 0){
+                  rpgPlaya.setAdvHealReadiness(true);
+                  is.setType(Material.BONE);
+                  playa.getInventory().setItem(5, is);
+               }
+               else if(type.compareTo("light") == 0){
+                  rpgPlaya.setLightningReadiness(true);
+                  is.setDurability((short)11);
+                  playa.getInventory().setItem(0, is);
+               }
+               else if(type.compareTo("advLight") == 0){
+                  rpgPlaya.setAdvLightningReadiness(true);
+                  is.setType(Material.BLAZE_ROD);
+                  playa.getInventory().setItem(6, is);
+               }
+               else if(type.compareTo("fire") == 0){
+                  rpgPlaya.setFireballReadiness(true);
+                  is.setDurability((short)1);
+                  playa.getInventory().setItem(2, is);
+               }
+               else if(type.compareTo("tele") == 0){
+                  rpgPlaya.setTeleportReadiness(true);
+                  is.setDurability((short)13);
+                  playa.getInventory().setItem(3, is);
+               }
+               else if(type.compareTo("baaa") == 0){
+                  rpgPlaya.setSheepReadiness(true);
+                  is.setType(Material.WHEAT);
+                  playa.getInventory().setItem(4, is);
+               }
             }
-            else if(type.compareTo("advHeal") == 0){
-               rpgPlaya.setAdvHealReadiness(true);
-               is.setType(Material.BONE);
-               playa.getInventory().setItem(5, is);
+        }, (long) (delay * 20));
+      }
+      /* Sets a task to turn off a ranged ability's cooldown*/
+      else if(classType.compareTo("ranged") == 0){
+         getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            public void run() {
+               RPGRangedPlayer rpgPlaya = rangedPlayerMap.get(playa.getName());
+               
+               if(type.compareTo("egg") == 0){
+                  rpgPlaya.setEggReadiness(true);
+                  playa.getInventory().setItem(2, new ItemStack(Material.EGG,1));
+               }
+               else if(type.compareTo("fire") == 0){
+                  rpgPlaya.setFireBowReadiness(true);
+                  playa.getInventory().setItem(1, new ItemStack(Material.BOW,1));
+               }
             }
-            else if(type.compareTo("light") == 0){
-               rpgPlaya.setLightningReadiness(true);
-               is.setDurability((short)11);
-               playa.getInventory().setItem(0, is);
-            }
-            else if(type.compareTo("advLight") == 0){
-               rpgPlaya.setAdvLightningReadiness(true);
-               is.setType(Material.BLAZE_ROD);
-               playa.getInventory().setItem(6, is);
-            }
-            else if(type.compareTo("fire") == 0){
-               rpgPlaya.setFireballReadiness(true);
-               is.setDurability((short)1);
-               playa.getInventory().setItem(2, is);
-            }
-            else if(type.compareTo("tele") == 0){
-               rpgPlaya.setTeleportReadiness(true);
-               is.setDurability((short)13);
-               playa.getInventory().setItem(3, is);
-            }
-            else if(type.compareTo("baaa") == 0){
-               rpgPlaya.setSheepReadiness(true);
-               is.setType(Material.WHEAT);
-               playa.getInventory().setItem(4, is);
-            }
-         }
-     }, (long) (delay * 20));
+        }, (long) (delay * 20)); // Multiplied by 20 to turn the delay time into seconds
+      }
    }
 }

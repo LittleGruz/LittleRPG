@@ -92,7 +92,7 @@ public class PlayerInteract implements Listener{
                   
                   // Give cooldown and remove item from inventory
                   playa.getInventory().remove(is);
-                  plugin.giveCooldown(playa, "tele", 10);
+                  plugin.giveCooldown(playa, "tele", "magic", 10);
                   plugin.getMagicPlayerMap().get(playa.getName()).setTeleportReadiness(false);
                }
                else
@@ -141,7 +141,7 @@ public class PlayerInteract implements Listener{
             }
             else{
                playa.getInventory().remove(Material.WHEAT);
-               plugin.giveCooldown(playa, "baaa", 15);
+               plugin.giveCooldown(playa, "baaa", "magic", 15);
                plugin.getMagicPlayerMap().get(playa.getName()).setSheepReadiness(false);
             }
             
@@ -174,7 +174,7 @@ public class PlayerInteract implements Listener{
                ItemStack is = new ItemStack(351,1);
                is.setDurability((short)1);
                playa.getInventory().remove(is);
-               plugin.giveCooldown(playa, "fire", 5);
+               plugin.giveCooldown(playa, "fire", "magic", 5);
                plugin.getMagicPlayerMap().get(playa.getName()).setFireballReadiness(false);
             }
             
@@ -240,7 +240,7 @@ public class PlayerInteract implements Listener{
             if(!plugin.getRangedPlayerMap().get(playa.getName()).isEggReady())
                playa.sendMessage("Egg is still on cooldown");
             else{
-               plugin.giveCooldown(playa, 5);
+               plugin.giveCooldown(playa, "egg", "ranged", 5);
                plugin.getRangedPlayerMap().get(playa.getName()).setEggReadiness(false);
             }
          }
@@ -329,7 +329,7 @@ public class PlayerInteract implements Listener{
                   ItemStack is = new ItemStack(351,1);
                   is.setDurability((short)11);
                   playa.getInventory().remove(is);
-                  plugin.giveCooldown(playa, "light", 1.5);
+                  plugin.giveCooldown(playa, "light", "magic", 1.5);
                   plugin.getMagicPlayerMap().get(playa.getName()).setLightningReadiness(false);
                }
                else{
@@ -339,7 +339,7 @@ public class PlayerInteract implements Listener{
                   
                   // Give cooldown and remove item from inventory
                   playa.getInventory().remove(Material.BLAZE_ROD);
-                  plugin.giveCooldown(playa, "advLight", 4);
+                  plugin.giveCooldown(playa, "advLight", "magic", 4);
                   plugin.getMagicPlayerMap().get(playa.getName()).setAdvLightningReadiness(false);
 
                   nearEnemies.add(e);

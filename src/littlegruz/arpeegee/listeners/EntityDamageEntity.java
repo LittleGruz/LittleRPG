@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.StringTokenizer;
 
 import littlegruz.arpeegee.ArpeegeeMain;
 
@@ -58,7 +59,7 @@ public class EntityDamageEntity implements Listener {
                   ItemStack is = new ItemStack(351,1);
                   is.setDurability((short)15);
                   playa.getInventory().remove(is);
-                  plugin.giveCooldown(playa, "heal", 7);
+                  plugin.giveCooldown(playa, "heal", "magic", 7);
                   plugin.getMagicPlayerMap().get(playa.getName()).setHealReadiness(false);
                }
                healSpell(playa, victim, 1);
@@ -73,7 +74,7 @@ public class EntityDamageEntity implements Listener {
                }
                else{
                   playa.getInventory().remove(Material.BONE);
-                  plugin.giveCooldown(playa, "advHeal", 11);
+                  plugin.giveCooldown(playa, "advHeal", "magic", 11);
                   plugin.getMagicPlayerMap().get(playa.getName()).setAdvHealReadiness(false);
                }
                healSpell(playa, victim, 2);
@@ -185,9 +186,20 @@ public class EntityDamageEntity implements Listener {
             // Check that it came from a player
             if(plugin.getProjMap().get(event.getDamager()) != null){
                ArrayList<Entity> ent = new ArrayList<Entity>();
-               int arch, i;
+               int arch, type, i;
+               String arrowData;
+               StringTokenizer st;
                
-               arch = (int) Double.parseDouble(plugin.getProjMap().get(event.getDamager()).replace("grounded", ""));
+               arrowData = plugin.getProjMap().get(event.getDamager()).replace("grounded", "");
+               st = new StringTokenizer(arrowData, "|");
+               
+               arch = (int) Double.parseDouble(st.nextToken());
+               type = Integer.parseInt(st.nextToken());
+               
+               /* If the arrow is a fire type, then set the entity on fire for
+                * 3 seconds */
+               if(type == 2)
+                  event.getEntity().setFireTicks(60);
                
                // If crit, do double damage
                if(plugin.probabilityRoll(5 * arch)){
