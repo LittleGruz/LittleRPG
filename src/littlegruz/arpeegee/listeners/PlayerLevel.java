@@ -59,6 +59,8 @@ public class PlayerLevel implements Listener{
                event.getPlayer().getInventory().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
             if(rpgPlaya.getLevel() >= 4)
                event.getPlayer().getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS));
+            if(rpgPlaya.getLevel() >= 5)
+               event.getPlayer().getInventory().setItem(1, new ItemStack(Material.BOW,1));
             if(rpgPlaya.getLevel() >= 6)
                event.getPlayer().getInventory().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
             if(rpgPlaya.getLevel() >= 7)

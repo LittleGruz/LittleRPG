@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.StringTokenizer;
@@ -43,7 +44,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 /* Make armour degrade and then be dropped by mobs
  * Levels and stat increase DONE (but no tested balancing)*/
 
-/* TODO: Feather falling potion effect for ranged?*/
+/* TODO: Feather falling potion effect for ranged.
+ * Damaged armour when respawning.
+ * Bonus's from wearing a full set of armour.
+ * Damage over time attacks.
+ * Status ailments.
+ * Enchanted melee/ranged weapons.
+ * Ability for users to add fetch/travel quests.
+ * Parties. Woo PARTAY!*/
 
 public class ArpeegeeMain extends JavaPlugin {
    private Logger log = Logger.getLogger("This is MINECRAFT!");
@@ -224,6 +232,35 @@ public class ArpeegeeMain extends JavaPlugin {
       }catch(Exception e){
          log.info("Incorrectly formatted LittleRPG world file");
       }
+      
+      /* Example quest in config.yml
+       * No prereq quest, must be at least level 5, the quest only has 2 part
+       * and player must have at least 5 dirt blocks. Finishing condition is 25
+       * dirt blocks with a reward of a sand block and 20xp.
+       * Part 2 has a finishing condition of 1 coal and 1 stick, reward is 30xp.
+       * quest1:
+       * -PQ:0
+       * -Level:5
+       * -Parts:2
+       * -Items:3:5
+       * -Text:Greetings traveller, I need more dirt to make my first home.
+       * -Text:Could you please fetch me 25 dirt blocks?
+       * -FC:3:25
+       * -Pass:Thank you, I can now make my lovely 3x4x3 dirt home.
+       * -Fail:You do not have enough dirt.
+       * -Reward:12:1:XP:20
+       * -Text:I now must decorate it, fetch me 1 piece of coal and 1 stick.
+       * -FC:263:1:280:1
+       * -Pass:Decorations! Yay!
+       * -Fail:That is not right.
+       * -Reward:XP:30*/
+      
+      //Get data from config.yml
+      int i = 1;
+      while(getConfig().isString("quest" + i)){
+         List<String> quest = getConfig().getStringList("quest" + i);
+         log.info("quest" + i);
+      }
 
       //Set up listeners
       getServer().getPluginManager().registerEvents(new EnemyDeaths(this), this);
@@ -245,7 +282,7 @@ public class ArpeegeeMain extends JavaPlugin {
       berserkMap = new HashMap<String, String>();
       projMap = new HashMap<Entity, String>();
 
-      log.info("LittleRPG v1.1 beta enabled");
+      log.info(this.toString() + " enabled");
    }
    
    public void onDisable(){
@@ -349,7 +386,7 @@ public class ArpeegeeMain extends JavaPlugin {
          log.info("Error saving LittleRPG worlds");
       }
       
-      log.info("LittleRPG v1.1 beta disabled");
+      log.info(this.toString() + " disabled");
    }
 
    public HashMap<String, RPGMeleePlayer> getMeleePlayerMap() {
