@@ -10,9 +10,8 @@ public class RPGMeleePlayer extends RPGPlayer{
       attack = true;
    }
 
-   public RPGMeleePlayer(String name, RPGSubClass subClassObj,
-         int level, int rage){
-      super(name, subClassObj, level);
+   public RPGMeleePlayer(String name, RPGSubClass subClassObj, int level, int rage, int quest, int party){
+      super(name, subClassObj, level, quest, party);
       this.rage = rage;
       attack = true;
    }

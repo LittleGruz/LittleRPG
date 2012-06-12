@@ -127,6 +127,7 @@ public class ArpeegeeMain extends JavaPlugin {
          while((input = br.readLine()) != null){
             String name;
             RPGSubClass rpgSubClass;
+            int level, rage;
             
             st = new StringTokenizer(input, " ");
             name = st.nextToken();
@@ -139,10 +140,19 @@ public class ArpeegeeMain extends JavaPlugin {
             
             if(subClassMap.get(rpgSubClass.getName()) == null)
                log.warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");
-            
-            meleePlayerMap.put(name, new RPGMeleePlayer(name, rpgSubClass,
-                  Integer.parseInt(st.nextToken()),
-                  Integer.parseInt(st.nextToken())));
+
+            //TODO (Remove) This stuff is here to make upgrading un-noticable for users
+            level = Integer.parseInt(st.nextToken());
+            rage = Integer.parseInt(st.nextToken());
+            if(st.hasMoreTokens()){
+               int quest, party;
+               
+               quest = Integer.parseInt(st.nextToken());
+               party = Integer.parseInt(st.nextToken());
+               meleePlayerMap.put(name, new RPGMeleePlayer(name, rpgSubClass, level, rage, quest, party));
+            }
+            else
+               meleePlayerMap.put(name, new RPGMeleePlayer(name, rpgSubClass, level, rage, -1, -1));
          }
          br.close();
          
@@ -163,6 +173,7 @@ public class ArpeegeeMain extends JavaPlugin {
          while((input = br.readLine()) != null){
             String name;
             RPGSubClass rpgSubClass;
+            int level;
             
             st = new StringTokenizer(input, " ");
             name = st.nextToken();
@@ -175,9 +186,18 @@ public class ArpeegeeMain extends JavaPlugin {
             
             if(subClassMap.get(rpgSubClass.getName()) == null)
                log.warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");
-            
-            rangedPlayerMap.put(name, new RPGRangedPlayer(name, rpgSubClass,
-                  Integer.parseInt(st.nextToken())));
+
+            // This stuff is here to make upgrading un-noticable for users
+            level = Integer.parseInt(st.nextToken());
+            if(st.hasMoreTokens()){
+               int quest, party;
+               
+               quest = Integer.parseInt(st.nextToken());
+               party = Integer.parseInt(st.nextToken());
+               rangedPlayerMap.put(name, new RPGRangedPlayer(name, rpgSubClass, level, quest, party));
+            }
+            else
+               rangedPlayerMap.put(name, new RPGRangedPlayer(name, rpgSubClass, level, -1, -1));
          }
          br.close();
          
@@ -198,6 +218,7 @@ public class ArpeegeeMain extends JavaPlugin {
          while((input = br.readLine()) != null){
             String name;
             RPGSubClass rpgSubClass;
+            int level;
             
             st = new StringTokenizer(input, " ");
             name = st.nextToken();
@@ -211,8 +232,17 @@ public class ArpeegeeMain extends JavaPlugin {
             if(subClassMap.get(rpgSubClass.getName()) == null)
                log.warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");
             
-            magicPlayerMap.put(name, new RPGMagicPlayer(name, rpgSubClass,
-                  Integer.parseInt(st.nextToken())));
+            // This stuff is here to make upgrading un-noticable for users
+            level = Integer.parseInt(st.nextToken());
+            if(st.hasMoreTokens()){
+               int quest, party;
+               
+               quest = Integer.parseInt(st.nextToken());
+               party = Integer.parseInt(st.nextToken());
+               magicPlayerMap.put(name, new RPGMagicPlayer(name, rpgSubClass, level, quest, party));
+            }
+            else
+               magicPlayerMap.put(name, new RPGMagicPlayer(name, rpgSubClass, level, -1, -1));
          }
          br.close();
          
@@ -287,6 +317,7 @@ public class ArpeegeeMain extends JavaPlugin {
       getCommand("addrpgworld").setExecutor(new Worlds(this));
       getCommand("removerpgworld").setExecutor(new Worlds(this));
       getCommand("setquest").setExecutor(new Quests(this));
+      getCommand("displayquests").setExecutor(new Quests(this));
 
       berserkMap = new HashMap<String, String>();
       projMap = new HashMap<Entity, String>();
@@ -316,7 +347,9 @@ public class ArpeegeeMain extends JavaPlugin {
                   + Double.toString(player.getValue().getSubClassObject().getEgg()) + " "
                   + Double.toString(player.getValue().getSubClassObject().getSpell()) + " "
                   + Integer.toString(player.getValue().getLevel()) + " "
-                  + Integer.toString(player.getValue().getRage()) + "\n");
+                  + Integer.toString(player.getValue().getRage()) + " "
+                  + Integer.toString(player.getValue().getQuest()) + " "
+                  + Integer.toString(player.getValue().getParty()) + "\n");
          }
          bw.close();
       }catch(IOException e){
@@ -337,7 +370,9 @@ public class ArpeegeeMain extends JavaPlugin {
                   + Double.toString(player.getValue().getSubClassObject().getBlock()) + " "
                   + Double.toString(player.getValue().getSubClassObject().getEgg()) + " "
                   + Double.toString(player.getValue().getSubClassObject().getSpell()) + " "
-                  + Integer.toString(player.getValue().getLevel()) + "\n");
+                  + Integer.toString(player.getValue().getLevel()) + " "
+                  + Integer.toString(player.getValue().getQuest()) + " "
+                  + Integer.toString(player.getValue().getParty()) + "\n");
          }
          bw.close();
       }catch(IOException e){
@@ -358,7 +393,9 @@ public class ArpeegeeMain extends JavaPlugin {
                   + Double.toString(player.getValue().getSubClassObject().getBlock()) + " "
                   + Double.toString(player.getValue().getSubClassObject().getEgg()) + " "
                   + Double.toString(player.getValue().getSubClassObject().getSpell()) + " "
-                  + Integer.toString(player.getValue().getLevel()) + "\n");
+                  + Integer.toString(player.getValue().getLevel()) + " "
+                  + Integer.toString(player.getValue().getQuest()) + " "
+                  + Integer.toString(player.getValue().getParty()) + "\n");
          }
          bw.close();
       }catch(IOException e){

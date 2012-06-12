@@ -18,6 +18,9 @@ commands:
    setquest:
       description: Prepares a quest to be set to a block
       usage: /setquest
+   displayquests:
+      description: Displays all the quests loaded
+      usage: /displayquests
    addrpgworld:
       description: Adds the current world to the list of worlds affected by the plugin
       usage: /addrpgworld

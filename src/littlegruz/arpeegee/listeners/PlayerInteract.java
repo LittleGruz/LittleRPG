@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import littlegruz.arpeegee.ArpeegeeMain;
+import littlegruz.arpeegee.entities.RPGQuest;
 
 import net.minecraft.server.EntityLiving;
 import net.minecraft.server.EntitySmallFireball;
@@ -245,7 +246,7 @@ public class PlayerInteract implements Listener{
                plugin.getRangedPlayerMap().get(playa.getName()).setEggReadiness(false);
             }
          }
-         // Player right clicking with fist
+         // Player right clicking with fist to set a quest
          else if(event.getAction().compareTo(Action.RIGHT_CLICK_BLOCK) == 0
                && event.getPlayer().getItemInHand().getType().compareTo(Material.AIR) == 0
                && plugin.isQuestCanSet()){
@@ -253,11 +254,11 @@ public class PlayerInteract implements Listener{
             plugin.setQuestCanSet(false);
             event.getPlayer().sendMessage("Quest number " + plugin.getQuestNumberToSet() + " set");
          }
-         // Player just right clicking
+         // Player just right clicking for a quest
          else if(event.getAction().compareTo(Action.RIGHT_CLICK_BLOCK) == 0
                && plugin.getQuestStartMap().get(event.getClickedBlock().getLocation()) != null){
-            
-            event.getPlayer().sendMessage("Got quest " + plugin.getQuestStartMap().get(event.getClickedBlock().getLocation()));
+            RPGQuest rpgq = plugin.getQuestMap().get(plugin.getQuestStartMap().get(event.getClickedBlock().getLocation()));
+            event.getPlayer().sendMessage("Got quest " + rpgq.getQuestNumber());
          }
       }
    }

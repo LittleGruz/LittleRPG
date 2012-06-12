@@ -1,7 +1,12 @@
 package littlegruz.arpeegee.commands;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import littlegruz.arpeegee.ArpeegeeMain;
 
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -33,6 +38,14 @@ public class Quests implements CommandExecutor{
             }
             else
                sender.sendMessage("Wrong number of arguments");
+         }
+         else if(cmd.getName().compareToIgnoreCase("displayquests") == 0){
+            Iterator<Map.Entry<Location, Integer>> it = plugin.getQuestStartMap().entrySet().iterator();
+            sender.sendMessage("Quest number | Location (world_name,x,y,z)");
+            while(it.hasNext()){
+               Entry<Location, Integer> block = it.next();
+               sender.sendMessage(block.getValue() + " | " + block.getKey().getWorld().getName() + "," + block.getKey().getBlockX() + "," + block.getKey().getBlockY() + "," + block.getKey().getBlockZ());
+            }
          }
       }
       else
