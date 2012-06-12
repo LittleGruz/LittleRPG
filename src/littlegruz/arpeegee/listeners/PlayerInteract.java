@@ -271,32 +271,60 @@ public class PlayerInteract implements Listener{
 
             // Just making sure they exist with a class
             if(rpgp != null){
-               // Check pre req quest/items, check fin con, update quests done
-               if(rpgp.getQuest() >= rpgq.getPrerequisiteQuest()){
-                  boolean pass;
-                  StringTokenizer st;
-                  
-                  pass = true;
-                  st = new StringTokenizer(rpgq.getRequiredItem(), "|");
-                  
-                  while(st.hasMoreTokens()){
-                     if(!event.getPlayer().getInventory().contains(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())))
-                        pass = false;
-                  }
-                  if(pass){
+               // Check if the player has already completed the 
+               if(rpgp.getComplete().contains(Integer.toString(rpgq.getQuestNumber()))){
+                  // Check if the player has completed the prerequisite
+                  if(rpgp.getComplete().contains(Integer.toString(rpgq.getPrerequisiteQuest()))){
+                     boolean pass, attempted;
+                     StringTokenizer st;
                      
-                     // Set the quest as being completed
-                     if(rpgp.getIncomplete().contains("-1"))
-                        rpgp.setIncomplete(rpgq.getQuestNumber() + "|");
-                     else if(!rpgp.getIncomplete().contains(Integer.toString(rpgq.getQuestNumber())))
-                        rpgp.setIncomplete(rpgp.getIncomplete() + rpgq.getQuestNumber() + "|");
-                     event.getPlayer().sendMessage("Got quest " + rpgq.getQuestNumber());
+                     pass = true;
+                     attempted = false;
+                     st = new StringTokenizer(rpgq.getRequiredItem(), "|");
+                     
+                     /* Let someone who has already made the prereqs pass
+                      * regardless and set a flag to trigger win condition checks*/
+                     if(!rpgp.getIncomplete().contains(Integer.toString(rpgq.getQuestNumber()))){
+                        while(st.hasMoreTokens()){
+                           if(!event.getPlayer().getInventory().contains(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())))
+                              pass = false;
+                        }
+                     }
+                     else
+                        attempted = true;
+                     
+                     if(pass){
+                        pass = false;
+                        if(attempted){
+                           // TODO Win condition check
+                           
+                           // if won, pass = true
+                        }
+                        else{
+                           // TODO Give the player the dialogue
+                           // Set the quest as being completed
+                           if(rpgp.getIncomplete().contains("-1"))
+                              rpgp.setIncomplete(rpgq.getQuestNumber() + "|");
+                           else if(!rpgp.getIncomplete().contains(Integer.toString(rpgq.getQuestNumber())))
+                              rpgp.setIncomplete(rpgp.getIncomplete() + rpgq.getQuestNumber() + "|");
+                           event.getPlayer().sendMessage("Got quest " + rpgq.getQuestNumber());
+                        }
+                        
+                        if(!pass){
+                           // TODO Failure dialogue
+                        }
+                        else{
+                           // TODO Winning dialogue
+                        }
+                     }
+                     else
+                        event.getPlayer().sendMessage("You are missing prerequisite item(s)");
                   }
                   else
-                     event.getPlayer().sendMessage("You are missing prerequisite item(s)");
+                     event.getPlayer().sendMessage("You have not completed the prerequisite quest");
                }
                else
-                  event.getPlayer().sendMessage("You have not completed the prerequisite quest");
+                  event.getPlayer().sendMessage("You have already completed this quest");
             }
             else
                event.getPlayer().sendMessage("Why haven't you chosen a class yet?");

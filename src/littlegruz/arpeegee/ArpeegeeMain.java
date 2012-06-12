@@ -141,13 +141,13 @@ public class ArpeegeeMain extends JavaPlugin {
             if(subClassMap.get(rpgSubClass.getName()) == null)
                log.warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");
 
-            //TODO (Remove) This stuff is here to make upgrading un-noticable for users
+            //TODO (Remove) This stuff is here to make upgrading past v1.1 un-noticable for users
             level = Integer.parseInt(st.nextToken());
             rage = Integer.parseInt(st.nextToken());
             if(st.hasMoreTokens())
-               meleePlayerMap.put(name, new RPGMeleePlayer(name, rpgSubClass, level, rage, Integer.parseInt(st.nextToken()), st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
+               meleePlayerMap.put(name, new RPGMeleePlayer(name, rpgSubClass, level, rage, st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
             else
-               meleePlayerMap.put(name, new RPGMeleePlayer(name, rpgSubClass, level, rage, -1, "-1", "-1", -1));
+               meleePlayerMap.put(name, new RPGMeleePlayer(name, rpgSubClass, level, rage, "-1", "-1", -1));
          }
          br.close();
          
@@ -185,9 +185,9 @@ public class ArpeegeeMain extends JavaPlugin {
             // This stuff is here to make upgrading un-noticable for users
             level = Integer.parseInt(st.nextToken());
             if(st.hasMoreTokens())
-               rangedPlayerMap.put(name, new RPGRangedPlayer(name, rpgSubClass, level, Integer.parseInt(st.nextToken()), st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
+               rangedPlayerMap.put(name, new RPGRangedPlayer(name, rpgSubClass, level, st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
             else
-               rangedPlayerMap.put(name, new RPGRangedPlayer(name, rpgSubClass, level, -1, "-1", "-1", -1));
+               rangedPlayerMap.put(name, new RPGRangedPlayer(name, rpgSubClass, level, "-1", "-1", -1));
          }
          br.close();
          
@@ -225,9 +225,9 @@ public class ArpeegeeMain extends JavaPlugin {
             // This stuff is here to make upgrading un-noticable for users
             level = Integer.parseInt(st.nextToken());
             if(st.hasMoreTokens())
-               magicPlayerMap.put(name, new RPGMagicPlayer(name, rpgSubClass, level, Integer.parseInt(st.nextToken()), st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
+               magicPlayerMap.put(name, new RPGMagicPlayer(name, rpgSubClass, level, st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
             else
-               magicPlayerMap.put(name, new RPGMagicPlayer(name, rpgSubClass, level, -1, "-1", "-1", -1));
+               magicPlayerMap.put(name, new RPGMagicPlayer(name, rpgSubClass, level, "-1", "-1", -1));
          }
          br.close();
          
@@ -333,7 +333,6 @@ public class ArpeegeeMain extends JavaPlugin {
                   + Double.toString(player.getValue().getSubClassObject().getSpell()) + " "
                   + Integer.toString(player.getValue().getLevel()) + " "
                   + Integer.toString(player.getValue().getRage()) + " "
-                  + Integer.toString(player.getValue().getQuest()) + " "
                   + player.getValue().getIncomplete() + " "
                   + player.getValue().getComplete() + " "
                   + Integer.toString(player.getValue().getParty()) + "\n");
@@ -358,7 +357,6 @@ public class ArpeegeeMain extends JavaPlugin {
                   + Double.toString(player.getValue().getSubClassObject().getEgg()) + " "
                   + Double.toString(player.getValue().getSubClassObject().getSpell()) + " "
                   + Integer.toString(player.getValue().getLevel()) + " "
-                  + Integer.toString(player.getValue().getQuest()) + " "
                   + player.getValue().getIncomplete() + " "
                   + player.getValue().getComplete() + " "
                   + Integer.toString(player.getValue().getParty()) + "\n");
@@ -383,7 +381,6 @@ public class ArpeegeeMain extends JavaPlugin {
                   + Double.toString(player.getValue().getSubClassObject().getEgg()) + " "
                   + Double.toString(player.getValue().getSubClassObject().getSpell()) + " "
                   + Integer.toString(player.getValue().getLevel()) + " "
-                  + Integer.toString(player.getValue().getQuest()) + " "
                   + player.getValue().getIncomplete() + " "
                   + player.getValue().getComplete() + " "
                   + Integer.toString(player.getValue().getParty()) + "\n");
