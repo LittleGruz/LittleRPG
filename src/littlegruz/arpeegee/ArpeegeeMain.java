@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +22,7 @@ import littlegruz.arpeegee.commands.Display;
 import littlegruz.arpeegee.commands.Worlds;
 import littlegruz.arpeegee.entities.RPGMagicPlayer;
 import littlegruz.arpeegee.entities.RPGMeleePlayer;
+import littlegruz.arpeegee.entities.RPGQuest;
 import littlegruz.arpeegee.entities.RPGRangedPlayer;
 import littlegruz.arpeegee.entities.RPGSubClass;
 import littlegruz.arpeegee.listeners.EnemyDeaths;
@@ -64,6 +66,7 @@ public class ArpeegeeMain extends JavaPlugin {
    private HashMap<String, RPGRangedPlayer> rangedPlayerMap;
    private HashMap<String, RPGMagicPlayer> magicPlayerMap;
    private HashMap<String, RPGSubClass> subClassMap;
+   private HashMap<Integer, RPGQuest> questMap;
    private HashMap<String, String> berserkMap;
    private HashMap<Entity, String> projMap;
    private HashMap<String, String> worldsMap;
@@ -233,34 +236,9 @@ public class ArpeegeeMain extends JavaPlugin {
          log.info("Incorrectly formatted LittleRPG world file");
       }
       
-      /* Example quest in config.yml
-       * No prereq quest, must be at least level 5, the quest only has 2 part
-       * and player must have at least 5 dirt blocks. Finishing condition is 25
-       * dirt blocks with a reward of a sand block and 20xp.
-       * Part 2 has a finishing condition of 1 coal and 1 stick, reward is 30xp.
-       * quest1:
-       * -PQ:0
-       * -Level:5
-       * -Parts:2
-       * -Items:3:5
-       * -Text:Greetings traveller, I need more dirt to make my first home.
-       * -Text:Could you please fetch me 25 dirt blocks?
-       * -FC:3:25
-       * -Pass:Thank you, I can now make my lovely 3x4x3 dirt home.
-       * -Fail:You do not have enough dirt.
-       * -Reward:12:1:XP:20
-       * -Text:I now must decorate it, fetch me 1 piece of coal and 1 stick.
-       * -FC:263:1:280:1
-       * -Pass:Decorations! Yay!
-       * -Fail:That is not right.
-       * -Reward:XP:30*/
-      
       //Get data from config.yml
-      int i = 1;
-      while(getConfig().isString("quest" + i)){
-         List<String> quest = getConfig().getStringList("quest" + i);
-         log.info("quest" + i);
-      }
+      questMap = new HashMap<Integer, RPGQuest>();
+      loadQuests();
 
       //Set up listeners
       getServer().getPluginManager().registerEvents(new EnemyDeaths(this), this);
@@ -446,9 +424,9 @@ public class ArpeegeeMain extends JavaPlugin {
          }
      }, (delay * 20) - playa.getLevel());
    }
-   
+
+   /* Sets a task to turn off a magical ability's cooldown*/
    public void giveCooldown(final Player playa, final String type, String classType, double delay){
-      /* Sets a task to turn off a magical ability's cooldown*/
       if(classType.compareTo("magic") == 0){
          getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
             public void run() {
@@ -509,6 +487,87 @@ public class ArpeegeeMain extends JavaPlugin {
                }
             }
         }, (long) (delay * 20)); // Multiplied by 20 to turn the delay time into seconds
+      }
+   }
+
+   /* Example quests from config.yml
+    * No prereq quest, must be at least level 5 and player must have at
+    * least 5 dirt blocks. Finishing condition is 25 dirt blocks with a
+    * reward of a sand block and 20xp.
+    * Quest 2 has a finishing condition of 1 coal and 1 stick, reward is 30xp.
+    * quest1:
+    * - PQ:0
+    * - Level:5
+    * - Items:3|5
+    * - Text:Greetings traveller, I need more dirt to make my first home.
+    * - Text:Could you please fetch me 25 dirt blocks?
+    * - FC:3|25
+    * - Pass:Thank you, I can now make my lovely 3x4x3 dirt home.
+    * - Fail:You do not have enough dirt.
+    * - Reward:12|1:XP|20
+    * quest2:
+    * - PQ:1
+    * - Text:I now must decorate it, fetch me 1 piece of coal and 1 stick.
+    * - FC:263|1:280|1
+    * - Pass:Decorations! Yay!
+    * - Fail:That is not right.
+    * - Reward:XP|30*/
+   
+   // Loads all the quests from config.yml
+   public void loadQuests(){
+      int i, quest, level, preReqQuest;
+      String type, item, finishers, reward;
+      ArrayList<String> text;
+      List<String> questData;
+      StringTokenizer st;
+      
+      // Get data and create each quest
+      for(quest = 1; getConfig().isList("quest" + quest); quest++){
+         questData = getConfig().getStringList("quest" + quest);
+         text = new ArrayList<String>();
+         level = -1;
+         preReqQuest = -1;
+         item = "";
+         finishers = "";
+         reward = "";
+         
+         for(i = 0; i < questData.size(); i++){
+            st = new StringTokenizer(questData.get(i), ":");
+            type = st.nextToken();
+            
+            if(type.compareToIgnoreCase("pq") == 0){
+               preReqQuest = Integer.parseInt(st.nextToken());
+            }
+            else if(type.compareToIgnoreCase("level") == 0){
+               level = Integer.parseInt(st.nextToken());
+            }
+            else if(type.compareToIgnoreCase("items") == 0){
+               item = st.nextToken();
+               while(st.hasMoreTokens()){
+                  item += "|" + st.nextToken();
+               }
+            }
+            else if(type.compareToIgnoreCase("text") == 0
+                  || type.compareToIgnoreCase("pass") == 0
+                  || type.compareToIgnoreCase("fail") == 0){
+               text.add(st.nextToken());
+            }
+            else if(type.compareToIgnoreCase("fc") == 0){
+               finishers = st.nextToken();
+               while(st.hasMoreTokens()){
+                  finishers += "|" + st.nextToken();
+               }
+            }
+            else if(type.compareToIgnoreCase("reward") == 0){
+               reward = st.nextToken();
+               while(st.hasMoreTokens()){
+                  reward += "|" + st.nextToken();
+               }
+            }
+         }
+         
+         // Create the new quest and store it in the quest hashmap
+         questMap.put(quest, new RPGQuest(quest, preReqQuest, level, item, text, finishers, reward));
       }
    }
 }

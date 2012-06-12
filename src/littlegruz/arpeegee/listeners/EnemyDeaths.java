@@ -130,7 +130,7 @@ public class EnemyDeaths implements Listener{
       int totalDrops, randNum;
       Random rand = new Random();
 
-      drops.removeAll(drops);
+      //drops.removeAll(drops);
       totalDrops = 0;
       
       if(plugin.probabilityRoll(baseChance)){

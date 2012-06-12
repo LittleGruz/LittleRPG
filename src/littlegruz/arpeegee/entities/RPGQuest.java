@@ -1,38 +1,47 @@
 package littlegruz.arpeegee.entities;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class RPGQuest{
-   int pq, rl, parts;
-   String ri, fc;
-   List<String> diag;
+   int pq, rl, quest;
+   String ri, fc, rew;
+   ArrayList<String> dialo;
    
-   public RPGQuest(int prerequisitQuest, int requiredLevel, int parts, String requiredItem, List<String> dialogue, String finishingConditions){
+   public RPGQuest(int questNumber, int prerequisitQuest, int requiredLevel, String requiredItem, ArrayList<String> dialogue, String finishingConditions, String reward){
+      quest = questNumber;
       pq = prerequisitQuest;
       rl = requiredLevel;
-      this.parts = parts;
       ri = requiredItem;
-      diag = dialogue;
+      dialo = dialogue;
       fc = finishingConditions;
+      rew = reward;
    }
 
-   public int getPreQuest(){
+   public int getQuestNumber(){
+      return quest;
+   }
+
+   public int getPrerequisiteQuest(){
       return pq;
    }
 
-   public int getReqLevel(){
+   public int getRequiredLevel(){
       return rl;
    }
 
-   public String getReqItem(){
+   public String getRequiredItem(){
       return ri;
    }
 
-   public List<String> getDiag(){
-      return diag;
+   public ArrayList<String> getDialogue(){
+      return dialo;
    }
 
-   public String getFinishConds(){
+   public String getFinishConditions(){
       return fc;
+   }
+
+   public String getReward(){
+      return rew;
    }
 }
