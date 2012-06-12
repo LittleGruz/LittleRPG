@@ -49,7 +49,7 @@ public class Display implements CommandExecutor{
          }
       }
       else
-         sender.sendMessage("You do not have enough permissions for this command");
+         sender.sendMessage("You do not have sufficient permissions");
       return true;
    }
 }

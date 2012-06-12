@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 import littlegruz.arpeegee.commands.Begin;
 import littlegruz.arpeegee.commands.Display;
+import littlegruz.arpeegee.commands.Quests;
 import littlegruz.arpeegee.commands.Worlds;
 import littlegruz.arpeegee.entities.RPGMagicPlayer;
 import littlegruz.arpeegee.entities.RPGMeleePlayer;
@@ -34,6 +35,7 @@ import littlegruz.arpeegee.listeners.PlayerProjectile;
 import littlegruz.arpeegee.listeners.PlayerRespawn;
 import littlegruz.arpeegee.listeners.PlayerSpeed;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.EnderDragon;
@@ -60,6 +62,7 @@ public class ArpeegeeMain extends JavaPlugin {
    private File meleePlayerFile;
    private File rangedPlayerFile;
    private File magicPlayerFile;
+   private File questStartFile;
    private File subClassFile;
    private File worldsFile;
    private HashMap<String, RPGMeleePlayer> meleePlayerMap;
@@ -67,9 +70,12 @@ public class ArpeegeeMain extends JavaPlugin {
    private HashMap<String, RPGMagicPlayer> magicPlayerMap;
    private HashMap<String, RPGSubClass> subClassMap;
    private HashMap<Integer, RPGQuest> questMap;
+   private HashMap<Location, Integer> questStartMap;
    private HashMap<String, String> berserkMap;
    private HashMap<Entity, String> projMap;
    private HashMap<String, String> worldsMap;
+   private int questNumberToSet;
+   private boolean questCanSet;
    
    public void onEnable(){
       BufferedReader br;
@@ -81,6 +87,7 @@ public class ArpeegeeMain extends JavaPlugin {
       meleePlayerFile = new File(getDataFolder().toString() + "/meleePlayer.txt");
       rangedPlayerFile = new File(getDataFolder().toString() + "/rangedPlayer.txt");
       magicPlayerFile = new File(getDataFolder().toString() + "/magicPlayer.txt");
+      questStartFile = new File(getDataFolder().toString() + "/questStarters.txt");
       subClassFile = new File(getDataFolder().toString() + "/subclasses.txt");
       worldsFile = new File(getDataFolder().toString() + "/worlds.txt");
 
@@ -236,6 +243,29 @@ public class ArpeegeeMain extends JavaPlugin {
          log.info("Incorrectly formatted LittleRPG world file");
       }
       
+      questStartMap = new HashMap<Location, Integer>();
+      // Load up the quest starting points from file
+      try{
+         Location loc;
+         br = new BufferedReader(new FileReader(questStartFile));
+         
+         // Load quest start file data into the world HashMap
+         while((input = br.readLine()) != null){
+            st = new StringTokenizer(input, " ");
+            loc = new Location(getServer().getWorld(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+            
+            questStartMap.put(loc, Integer.parseInt(st.nextToken()));
+         }
+         br.close();
+         
+      }catch(FileNotFoundException e){
+         log.info("No original LittleRPG quest start file found. One will be created for you");
+      }catch(IOException e){
+         log.info("Error reading LittleRPG quest start file");
+      }catch(Exception e){
+         log.info("Incorrectly formatted LittleRPG quest start file");
+      }
+      
       //Get data from config.yml
       questMap = new HashMap<Integer, RPGQuest>();
       loadQuests();
@@ -256,9 +286,13 @@ public class ArpeegeeMain extends JavaPlugin {
       getCommand("ichoosemagic").setExecutor(new Begin(this));
       getCommand("addrpgworld").setExecutor(new Worlds(this));
       getCommand("removerpgworld").setExecutor(new Worlds(this));
+      getCommand("setquest").setExecutor(new Quests(this));
 
       berserkMap = new HashMap<String, String>();
       projMap = new HashMap<Entity, String>();
+      
+      questNumberToSet = -1;
+      questCanSet = false;
 
       log.info(this.toString() + " enabled");
    }
@@ -356,12 +390,30 @@ public class ArpeegeeMain extends JavaPlugin {
          
          // Save all world names to file
          while(it.hasNext()){
-            Entry<String, String> mp = it.next();
-            bw.write(mp.getValue() + "\n");
+            Entry<String, String> world = it.next();
+            bw.write(world.getValue() + "\n");
          }
          bw.close();
       }catch(IOException e){
          log.info("Error saving LittleRPG worlds");
+      }
+      
+      try{
+         bw = new BufferedWriter(new FileWriter(questStartFile));
+         Iterator<Map.Entry<Location, Integer>> it = questStartMap.entrySet().iterator();
+         
+         // Save all quest starting points to file
+         while(it.hasNext()){
+            Entry<Location, Integer> quest = it.next();
+            bw.write(quest.getKey().getWorld().getName() + " "
+                  + Integer.toString(quest.getKey().getBlockX()) + " "
+                  + Integer.toString(quest.getKey().getBlockY()) + " "
+                  + Integer.toString(quest.getKey().getBlockZ()) + " "
+                  + Integer.toString(quest.getValue()) + "\n");
+         }
+         bw.close();
+      }catch(IOException e){
+         log.info("Error saving LittleRPG quest starting points");
       }
       
       log.info(this.toString() + " disabled");
@@ -383,6 +435,10 @@ public class ArpeegeeMain extends JavaPlugin {
       return subClassMap;
    }
    
+   public HashMap<Integer, RPGQuest> getQuestMap() {
+      return questMap;
+   }
+   
    public HashMap<String, String> getBerserkMap() {
       return berserkMap;
    }
@@ -393,6 +449,26 @@ public class ArpeegeeMain extends JavaPlugin {
 
    public HashMap<String, String> getWorldsMap(){
       return worldsMap;
+   }
+
+   public HashMap<Location, Integer> getQuestStartMap(){
+      return questStartMap;
+   }
+
+   public int getQuestNumberToSet(){
+      return questNumberToSet;
+   }
+
+   public void setQuestNumberToSet(int questNumberToSet){
+      this.questNumberToSet = questNumberToSet;
+   }
+
+   public boolean isQuestCanSet(){
+      return questCanSet;
+   }
+
+   public void setQuestCanSet(boolean questCanSet){
+      this.questCanSet = questCanSet;
    }
    
    /* Returns true if the RNG smiles upon the user*/

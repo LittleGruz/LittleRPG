@@ -30,7 +30,7 @@ public class EntityDamageEntity implements Listener {
 
    @EventHandler
    public void onEntityDamageEntity(EntityDamageByEntityEvent event){
-      if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getUID().toString())){
+      if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getName())){
          // Fist bump!
          if(event.getEntity() instanceof Player
                && event.getDamager() instanceof Player){

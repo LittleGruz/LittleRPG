@@ -22,7 +22,7 @@ public class PlayerLevel implements Listener{
    // Give new weapons if the necessary level is reached
    @EventHandler
    public void onPlayerLevel(PlayerLevelChangeEvent event){
-      if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getUID().toString())){
+      if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getName())){
          if(event.getNewLevel() > event.getOldLevel())
             event.getPlayer().sendMessage("Level up!");
          

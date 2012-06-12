@@ -24,7 +24,7 @@ public class PlayerRespawn implements Listener{
    //TODO: Y NO CAN DAMAGE ARMOUR?
    @EventHandler
    public void onPlayerRespawn(PlayerRespawnEvent event){
-      if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getUID().toString())){
+      if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getName())){
          // Restore weapons and levels for the melee class
          if(plugin.getMeleePlayerMap().get(event.getPlayer().getName()) != null){
             RPGMeleePlayer rpgPlaya = plugin.getMeleePlayerMap().get(event.getPlayer().getName());
@@ -135,7 +135,7 @@ public class PlayerRespawn implements Listener{
 
    @EventHandler
    public void onPlayerDeath(PlayerDeathEvent event){
-      if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getUID().toString())){
+      if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getName())){
          event.setDroppedExp(0);
          event.setKeepLevel(true);
          event.getDrops().removeAll(event.getDrops());

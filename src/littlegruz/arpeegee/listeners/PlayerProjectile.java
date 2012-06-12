@@ -19,7 +19,7 @@ public class PlayerProjectile implements Listener{
    
    @EventHandler
    public void onPlayerBowShoot(EntityShootBowEvent event){
-      if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getUID().toString())){
+      if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getName())){
          if(event.getEntity() instanceof Player){
             Player playa = (Player) event.getEntity();
    
@@ -47,7 +47,7 @@ public class PlayerProjectile implements Listener{
    
    @EventHandler
    public void onEggThrow(PlayerEggThrowEvent event){
-      if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getUID().toString())){
+      if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getName())){
          event.setHatching(false);
          // Determining explosion chance by egg skill
          if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null
@@ -62,7 +62,7 @@ public class PlayerProjectile implements Listener{
    
    @EventHandler
    public void onProjectileHit(ProjectileHitEvent event){
-      if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getUID().toString())){
+      if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getName())){
          // Projectile hitting something
          Entity ent = event.getEntity();
          if(plugin.getProjMap().get(ent) != null){

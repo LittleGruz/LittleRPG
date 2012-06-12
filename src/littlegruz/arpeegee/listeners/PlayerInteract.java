@@ -20,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -37,7 +38,7 @@ public class PlayerInteract implements Listener{
    
    @EventHandler
    public void onPlayerInteract(PlayerInteractEvent event){
-      if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getUID().toString())){
+      if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getName())){
          Player playa = event.getPlayer();
    
          // Casting weapon for "Flash"
@@ -243,6 +244,20 @@ public class PlayerInteract implements Listener{
                plugin.giveCooldown(playa, "egg", "ranged", 5);
                plugin.getRangedPlayerMap().get(playa.getName()).setEggReadiness(false);
             }
+         }
+         // Player right clicking with fist
+         else if(event.getAction().compareTo(Action.RIGHT_CLICK_BLOCK) == 0
+               && event.getPlayer().getItemInHand().getType().compareTo(Material.AIR) == 0
+               && plugin.isQuestCanSet()){
+            plugin.getQuestStartMap().put(event.getClickedBlock().getLocation(), plugin.getQuestNumberToSet());
+            plugin.setQuestCanSet(false);
+            event.getPlayer().sendMessage("Quest number " + plugin.getQuestNumberToSet() + " set");
+         }
+         // Player just right clicking
+         else if(event.getAction().compareTo(Action.RIGHT_CLICK_BLOCK) == 0
+               && plugin.getQuestStartMap().get(event.getClickedBlock().getLocation()) != null){
+            
+            event.getPlayer().sendMessage("Got quest " + plugin.getQuestStartMap().get(event.getClickedBlock().getLocation()));
          }
       }
    }

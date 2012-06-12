@@ -18,7 +18,7 @@ public class PlayerSpeed implements Listener{
    
    @EventHandler
    public void onPlayerSprinting(PlayerMoveEvent event){
-      if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getUID().toString())){
+      if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getName())){
          if(event.getPlayer().isSprinting()){
             /* The exception will get thrown if player is not wear the armour piece
              * which means they are not wearing the required armour for the boost

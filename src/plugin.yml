@@ -15,6 +15,9 @@ commands:
    ichoosemagic:
       description: Makes it all complete
       usage: /ichoosemagic
+   setquest:
+      description: Prepares a quest to be set to a block
+      usage: /setquest
    addrpgworld:
       description: Adds the current world to the list of worlds affected by the plugin
       usage: /addrpgworld
@@ -25,6 +28,9 @@ commands:
 permissions:
    arpeegee.world:
       description: Adding or removing worlds where LittleRPG is active
+      default: op
+   arpeegee.questing:
+      description: Setting up quests
       default: op
    arpeegee.display:
       description: Displaying [sub-]classes

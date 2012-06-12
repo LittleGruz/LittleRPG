@@ -18,7 +18,7 @@ public class PlayerJoin implements Listener{
 
    @EventHandler
    public void onPlayerJoin(PlayerJoinEvent event){
-      if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getUID().toString())){
+      if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getName())){
          Player playa = event.getPlayer();
          if(plugin.getMeleePlayerMap().get(event.getPlayer().getName()) == null
                && plugin.getRangedPlayerMap().get(event.getPlayer().getName()) == null

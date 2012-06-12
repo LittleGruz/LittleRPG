@@ -37,7 +37,7 @@ public class EnemyDeaths implements Listener{
    
    @EventHandler
    public void onEnemyDeath(EntityDeathEvent event){
-      if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getUID().toString())){
+      if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getName())){
          if(event.getEntity() instanceof Animals
                || event.getEntity() instanceof Monster){
             float add, exp;
