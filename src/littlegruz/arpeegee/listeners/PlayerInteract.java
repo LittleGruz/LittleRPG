@@ -2,8 +2,10 @@ package littlegruz.arpeegee.listeners;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.StringTokenizer;
 
 import littlegruz.arpeegee.ArpeegeeMain;
+import littlegruz.arpeegee.entities.RPGPlayer;
 import littlegruz.arpeegee.entities.RPGQuest;
 
 import net.minecraft.server.EntityLiving;
@@ -258,7 +260,46 @@ public class PlayerInteract implements Listener{
          else if(event.getAction().compareTo(Action.RIGHT_CLICK_BLOCK) == 0
                && plugin.getQuestStartMap().get(event.getClickedBlock().getLocation()) != null){
             RPGQuest rpgq = plugin.getQuestMap().get(plugin.getQuestStartMap().get(event.getClickedBlock().getLocation()));
-            event.getPlayer().sendMessage("Got quest " + rpgq.getQuestNumber());
+            RPGPlayer rpgp = null;
+            
+            if(plugin.getMagicPlayerMap().get(playa.getName()) != null)
+               rpgp = plugin.getMagicPlayerMap().get(playa.getName());
+            else if(plugin.getMagicPlayerMap().get(playa.getName()) != null)
+               rpgp = plugin.getMeleePlayerMap().get(playa.getName());
+            else if(plugin.getMagicPlayerMap().get(playa.getName()) != null)
+               rpgp = plugin.getRangedPlayerMap().get(playa.getName());
+
+            // Just making sure they exist with a class
+            if(rpgp != null){
+               // Check pre req quest/items, check fin con, update quests done
+               if(rpgp.getQuest() >= rpgq.getPrerequisiteQuest()){
+                  boolean pass;
+                  StringTokenizer st;
+                  
+                  pass = true;
+                  st = new StringTokenizer(rpgq.getRequiredItem(), "|");
+                  
+                  while(st.hasMoreTokens()){
+                     if(!event.getPlayer().getInventory().contains(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())))
+                        pass = false;
+                  }
+                  if(pass){
+                     
+                     // Set the quest as being completed
+                     if(rpgp.getIncomplete().contains("-1"))
+                        rpgp.setIncomplete(rpgq.getQuestNumber() + "|");
+                     else if(!rpgp.getIncomplete().contains(Integer.toString(rpgq.getQuestNumber())))
+                        rpgp.setIncomplete(rpgp.getIncomplete() + rpgq.getQuestNumber() + "|");
+                     event.getPlayer().sendMessage("Got quest " + rpgq.getQuestNumber());
+                  }
+                  else
+                     event.getPlayer().sendMessage("You are missing prerequisite item(s)");
+               }
+               else
+                  event.getPlayer().sendMessage("You have not completed the prerequisite quest");
+            }
+            else
+               event.getPlayer().sendMessage("Why haven't you chosen a class yet?");
          }
       }
    }

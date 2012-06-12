@@ -1,7 +1,7 @@
 package littlegruz.arpeegee.entities;
 
 public class RPGPlayer {
-   private String name;
+   private String name, incomplete, complete;
    private int level, quest, party;
    private RPGSubClass subObj;
 
@@ -12,15 +12,18 @@ public class RPGPlayer {
       level = 1;
       quest = -1;
       party = -1;
+      incomplete = "0";
    }
    
    // Restoring an RPGPlayer from a saved state (with party id [unimplemented])
-   public RPGPlayer(String name, RPGSubClass subClassObj, int level, int quest, int party){
+   public RPGPlayer(String name, RPGSubClass subClassObj, int level, int quest, String incomplete, String complete, int party){
       this.name = name;
       subObj = subClassObj;
       this.level = level;
       this.quest = quest;
       this.party = party;
+      this.incomplete = incomplete;
+      this.complete = complete;
    }
 
    public String getName() {
@@ -53,5 +56,21 @@ public class RPGPlayer {
 
    public void setParty(int party){
       this.party = party;
+   }
+
+   public String getIncomplete(){
+      return incomplete;
+   }
+
+   public void setIncomplete(String incomplete){
+      this.incomplete = incomplete;
+   }
+
+   public String getComplete(){
+      return complete;
+   }
+
+   public void setComplete(String complete){
+      this.complete = complete;
    }
 }
