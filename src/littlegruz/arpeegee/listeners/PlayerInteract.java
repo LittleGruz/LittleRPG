@@ -294,15 +294,17 @@ public class PlayerInteract implements Listener{
                         attempted = true;
                      
                      if(pass){
-                        pass = false;
                         if(attempted){
-                           // TODO Win condition check
-                           
-                           // if won, pass = true
+                           // Win condition check
+                           while(st.hasMoreTokens()){
+                              if(!event.getPlayer().getInventory().contains(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())))
+                                 pass = false;
+                           }
                         }
                         else{
-                           // TODO Give the player the dialogue
-                           // Set the quest as being completed
+                           sendDialogue("text|", event.getPlayer(), rpgq.getDialogue());
+                           
+                           // Set the quest as being active
                            if(rpgp.getIncomplete().contains("-1"))
                               rpgp.setIncomplete(rpgq.getQuestNumber() + "|");
                            else if(!rpgp.getIncomplete().contains(Integer.toString(rpgq.getQuestNumber())))
@@ -310,12 +312,10 @@ public class PlayerInteract implements Listener{
                            event.getPlayer().sendMessage("Got quest " + rpgq.getQuestNumber());
                         }
                         
-                        if(!pass){
-                           // TODO Failure dialogue
-                        }
-                        else{
-                           // TODO Winning dialogue
-                        }
+                        if(pass)
+                           sendDialogue("pass|", event.getPlayer(), rpgq.getDialogue());
+                        else
+                           sendDialogue("fail|", event.getPlayer(), rpgq.getDialogue());
                      }
                      else
                         event.getPlayer().sendMessage("You are missing prerequisite item(s)");
@@ -448,6 +448,16 @@ public class PlayerInteract implements Listener{
                return;
             }
          }
+      }
+   }
+   
+   // Send the player the desired dialogue
+   private void sendDialogue(String type, Player playa, ArrayList<String> dialogue){
+      int i;
+      
+      for(i = 0; i < dialogue.size(); i++){
+         if(dialogue.get(i).contains(type))
+            playa.sendMessage(dialogue.get(i).replace(type, ""));
       }
    }
 }

@@ -651,7 +651,7 @@ public class ArpeegeeMain extends JavaPlugin {
             else if(type.compareToIgnoreCase("text") == 0
                   || type.compareToIgnoreCase("pass") == 0
                   || type.compareToIgnoreCase("fail") == 0){
-               text.add(st.nextToken());
+               text.add(type.toLowerCase() + "|" + st.nextToken());
             }
             else if(type.compareToIgnoreCase("fc") == 0){
                finishers = st.nextToken();
