@@ -10,8 +10,9 @@ public class RPGPlayer {
       this.name = name;
       subObj = subClassObj;
       level = 1;
+      incomplete = "-1";
+      complete = "-1";
       party = -1;
-      incomplete = "0";
    }
    
    // Restoring an RPGPlayer from a saved state (with party id [unimplemented])
@@ -19,9 +20,9 @@ public class RPGPlayer {
       this.name = name;
       subObj = subClassObj;
       this.level = level;
-      this.party = party;
       this.incomplete = incomplete;
       this.complete = complete;
+      this.party = party;
    }
 
    public String getName() {

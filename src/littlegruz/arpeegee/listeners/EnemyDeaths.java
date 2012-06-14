@@ -40,7 +40,7 @@ public class EnemyDeaths implements Listener{
       if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getName())){
          if(event.getEntity() instanceof Animals
                || event.getEntity() instanceof Monster){
-            float add, exp;
+            float exp;
             
             event.setDroppedExp(0);
             
@@ -106,21 +106,8 @@ public class EnemyDeaths implements Listener{
             }
             
             for(Entity e : event.getEntity().getNearbyEntities(15, 15, 15)) {
-               if (e instanceof Player) {
-                  Player p = (Player) e;
-                  
-                  /* If max exp is represented as 100, then the player is given 5
-                   * exp points which is divided by their level and 0.33. This will
-                   * make it longer to level as the player progresses*/
-                  add = (float) (exp/(p.getLevel() * 0.33));
-                  if(p.getExp() + add > 1){
-                     add = (add + p.getExp()) - 1;
-                     p.setLevel(p.getLevel() + 1);
-                     p.setExp(add);
-                  }
-                  else
-                     p.setExp(p.getExp() + add);
-               }
+               if (e instanceof Player)
+                  plugin.giveExp((Player) e, exp);
             }
          }
       }

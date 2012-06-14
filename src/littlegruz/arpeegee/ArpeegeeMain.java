@@ -596,8 +596,7 @@ public class ArpeegeeMain extends JavaPlugin {
     * least 5 dirt blocks. Finishing condition is 25 dirt blocks with a
     * reward of a sand block and 20xp.
     * Quest 2 has a finishing condition of 1 coal and 1 stick, reward is 30xp.
-    * quest1:
-    * - PQ:0
+    * quest0:
     * - Level:5
     * - Items:3|5
     * - Text:Greetings traveller, I need more dirt to make my first home.
@@ -606,8 +605,8 @@ public class ArpeegeeMain extends JavaPlugin {
     * - Pass:Thank you, I can now make my lovely 3x4x3 dirt home.
     * - Fail:You do not have enough dirt.
     * - Reward:12|1:XP|20
-    * quest2:
-    * - PQ:1
+    * quest1:
+    * - PQ:0
     * - Text:I now must decorate it, fetch me 1 piece of coal and 1 stick.
     * - FC:263|1:280|1
     * - Pass:Decorations! Yay!
@@ -670,5 +669,21 @@ public class ArpeegeeMain extends JavaPlugin {
          // Create the new quest and store it in the quest hashmap
          questMap.put(quest, new RPGQuest(quest, preReqQuest, level, item, text, finishers, reward));
       }
+   }
+
+   /* If max exp is represented as 100, then the player is given 5
+    * exp points which is divided by their level and 0.33. This will
+    * make it longer to level as the player progresses*/
+   public void giveExp(Player playa, float exp){
+      float amount;
+      
+      amount = (float) (exp/(playa.getLevel() * 0.33));
+      if(playa.getExp() + amount > 1){
+         amount = (amount + playa.getExp()) - 1;
+         playa.setLevel(playa.getLevel() + 1);
+         playa.setExp(amount);
+      }
+      else
+         playa.setExp(playa.getExp() + amount);
    }
 }

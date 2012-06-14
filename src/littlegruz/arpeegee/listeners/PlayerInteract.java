@@ -271,10 +271,11 @@ public class PlayerInteract implements Listener{
 
             // Just making sure they exist with a class
             if(rpgp != null){
-               // Check if the player has already completed the 
-               if(rpgp.getComplete().contains(Integer.toString(rpgq.getQuestNumber()))){
-                  // Check if the player has completed the prerequisite
-                  if(rpgp.getComplete().contains(Integer.toString(rpgq.getPrerequisiteQuest()))){
+               // Check if the player has already completed the quest
+               if(!rpgp.getComplete().contains(Integer.toString(rpgq.getQuestNumber()))){
+                  // Check if the player has completed the prerequisite, if it has a prerequisite
+                  if(rpgp.getComplete().contains(Integer.toString(rpgq.getPrerequisiteQuest()))
+                        || rpgq.getPrerequisiteQuest() == -1){
                      boolean pass, attempted;
                      StringTokenizer st;
                      
@@ -296,10 +297,47 @@ public class PlayerInteract implements Listener{
                      if(pass){
                         if(attempted){
                            // Win condition check
+                           st = new StringTokenizer(rpgq.getFinishConditions(), "|");
+                           
                            while(st.hasMoreTokens()){
                               if(!event.getPlayer().getInventory().contains(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())))
                                  pass = false;
                            }
+                           
+                           if(pass){
+                              sendDialogue("pass|", event.getPlayer(), rpgq.getDialogue());
+                              
+                              // Set the quest as completed
+                              if(rpgp.getComplete().contains("-1"))
+                                 rpgp.setComplete(rpgq.getQuestNumber() + "|");
+                              else
+                                 rpgp.setComplete(rpgp.getComplete() + rpgq.getQuestNumber() + "|");
+                              
+                              // Give the player the reward
+                              st = new StringTokenizer(rpgq.getReward(), "|");
+                              event.getPlayer().setExp((float)0.2);
+                              while(st.hasMoreTokens()){
+                                 String type;
+                                 
+                                 type = st.nextToken();
+                                 if(type.compareToIgnoreCase("xp") == 0){
+                                    float xp;
+                                    
+                                    xp = Float.parseFloat(st.nextToken());
+                                    plugin.giveExp(event.getPlayer(), xp / 100);
+                                    event.getPlayer().sendMessage("You gained " + xp + " experience points!");
+                                 }
+                                 else{
+                                    ItemStack is;
+                                    
+                                    is = new ItemStack(Integer.parseInt(type), Integer.parseInt(st.nextToken()));
+                                    event.getPlayer().getInventory().addItem(is);
+                                    event.getPlayer().sendMessage("You gained " + is.getAmount() + " " + is.getType().toString() + "!");
+                                 }
+                              }
+                           }
+                           else if(!pass)
+                              sendDialogue("fail|", event.getPlayer(), rpgq.getDialogue());
                         }
                         else{
                            sendDialogue("text|", event.getPlayer(), rpgq.getDialogue());
@@ -309,13 +347,7 @@ public class PlayerInteract implements Listener{
                               rpgp.setIncomplete(rpgq.getQuestNumber() + "|");
                            else if(!rpgp.getIncomplete().contains(Integer.toString(rpgq.getQuestNumber())))
                               rpgp.setIncomplete(rpgp.getIncomplete() + rpgq.getQuestNumber() + "|");
-                           event.getPlayer().sendMessage("Got quest " + rpgq.getQuestNumber());
                         }
-                        
-                        if(pass)
-                           sendDialogue("pass|", event.getPlayer(), rpgq.getDialogue());
-                        else
-                           sendDialogue("fail|", event.getPlayer(), rpgq.getDialogue());
                      }
                      else
                         event.getPlayer().sendMessage("You are missing prerequisite item(s)");
@@ -324,7 +356,7 @@ public class PlayerInteract implements Listener{
                      event.getPlayer().sendMessage("You have not completed the prerequisite quest");
                }
                else
-                  event.getPlayer().sendMessage("You have already completed this quest");
+                  event.getPlayer().sendMessage("You have already completed this quest!");
             }
             else
                event.getPlayer().sendMessage("Why haven't you chosen a class yet?");
