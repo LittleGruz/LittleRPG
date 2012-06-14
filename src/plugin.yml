@@ -1,6 +1,6 @@
 name: LittleRPG
 main: littlegruz.arpeegee.ArpeegeeMain
-version: 1.1
+version: 1.2
 
 commands:
    displaysubclass:

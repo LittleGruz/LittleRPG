@@ -671,13 +671,13 @@ public class ArpeegeeMain extends JavaPlugin {
       }
    }
 
-   /* If max exp is represented as 100, then the player is given 5
-    * exp points which is divided by their level and 0.33. This will
-    * make it longer to level as the player progresses*/
+   /* If max exp is represented as 100, then if the player is given 5 exp points
+    * it is divided by their level and 0.33. This will make it longer to level
+    * as the player progresses*/
    public void giveExp(Player playa, float exp){
       float amount;
       
-      amount = (float) (exp/(playa.getLevel() * 0.33));
+      amount = (float) ((exp / 100)/(playa.getLevel() * 0.33));
       if(playa.getExp() + amount > 1){
          amount = (amount + playa.getExp()) - 1;
          playa.setLevel(playa.getLevel() + 1);

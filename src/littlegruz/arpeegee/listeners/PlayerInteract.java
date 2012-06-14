@@ -324,7 +324,7 @@ public class PlayerInteract implements Listener{
                                     float xp;
                                     
                                     xp = Float.parseFloat(st.nextToken());
-                                    plugin.giveExp(event.getPlayer(), xp / 100);
+                                    plugin.giveExp(event.getPlayer(), xp);
                                     event.getPlayer().sendMessage("You gained " + xp + " experience points!");
                                  }
                                  else{
