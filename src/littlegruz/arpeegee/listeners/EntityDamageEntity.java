@@ -103,7 +103,7 @@ public class EntityDamageEntity implements Listener {
                      crit = 2;
                   else
                      crit = 1;
-                  event.setDamage((blade + (level / 2)) * crit);
+                  event.setDamage((blade + (level / 5)) * crit);
                   
                }
                else{
@@ -141,6 +141,15 @@ public class EntityDamageEntity implements Listener {
                
                //playa.getItemInHand().setDurability((short) 0);
                
+            }
+            else if(playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0
+                  && playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
+                  && playa.getItemInHand().getType().compareTo(Material.STONE_SWORD) == 0
+                  && playa.getItemInHand().getType().compareTo(Material.WOOD_SWORD) == 0
+                  && plugin.getMeleePlayerMap().get(playa.getName()) != null
+                  && plugin.getMagicPlayerMap().get(playa.getName()) != null
+                  && plugin.getRangedPlayerMap().get(playa.getName()) != null){
+               event.setDamage(1);
             }
          }
          // Player taking damage

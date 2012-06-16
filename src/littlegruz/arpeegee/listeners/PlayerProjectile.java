@@ -29,14 +29,25 @@ public class PlayerProjectile implements Listener{
                plugin.getProjMap().put(event.getProjectile(),
                      Double.toString(plugin.getRangedPlayerMap().get(playa.getName()).getSubClassObject().getArch()) + "|1");
                }
-               // Fire arrow
-               else if(playa.getInventory().getHeldItemSlot() == 1
-                     /*&& playa.getLevel() >= 5*/){
+               else if(playa.getInventory().getHeldItemSlot() == 1){
+                  // Fire arrow
+                  if(playa.getLevel() >= 5){
+                     plugin.getProjMap().put(event.getProjectile(),
+                           Double.toString(plugin.getRangedPlayerMap().get(playa.getName()).getSubClassObject().getArch()) + "|2");
+                     playa.getInventory().setItemInHand(null);
+                     plugin.getRangedPlayerMap().get(playa.getName()).setFireBowReadiness(false);
+                     plugin.giveCooldown(playa, "fire", "ranged", 3);
+                  }
+                  // Normal arrow
+                  else{
+                     plugin.getProjMap().put(event.getProjectile(),
+                           Double.toString(plugin.getRangedPlayerMap().get(playa.getName()).getSubClassObject().getArch()) + "|1");
+                  }
+               }
+               // Normal arrow
+               else if(playa.getInventory().getHeldItemSlot() > 1){
                   plugin.getProjMap().put(event.getProjectile(),
-                        Double.toString(plugin.getRangedPlayerMap().get(playa.getName()).getSubClassObject().getArch()) + "|2");
-                  playa.getInventory().setItemInHand(null);
-                  plugin.getRangedPlayerMap().get(playa.getName()).setFireBowReadiness(false);
-                  plugin.giveCooldown(playa, "fire", "ranged", 3);
+                        Double.toString(plugin.getRangedPlayerMap().get(playa.getName()).getSubClassObject().getArch()) + "|1");
                }
                if(playa.getInventory().getItem(9).getAmount() < 2)
                   playa.getInventory().getItem(9).setAmount(10);

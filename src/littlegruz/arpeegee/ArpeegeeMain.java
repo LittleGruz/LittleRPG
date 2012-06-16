@@ -76,6 +76,7 @@ public class ArpeegeeMain extends JavaPlugin {
    private HashMap<String, String> worldsMap;
    private int questNumberToSet;
    private boolean questCanSet;
+   private boolean questCanUnset;
    
    public void onEnable(){
       BufferedReader br;
@@ -309,6 +310,7 @@ public class ArpeegeeMain extends JavaPlugin {
       
       questNumberToSet = -1;
       questCanSet = false;
+      questCanUnset = false;
 
       log.info(this.toString() + " enabled");
    }
@@ -494,6 +496,14 @@ public class ArpeegeeMain extends JavaPlugin {
 
    public void setQuestCanSet(boolean questCanSet){
       this.questCanSet = questCanSet;
+   }
+
+   public boolean isQuestCanUnset(){
+      return questCanUnset;
+   }
+
+   public void setQuestCanUnset(boolean questCanUnset){
+      this.questCanUnset = questCanUnset;
    }
    
    /* Returns true if the RNG smiles upon the user*/

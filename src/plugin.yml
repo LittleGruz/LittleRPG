@@ -17,7 +17,10 @@ commands:
       usage: /ichoosemagic
    setquest:
       description: Prepares a quest to be set to a block
-      usage: /setquest
+      usage: /setquest <quest_number>
+   unsetquest:
+      description: Unsets a quest from a block
+      usage: /unsetquest
    displayquests:
       description: Displays all the quests loaded
       usage: /displayquests

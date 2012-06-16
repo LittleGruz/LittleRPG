@@ -256,6 +256,15 @@ public class PlayerInteract implements Listener{
             plugin.setQuestCanSet(false);
             event.getPlayer().sendMessage("Quest number " + plugin.getQuestNumberToSet() + " set");
          }
+         // Player right clicking with fist to set a quest
+         else if(event.getAction().compareTo(Action.RIGHT_CLICK_BLOCK) == 0
+               && event.getPlayer().getItemInHand().getType().compareTo(Material.AIR) == 0
+               && plugin.isQuestCanUnset()
+               && plugin.getQuestStartMap().get(event.getClickedBlock().getLocation()) != null){
+            plugin.getQuestStartMap().remove(event.getClickedBlock().getLocation());
+            plugin.setQuestCanUnset(false);
+            event.getPlayer().sendMessage("Quest block unset");
+         }
          // Player just right clicking for a quest
          else if(event.getAction().compareTo(Action.RIGHT_CLICK_BLOCK) == 0
                && plugin.getQuestStartMap().get(event.getClickedBlock().getLocation()) != null){

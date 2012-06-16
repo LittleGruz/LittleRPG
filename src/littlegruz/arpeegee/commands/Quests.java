@@ -47,6 +47,10 @@ public class Quests implements CommandExecutor{
                sender.sendMessage(block.getValue() + " | " + block.getKey().getWorld().getName() + "," + block.getKey().getBlockX() + "," + block.getKey().getBlockY() + "," + block.getKey().getBlockZ());
             }
          }
+         else if(cmd.getName().compareToIgnoreCase("unsetquest") == 0){
+            plugin.setQuestCanSet(true);
+            sender.sendMessage("Right click with your fist to unset a quest giving block");
+         }
       }
       else
          sender.sendMessage("You do not have sufficient permissions");
