@@ -26,7 +26,7 @@ public class PlayerJoin implements Listener{
                event.setJoinMessage(plugin.getTextsMap().get("intro"));
             }
             else{
-               playa.sendMessage("Spout!");
+               plugin.getGUI().attachIntro(playa);
             }
             
             // Just in case they have levels/experience

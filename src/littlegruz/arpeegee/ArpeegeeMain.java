@@ -28,6 +28,7 @@ import littlegruz.arpeegee.entities.RPGQuest;
 import littlegruz.arpeegee.entities.RPGRangedPlayer;
 import littlegruz.arpeegee.entities.RPGSubClass;
 import littlegruz.arpeegee.gui.LittleGUI;
+import littlegruz.arpeegee.listeners.ButtonListener;
 import littlegruz.arpeegee.listeners.EnemyDeaths;
 import littlegruz.arpeegee.listeners.EntityDamageEntity;
 import littlegruz.arpeegee.listeners.PlayerInteract;
@@ -99,6 +100,8 @@ public class ArpeegeeMain extends JavaPlugin {
       subClassFile = new File(getDataFolder().toString() + "/subclasses.txt");
       worldsFile = new File(getDataFolder().toString() + "/worlds.txt");
       textsFile = new File(getDataFolder().toString() + "/texts.txt");
+      
+      spoutEnabled = getServer().getPluginManager().isPluginEnabled("Spout");
 
       subClassMap = new HashMap<String, RPGSubClass>();
       // Load up the sub-classes from file
@@ -288,10 +291,16 @@ public class ArpeegeeMain extends JavaPlugin {
          
       }catch(FileNotFoundException e){
          log.info("No original LittleRPG text file found. One will be created for you");
+         
+         if(!spoutEnabled){
          textsMap.put("intro", ChatColor.RED + " Welcome to a LittleRPG world. Please choose a class to begin. "
                + ChatColor.YELLOW + "Melee class: type /ichoosemelee                                "
                + ChatColor.GREEN + "Ranged class: type /ichooseranged                              "
                + ChatColor.BLUE + "Magic class: type /ichoosemagic                                ");
+         }
+         else
+            textsMap.put("intro", ChatColor.RED + "Welcome to a LittleRPG world. You want to be the very best, like no one ever was.");
+         
          textsMap.put("return", ChatColor.RED + "Welcome back, brave adventurer.");
       }catch(IOException e){
          log.info("Error reading LittleRPG text file");
@@ -335,6 +344,8 @@ public class ArpeegeeMain extends JavaPlugin {
       getServer().getPluginManager().registerEvents(new PlayerProjectile(this), this);
       getServer().getPluginManager().registerEvents(new PlayerRespawn(this), this);
       getServer().getPluginManager().registerEvents(new PlayerSpeed(this), this);
+      if(spoutEnabled)
+         getServer().getPluginManager().registerEvents(new ButtonListener(this), this);
 
       getCommand("displaysubclass").setExecutor(new Display(this));
       getCommand("ichoosemelee").setExecutor(new Begin(this));
@@ -354,8 +365,6 @@ public class ArpeegeeMain extends JavaPlugin {
       questNumberToSet = -1;
       questCanSet = false;
       questCanUnset = false;
-      
-      spoutEnabled = getServer().getPluginManager().isPluginEnabled("Spout");
       
       if(spoutEnabled)
          gui = new LittleGUI(this);
@@ -576,7 +585,7 @@ public class ArpeegeeMain extends JavaPlugin {
       return textsMap;
    }
 
-   public LittleGUI getGui(){
+   public LittleGUI getGUI(){
       return gui;
    }
 

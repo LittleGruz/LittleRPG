@@ -22,14 +22,18 @@ public class RPGPlayer {
       this.level = level;
 
       // TODO This is here because I was an idiot and did not change all -1 values in the previous version
-      if(complete.compareTo("-1") == 0)
-         this.complete = complete.replace("-1", "none");
-      else if(complete.contains("-1"))
-         this.complete = complete.replace("-1", "");
       if(incomplete.compareTo("-1") == 0)
          this.incomplete = incomplete.replace("-1", "none");
       else if(incomplete.contains("-1"))
          this.incomplete = incomplete.replace("-1", "");
+      else
+         this.incomplete = incomplete;
+      if(complete.compareTo("-1") == 0)
+         this.complete = complete.replace("-1", "none");
+      else if(complete.contains("-1"))
+         this.complete = complete.replace("-1", "");
+      else
+         this.complete = complete;
       
       this.party = party;
    }
