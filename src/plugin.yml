@@ -19,7 +19,7 @@ commands:
       description: Prepares a quest to be set to a block
       usage: /setquest <quest_number>
    unsetquest:
-      description: Unsets a quest from a block
+      description: Prepares a quest to be removed from a block
       usage: /unsetquest
    displayquests:
       description: Displays all the quests loaded
@@ -30,6 +30,12 @@ commands:
    removerpgworld:
       description: Removes the current world to the list of worlds affected by the plugin
       usage: /removerpgworld
+   setrpgintro:
+      description: Sets the introduction message for new players
+      usage: /setrpgintro <message>
+   setrpgreturn:
+      description: Sets the introduction message for returning players
+      usage: /setrpgreturn <message>
       
 permissions:
    arpeegee.world:
@@ -37,6 +43,9 @@ permissions:
       default: op
    arpeegee.questing:
       description: Setting up quests
+      default: op
+   arpeegee.text:
+      description: Setting up joining text
       default: op
    arpeegee.display:
       description: Displaying [sub-]classes

@@ -57,6 +57,8 @@ public class Begin implements CommandExecutor{
             ((Player) sender).getInventory().setItem(0, is);
          }
       }
+      else
+         sender.sendMessage("You do not have sufficient permissions");
       return true;
    }
 

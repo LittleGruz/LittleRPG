@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 import littlegruz.arpeegee.commands.Begin;
 import littlegruz.arpeegee.commands.Display;
+import littlegruz.arpeegee.commands.Join;
 import littlegruz.arpeegee.commands.Quests;
 import littlegruz.arpeegee.commands.Worlds;
 import littlegruz.arpeegee.entities.RPGMagicPlayer;
@@ -26,6 +27,7 @@ import littlegruz.arpeegee.entities.RPGMeleePlayer;
 import littlegruz.arpeegee.entities.RPGQuest;
 import littlegruz.arpeegee.entities.RPGRangedPlayer;
 import littlegruz.arpeegee.entities.RPGSubClass;
+import littlegruz.arpeegee.gui.LittleGUI;
 import littlegruz.arpeegee.listeners.EnemyDeaths;
 import littlegruz.arpeegee.listeners.EntityDamageEntity;
 import littlegruz.arpeegee.listeners.PlayerInteract;
@@ -35,6 +37,7 @@ import littlegruz.arpeegee.listeners.PlayerProjectile;
 import littlegruz.arpeegee.listeners.PlayerRespawn;
 import littlegruz.arpeegee.listeners.PlayerSpeed;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Animals;
@@ -59,12 +62,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ArpeegeeMain extends JavaPlugin {
    private Logger log = Logger.getLogger("This is MINECRAFT!");
+   private LittleGUI gui;
    private File meleePlayerFile;
    private File rangedPlayerFile;
    private File magicPlayerFile;
    private File questStartFile;
    private File subClassFile;
    private File worldsFile;
+   private File textsFile;
    private HashMap<String, RPGMeleePlayer> meleePlayerMap;
    private HashMap<String, RPGRangedPlayer> rangedPlayerMap;
    private HashMap<String, RPGMagicPlayer> magicPlayerMap;
@@ -74,6 +79,7 @@ public class ArpeegeeMain extends JavaPlugin {
    private HashMap<String, String> berserkMap;
    private HashMap<Entity, String> projMap;
    private HashMap<String, String> worldsMap;
+   private HashMap<String, String> textsMap;
    private int questNumberToSet;
    private boolean questCanSet;
    private boolean questCanUnset;
@@ -92,6 +98,7 @@ public class ArpeegeeMain extends JavaPlugin {
       questStartFile = new File(getDataFolder().toString() + "/questStarters.txt");
       subClassFile = new File(getDataFolder().toString() + "/subclasses.txt");
       worldsFile = new File(getDataFolder().toString() + "/worlds.txt");
+      textsFile = new File(getDataFolder().toString() + "/texts.txt");
 
       subClassMap = new HashMap<String, RPGSubClass>();
       // Load up the sub-classes from file
@@ -143,7 +150,7 @@ public class ArpeegeeMain extends JavaPlugin {
             if(subClassMap.get(rpgSubClass.getName()) == null)
                log.warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");
 
-            //TODO (Remove) This stuff is here to make upgrading past v1.1 un-noticable for users
+            //TODO (Remove eventually) This stuff is here to make upgrading past v1.1 un-noticable for users
             level = Integer.parseInt(st.nextToken());
             rage = Integer.parseInt(st.nextToken());
             if(st.hasMoreTokens())
@@ -189,7 +196,7 @@ public class ArpeegeeMain extends JavaPlugin {
             if(st.hasMoreTokens())
                rangedPlayerMap.put(name, new RPGRangedPlayer(name, rpgSubClass, level, st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
             else
-               rangedPlayerMap.put(name, new RPGRangedPlayer(name, rpgSubClass, level, "-1", "-1", -1));
+               rangedPlayerMap.put(name, new RPGRangedPlayer(name, rpgSubClass, level, "none", "none", -1));
          }
          br.close();
          
@@ -229,7 +236,7 @@ public class ArpeegeeMain extends JavaPlugin {
             if(st.hasMoreTokens())
                magicPlayerMap.put(name, new RPGMagicPlayer(name, rpgSubClass, level, st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
             else
-               magicPlayerMap.put(name, new RPGMagicPlayer(name, rpgSubClass, level, "-1", "-1", -1));
+               magicPlayerMap.put(name, new RPGMagicPlayer(name, rpgSubClass, level, "none", "none", -1));
          }
          br.close();
          
@@ -258,6 +265,38 @@ public class ArpeegeeMain extends JavaPlugin {
          log.info("Error reading LittleRPG world file");
       }catch(Exception e){
          log.info("Incorrectly formatted LittleRPG world file");
+      }
+      
+      textsMap = new HashMap<String, String>();
+      // Load up the worlds from file
+      try{
+         String type, msg;
+         br = new BufferedReader(new FileReader(textsFile));
+         
+         // Load world file data into the world HashMap
+         while((input = br.readLine()) != null){
+            st = new StringTokenizer(input, " ");
+            type = st.nextToken();
+            msg = st.nextToken();
+            
+            while(st.hasMoreTokens())
+               msg += " " + st.nextToken();
+            
+            textsMap.put(type, msg);
+         }
+         br.close();
+         
+      }catch(FileNotFoundException e){
+         log.info("No original LittleRPG text file found. One will be created for you");
+         textsMap.put("intro", ChatColor.RED + " Welcome to a LittleRPG world. Please choose a class to begin. "
+               + ChatColor.YELLOW + "Melee class: type /ichoosemelee                                "
+               + ChatColor.GREEN + "Ranged class: type /ichooseranged                              "
+               + ChatColor.BLUE + "Magic class: type /ichoosemagic                                ");
+         textsMap.put("return", ChatColor.RED + "Welcome back, brave adventurer.");
+      }catch(IOException e){
+         log.info("Error reading LittleRPG text file");
+      }catch(Exception e){
+         log.info("Incorrectly formatted LittleRPG text file");
       }
       
       questStartMap = new HashMap<Location, Integer>();
@@ -306,6 +345,8 @@ public class ArpeegeeMain extends JavaPlugin {
       getCommand("setquest").setExecutor(new Quests(this));
       getCommand("unsetquest").setExecutor(new Quests(this));
       getCommand("displayquests").setExecutor(new Quests(this));
+      getCommand("setrpgintro").setExecutor(new Join(this));
+      getCommand("setrpgreturn").setExecutor(new Join(this));
 
       berserkMap = new HashMap<String, String>();
       projMap = new HashMap<Entity, String>();
@@ -315,6 +356,9 @@ public class ArpeegeeMain extends JavaPlugin {
       questCanUnset = false;
       
       spoutEnabled = getServer().getPluginManager().isPluginEnabled("Spout");
+      
+      if(spoutEnabled)
+         gui = new LittleGUI(this);
 
       log.info(this.toString() + " enabled");
    }
@@ -430,6 +474,20 @@ public class ArpeegeeMain extends JavaPlugin {
       }
       
       try{
+         bw = new BufferedWriter(new FileWriter(textsFile));
+         Iterator<Map.Entry<String, String>> it = textsMap.entrySet().iterator();
+         
+         // Save all world names to file
+         while(it.hasNext()){
+            Entry<String, String> text = it.next();
+            bw.write(text.getKey() + " " + text.getValue() + "\n");
+         }
+         bw.close();
+      }catch(IOException e){
+         log.info("Error saving LittleRPG texts file");
+      }
+      
+      try{
          bw = new BufferedWriter(new FileWriter(questStartFile));
          Iterator<Map.Entry<Location, Integer>> it = questStartMap.entrySet().iterator();
          
@@ -512,6 +570,14 @@ public class ArpeegeeMain extends JavaPlugin {
    
    public boolean isSpoutEnabled(){
       return spoutEnabled;
+   }
+
+   public HashMap<String, String> getTextsMap(){
+      return textsMap;
+   }
+
+   public LittleGUI getGui(){
+      return gui;
    }
 
    /* Returns true if the RNG smiles upon the user*/

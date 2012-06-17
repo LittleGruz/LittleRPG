@@ -350,7 +350,7 @@ public class PlayerInteract implements Listener{
                         }
                         else{
                            sendDialogue("text|", event.getPlayer(), rpgq.getDialogue());
-                           
+
                            // Set the quest as being active
                            if(rpgp.getIncomplete().contains("none"))
                               rpgp.setIncomplete(rpgq.getQuestNumber() + "|");
