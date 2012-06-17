@@ -150,6 +150,12 @@ public class PlayerRespawn implements Listener{
          for(ItemStack is : event.getDrops()){
             if(is.getType().compareTo(Material.INK_SACK) == 0)
                removeList.add(is);
+            else if(is.getType().compareTo(Material.WHEAT) == 0)
+               removeList.add(is);
+            else if(is.getType().compareTo(Material.BONE) == 0)
+               removeList.add(is);
+            else if(is.getType().compareTo(Material.BLAZE_ROD) == 0)
+               removeList.add(is);
             else if(is.getType().compareTo(Material.IRON_SWORD) == 0)
                removeList.add(is);
             else if(is.getType().compareTo(Material.BOW) == 0
