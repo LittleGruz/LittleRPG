@@ -22,6 +22,7 @@ import org.bukkit.entity.Silverfish;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Spider;
+import org.bukkit.entity.Squid;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -48,6 +49,10 @@ public class EnemyDeaths implements Listener{
             exp = (float) 0.15;
             if(event.getEntity() instanceof Animals){
                exp = (float) 0.05;
+               itemDrops(event.getDrops(), 0);
+            }
+            else if(event.getEntity() instanceof Squid){
+               exp = (float) 0.06;
                itemDrops(event.getDrops(), 0);
             }
             else if(event.getEntity() instanceof PigZombie){

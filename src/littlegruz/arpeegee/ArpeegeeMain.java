@@ -46,6 +46,7 @@ import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Squid;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -602,6 +603,8 @@ public class ArpeegeeMain extends JavaPlugin {
    /* Checks if the given entity is an enemy*/
    public boolean isEnemy(Entity ent){
       if(ent instanceof Animals)
+         return true;
+      else if(ent instanceof Squid)
          return true;
       else if(ent instanceof Monster)
          return true;
