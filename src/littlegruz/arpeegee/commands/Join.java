@@ -18,7 +18,7 @@ public class Join implements CommandExecutor{
          String commandLabel, String[] args){
       if(sender.hasPermission("arpeegee.text")){
          if(cmd.getName().compareToIgnoreCase("setrpgintro") == 0){
-            if(args.length < 1){
+            if(args.length > 0){
                String msg;
                
                msg = args[0];
@@ -33,7 +33,7 @@ public class Join implements CommandExecutor{
                sender.sendMessage("Wrong number of arguments");
          }
          else if(cmd.getName().compareToIgnoreCase("setrpgreturn") == 0){
-            if(args.length < 1){
+            if(args.length > 0){
                String msg;
                
                msg = args[0];
