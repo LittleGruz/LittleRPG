@@ -36,7 +36,7 @@ public class PlayerRespawn implements Listener{
             event.getPlayer().getInventory().setItem(0, new ItemStack(Material.IRON_SWORD,1));
             
             // Return armour (at half durability) and weapons if at the required level
-            if(rpgPlaya.getLevel() >= 3){
+            /*if(rpgPlaya.getLevel() >= 3){
                event.getPlayer().getInventory().setChestplate(new ItemStack(Material.IRON_CHESTPLATE,1,(short) 121));
             }
             if(rpgPlaya.getLevel() >= 5)
@@ -49,7 +49,7 @@ public class PlayerRespawn implements Listener{
             }
             if(rpgPlaya.getLevel() >= 12){
                event.getPlayer().getInventory().setHelmet(new ItemStack(Material.IRON_HELMET,1,(short) 83));
-            }
+            }*/
          }
          // Restore weapons and levels for the ranged class
          else if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null){
@@ -62,7 +62,7 @@ public class PlayerRespawn implements Listener{
             event.getPlayer().getInventory().setItem(9, new ItemStack(Material.ARROW,10));
 
             // Return armour (at half durability) and weapons if at the required level
-            if(rpgPlaya.getLevel() >= 2){
+            /*if(rpgPlaya.getLevel() >= 2){
                event.getPlayer().getInventory().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE,1,(short) 41));
             }
             if(rpgPlaya.getLevel() >= 4){
@@ -77,7 +77,7 @@ public class PlayerRespawn implements Listener{
                event.getPlayer().getInventory().setItem(2, new ItemStack(Material.EGG,1));
             if(rpgPlaya.getLevel() >= 8){
                event.getPlayer().getInventory().setChestplate(new ItemStack(Material.LEATHER_HELMET,1,(short) 28));
-            }
+            }*/
          }
          // Restore weapons and levels for the magic class
          else if(plugin.getMagicPlayerMap().get(event.getPlayer().getName()) != null){
@@ -98,9 +98,9 @@ public class PlayerRespawn implements Listener{
                event.getPlayer().getInventory().setItem(1, is);
             }
             // Wizard robe
-            if(rpgPlaya.getLevel() >= 4){
+            /*if(rpgPlaya.getLevel() >= 4){
                event.getPlayer().getInventory().setChestplate(new ItemStack(Material.GOLD_CHESTPLATE,1,(short) 57));
-            }
+            }*/
             // Fireball
             if(rpgPlaya.getLevel() >= 5){
                is.setDurability((short)1);
@@ -112,9 +112,9 @@ public class PlayerRespawn implements Listener{
                event.getPlayer().getInventory().setItem(3, is);
             }
             // Wizard hat
-            if(rpgPlaya.getLevel() >= 9){
+            /*if(rpgPlaya.getLevel() >= 9){
                event.getPlayer().getInventory().setChestplate(new ItemStack(Material.GOLD_CHESTPLATE,1,(short) 39));
-            }
+            }*/
             // Sheep summon
             if(rpgPlaya.getLevel() >= 10){
                is.setType(Material.WHEAT);
@@ -138,15 +138,26 @@ public class PlayerRespawn implements Listener{
    public void onPlayerDeath(PlayerDeathEvent event){
       if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getName())){
          int i;
+         boolean bowTaken;
          ArrayList<ItemStack> removeList = new ArrayList<ItemStack>();
          
          event.setDroppedExp(0);
          event.setKeepLevel(true);
+         bowTaken = false;
          
          //event.getDrops().removeAll(event.getDrops());
          
          for(ItemStack is : event.getDrops()){
             if(is.getType().compareTo(Material.INK_SACK) == 0)
+               removeList.add(is);
+            else if(is.getType().compareTo(Material.IRON_SWORD) == 0)
+               removeList.add(is);
+            else if(is.getType().compareTo(Material.BOW) == 0
+                  && !bowTaken){
+               removeList.add(is);
+               bowTaken = true;
+            }
+            else if(is.getType().compareTo(Material.ARROW) == 0)
                removeList.add(is);
          }
          for(i = 0; i < removeList.size(); i++)

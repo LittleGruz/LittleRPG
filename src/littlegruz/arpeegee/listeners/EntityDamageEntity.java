@@ -146,6 +146,8 @@ public class EntityDamageEntity implements Listener {
                   && playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
                   && playa.getItemInHand().getType().compareTo(Material.STONE_SWORD) == 0
                   && playa.getItemInHand().getType().compareTo(Material.WOOD_SWORD) == 0
+                  && playa.getItemInHand().getType().compareTo(Material.BOW) == 0
+                  && playa.getItemInHand().getType().compareTo(Material.AIR) == 0
                   && plugin.getMeleePlayerMap().get(playa.getName()) != null
                   && plugin.getMagicPlayerMap().get(playa.getName()) != null
                   && plugin.getRangedPlayerMap().get(playa.getName()) != null){
