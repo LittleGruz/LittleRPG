@@ -1,5 +1,7 @@
 package littlegruz.arpeegee.listeners;
 
+import java.util.ArrayList;
+
 import littlegruz.arpeegee.ArpeegeeMain;
 import littlegruz.arpeegee.entities.RPGMagicPlayer;
 import littlegruz.arpeegee.entities.RPGMeleePlayer;
@@ -21,7 +23,6 @@ public class PlayerRespawn implements Listener{
    }
    
    
-   //TODO: Y NO CAN DAMAGE ARMOUR?
    @EventHandler
    public void onPlayerRespawn(PlayerRespawnEvent event){
       if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getName())){
@@ -136,9 +137,21 @@ public class PlayerRespawn implements Listener{
    @EventHandler
    public void onPlayerDeath(PlayerDeathEvent event){
       if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getName())){
+         int i;
+         ArrayList<ItemStack> removeList = new ArrayList<ItemStack>();
+         
          event.setDroppedExp(0);
          event.setKeepLevel(true);
-         event.getDrops().removeAll(event.getDrops());
+         
+         //event.getDrops().removeAll(event.getDrops());
+         
+         for(ItemStack is : event.getDrops()){
+            if(is.getType().compareTo(Material.INK_SACK) == 0)
+               removeList.add(is);
+         }
+         for(i = 0; i < removeList.size(); i++)
+            event.getDrops().remove(removeList.get(i));
+         removeList.clear();
       }
    }
    

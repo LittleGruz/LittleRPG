@@ -48,7 +48,7 @@ public class Quests implements CommandExecutor{
             }
          }
          else if(cmd.getName().compareToIgnoreCase("unsetquest") == 0){
-            plugin.setQuestCanSet(true);
+            plugin.setQuestCanUnset(true);
             sender.sendMessage("Right click with your fist to unset a quest giving block");
          }
       }

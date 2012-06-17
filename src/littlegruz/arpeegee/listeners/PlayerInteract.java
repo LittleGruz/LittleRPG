@@ -273,9 +273,9 @@ public class PlayerInteract implements Listener{
             
             if(plugin.getMagicPlayerMap().get(playa.getName()) != null)
                rpgp = plugin.getMagicPlayerMap().get(playa.getName());
-            else if(plugin.getMagicPlayerMap().get(playa.getName()) != null)
+            else if(plugin.getMeleePlayerMap().get(playa.getName()) != null)
                rpgp = plugin.getMeleePlayerMap().get(playa.getName());
-            else if(plugin.getMagicPlayerMap().get(playa.getName()) != null)
+            else if(plugin.getRangedPlayerMap().get(playa.getName()) != null)
                rpgp = plugin.getRangedPlayerMap().get(playa.getName());
 
             // Just making sure they exist with a class
@@ -317,7 +317,7 @@ public class PlayerInteract implements Listener{
                               sendDialogue("pass|", event.getPlayer(), rpgq.getDialogue());
                               
                               // Set the quest as completed
-                              if(rpgp.getComplete().contains("-1"))
+                              if(rpgp.getComplete().contains("none"))
                                  rpgp.setComplete(rpgq.getQuestNumber() + "|");
                               else
                                  rpgp.setComplete(rpgp.getComplete() + rpgq.getQuestNumber() + "|");
@@ -352,7 +352,7 @@ public class PlayerInteract implements Listener{
                            sendDialogue("text|", event.getPlayer(), rpgq.getDialogue());
                            
                            // Set the quest as being active
-                           if(rpgp.getIncomplete().contains("-1"))
+                           if(rpgp.getIncomplete().contains("none"))
                               rpgp.setIncomplete(rpgq.getQuestNumber() + "|");
                            else if(!rpgp.getIncomplete().contains(Integer.toString(rpgq.getQuestNumber())))
                               rpgp.setIncomplete(rpgp.getIncomplete() + rpgq.getQuestNumber() + "|");

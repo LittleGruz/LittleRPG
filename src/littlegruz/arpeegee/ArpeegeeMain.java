@@ -77,6 +77,7 @@ public class ArpeegeeMain extends JavaPlugin {
    private int questNumberToSet;
    private boolean questCanSet;
    private boolean questCanUnset;
+   private boolean spoutEnabled;
    
    public void onEnable(){
       BufferedReader br;
@@ -148,7 +149,7 @@ public class ArpeegeeMain extends JavaPlugin {
             if(st.hasMoreTokens())
                meleePlayerMap.put(name, new RPGMeleePlayer(name, rpgSubClass, level, rage, st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
             else
-               meleePlayerMap.put(name, new RPGMeleePlayer(name, rpgSubClass, level, rage, "-1", "-1", -1));
+               meleePlayerMap.put(name, new RPGMeleePlayer(name, rpgSubClass, level, rage, "none", "none", -1));
          }
          br.close();
          
@@ -303,6 +304,7 @@ public class ArpeegeeMain extends JavaPlugin {
       getCommand("addrpgworld").setExecutor(new Worlds(this));
       getCommand("removerpgworld").setExecutor(new Worlds(this));
       getCommand("setquest").setExecutor(new Quests(this));
+      getCommand("unsetquest").setExecutor(new Quests(this));
       getCommand("displayquests").setExecutor(new Quests(this));
 
       berserkMap = new HashMap<String, String>();
@@ -311,6 +313,8 @@ public class ArpeegeeMain extends JavaPlugin {
       questNumberToSet = -1;
       questCanSet = false;
       questCanUnset = false;
+      
+      spoutEnabled = getServer().getPluginManager().isPluginEnabled("Spout");
 
       log.info(this.toString() + " enabled");
    }
@@ -506,6 +510,10 @@ public class ArpeegeeMain extends JavaPlugin {
       this.questCanUnset = questCanUnset;
    }
    
+   public boolean isSpoutEnabled(){
+      return spoutEnabled;
+   }
+
    /* Returns true if the RNG smiles upon the user*/
    public boolean probabilityRoll(int percent){
       Random rand = new Random();

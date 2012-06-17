@@ -1,6 +1,6 @@
 name: LittleRPG
 main: littlegruz.arpeegee.ArpeegeeMain
-version: 1.2
+version: 1.3
 
 commands:
    displaysubclass:
@@ -44,3 +44,6 @@ permissions:
    arpeegee.begin:
       description: Choosing starting classes
       default: true
+softdepend: [Spout]
+softdepend: [Multiverse-Core]
+softdepend: [My Worlds]

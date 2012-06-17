@@ -10,8 +10,8 @@ public class RPGPlayer {
       this.name = name;
       subObj = subClassObj;
       level = 1;
-      incomplete = "-1";
-      complete = "-1";
+      incomplete = "none";
+      complete = "none";
       party = -1;
    }
    

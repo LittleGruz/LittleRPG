@@ -23,21 +23,25 @@ public class PlayerJoin implements Listener{
          if(plugin.getMeleePlayerMap().get(event.getPlayer().getName()) == null
                && plugin.getRangedPlayerMap().get(event.getPlayer().getName()) == null
                && plugin.getMagicPlayerMap().get(event.getPlayer().getName()) == null){
-            event.setJoinMessage(ChatColor.RED + "Welcome, " + playa.getName() + ", to LittleRPG.");
+            //if(!plugin.isSpoutEnabled()){
+               event.setJoinMessage(ChatColor.RED + "Welcome, " + playa.getName() + ", to LittleRPG.");
+               
+               delayMessage(playa, ChatColor.YELLOW + "Before you begin your adventure, you should pick a class.", 5);
+               delayMessage(playa, ChatColor.GREEN + "If you are one that desires to get close enough to taunt their prey, the melee class would be most suitable. Type: '/ichoosemelee'", 150);
+               delayMessage(playa, ChatColor.BLUE + "If you would rather pick enemies off from a perch where they can not hit you, the ranged class is most appropriate. Type: '/ichooseranged'", 350);
+               delayMessage(playa, ChatColor.LIGHT_PURPLE + "But if spewing arcane energies from your fingertips appeals  to you best, then the magic class is your best bet. Type: '/ichoosemagic'", 500);
+          /*}
+            else{
+               playa.sendMessage("Spout!");
+            }*/
             
-            delayMessage(playa, ChatColor.YELLOW + "Before you begin your adventure, you should pick a class.", 5);
-            delayMessage(playa, ChatColor.GREEN + "If you are one that desires to get close enough to taunt their prey, the melee class would be most suitable. Type: '/ichoosemelee'", 150);
-            delayMessage(playa, ChatColor.BLUE + "If you would rather pick enemies off from a perch where they can not hit you, the ranged class is most appropriate. Type: '/ichooseranged'", 350);
-            delayMessage(playa, ChatColor.LIGHT_PURPLE + "But if spewing arcane energies from your fingertips appeals  to you best, then the magic class is your best bet. Type: '/ichoosemagic'", 500);
+            // Just in case they have levels/experience
+            setRPGLevel(event.getPlayer());
+            event.getPlayer().setExp(0);
          }
          else{
             event.setJoinMessage(ChatColor.RED + "Welcome back, brave adventurer.");
-            if(plugin.getMeleePlayerMap().get(event.getPlayer().getName()) != null)
-               event.getPlayer().setLevel(plugin.getMeleePlayerMap().get(event.getPlayer().getName()).getLevel());
-            else if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null)
-               event.getPlayer().setLevel(plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getLevel());
-            else if(plugin.getMagicPlayerMap().get(event.getPlayer().getName()) != null)
-               event.getPlayer().setLevel(plugin.getMagicPlayerMap().get(event.getPlayer().getName()).getLevel());
+            setRPGLevel(event.getPlayer());
          }
       }
    }
@@ -48,5 +52,14 @@ public class PlayerJoin implements Listener{
             playa.sendMessage(msg);
          }
      }, delay);
+   }
+   
+   private void setRPGLevel(Player playa){
+      if(plugin.getMeleePlayerMap().get(playa.getName()) != null)
+         playa.setLevel(plugin.getMeleePlayerMap().get(playa.getName()).getLevel());
+      else if(plugin.getRangedPlayerMap().get(playa.getName()) != null)
+         playa.setLevel(plugin.getRangedPlayerMap().get(playa.getName()).getLevel());
+      else if(plugin.getMagicPlayerMap().get(playa.getName()) != null)
+         playa.setLevel(plugin.getMagicPlayerMap().get(playa.getName()).getLevel());
    }
 }
