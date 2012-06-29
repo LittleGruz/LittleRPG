@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 import littlegruz.arpeegee.commands.Begin;
 import littlegruz.arpeegee.commands.Display;
@@ -66,7 +65,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Parties. Woo PARTAY!*/
 
 public class ArpeegeeMain extends JavaPlugin {
-   private Logger log = Logger.getLogger("This is MINECRAFT!");
    private LittleGUI gui;
    private File meleePlayerFile;
    private File rangedPlayerFile;
@@ -130,11 +128,11 @@ public class ArpeegeeMain extends JavaPlugin {
          br.close();
 
       }catch(FileNotFoundException e){
-         log.info("No original LittleRPG sub-class file found. One will be created for you");
+         getLogger().info("No original LittleRPG sub-class file found. One will be created for you");
       }catch(IOException e){
-         log.info("Error reading LittleRPG sub-class file");
+         getLogger().info("Error reading LittleRPG sub-class file");
       }catch(Exception e){
-         log.info("Incorrectly formatted LittleRPG sub-class file");
+         getLogger().info("Incorrectly formatted LittleRPG sub-class file");
       }
 
       meleePlayerMap = new HashMap<String, RPGMeleePlayer>();
@@ -158,7 +156,7 @@ public class ArpeegeeMain extends JavaPlugin {
                   Double.parseDouble(st.nextToken()));
             
             if(subClassMap.get(rpgSubClass.getName()) == null)
-               log.warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");
+               getLogger().warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");
 
             //TODO (Remove eventually) This stuff is here to make upgrading past v1.1 un-noticable for users
             level = Integer.parseInt(st.nextToken());
@@ -171,11 +169,11 @@ public class ArpeegeeMain extends JavaPlugin {
          br.close();
          
       }catch(FileNotFoundException e){
-         log.info("No original LittleRPG melee player file found. One will be created for you");
+         getLogger().info("No original LittleRPG melee player file found. One will be created for you");
       }catch(IOException e){
-         log.info("Error reading LittleRPG melee player file");
+         getLogger().info("Error reading LittleRPG melee player file");
       }catch(Exception e){
-         log.info("Incorrectly formatted LittleRPG melee player file");
+         getLogger().info("Incorrectly formatted LittleRPG melee player file");
       }
 
       rangedPlayerMap = new HashMap<String, RPGRangedPlayer>();
@@ -199,7 +197,7 @@ public class ArpeegeeMain extends JavaPlugin {
                   Double.parseDouble(st.nextToken()));
             
             if(subClassMap.get(rpgSubClass.getName()) == null)
-               log.warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");
+               getLogger().warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");
 
             // This stuff is here to make upgrading un-noticable for users
             level = Integer.parseInt(st.nextToken());
@@ -211,11 +209,11 @@ public class ArpeegeeMain extends JavaPlugin {
          br.close();
          
       }catch(FileNotFoundException e){
-         log.info("No original LittleRPG ranged player file found. One will be created for you");
+         getLogger().info("No original LittleRPG ranged player file found. One will be created for you");
       }catch(IOException e){
-         log.info("Error reading LittleRPG ranged player file");
+         getLogger().info("Error reading LittleRPG ranged player file");
       }catch(Exception e){
-         log.info("Incorrectly formatted LittleRPG ranged player file");
+         getLogger().info("Incorrectly formatted LittleRPG ranged player file");
       }
 
       magicPlayerMap = new HashMap<String, RPGMagicPlayer>();
@@ -239,7 +237,7 @@ public class ArpeegeeMain extends JavaPlugin {
                   Double.parseDouble(st.nextToken()));
             
             if(subClassMap.get(rpgSubClass.getName()) == null)
-               log.warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");
+               getLogger().warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");
             
             // This stuff is here to make upgrading un-noticable for users
             level = Integer.parseInt(st.nextToken());
@@ -251,11 +249,11 @@ public class ArpeegeeMain extends JavaPlugin {
          br.close();
          
       }catch(FileNotFoundException e){
-         log.info("No original LittleRPG magic player file found. One will be created for you");
+         getLogger().info("No original LittleRPG magic player file found. One will be created for you");
       }catch(IOException e){
-         log.info("Error reading LittleRPG magic player file");
+         getLogger().info("Error reading LittleRPG magic player file");
       }catch(Exception e){
-         log.info("Incorrectly formatted LittleRPG magic player file");
+         getLogger().info("Incorrectly formatted LittleRPG magic player file");
       }
       
       worldsMap = new HashMap<String, String>();
@@ -270,11 +268,11 @@ public class ArpeegeeMain extends JavaPlugin {
          br.close();
          
       }catch(FileNotFoundException e){
-         log.info("No original LittleRPG world file found. One will be created for you");
+         getLogger().info("No original LittleRPG world file found. One will be created for you");
       }catch(IOException e){
-         log.info("Error reading LittleRPG world file");
+         getLogger().info("Error reading LittleRPG world file");
       }catch(Exception e){
-         log.info("Incorrectly formatted LittleRPG world file");
+         getLogger().info("Incorrectly formatted LittleRPG world file");
       }
       
       textsMap = new HashMap<String, String>();
@@ -297,7 +295,7 @@ public class ArpeegeeMain extends JavaPlugin {
          br.close();
          
       }catch(FileNotFoundException e){
-         log.info("No original LittleRPG text file found. One will be created for you");
+         getLogger().info("No original LittleRPG text file found. One will be created for you");
          
          if(!spoutEnabled){
          textsMap.put("intro", ChatColor.RED + " Welcome to a LittleRPG world. Please choose a class to begin. "
@@ -310,9 +308,9 @@ public class ArpeegeeMain extends JavaPlugin {
          
          textsMap.put("return", ChatColor.RED + "Welcome back, brave adventurer.");
       }catch(IOException e){
-         log.info("Error reading LittleRPG text file");
+         getLogger().info("Error reading LittleRPG text file");
       }catch(Exception e){
-         log.info("Incorrectly formatted LittleRPG text file");
+         getLogger().info("Incorrectly formatted LittleRPG text file");
       }
       
       questStartMap = new HashMap<Location, Integer>();
@@ -331,11 +329,11 @@ public class ArpeegeeMain extends JavaPlugin {
          br.close();
          
       }catch(FileNotFoundException e){
-         log.info("No original LittleRPG quest start file found. One will be created for you");
+         getLogger().info("No original LittleRPG quest start file found. One will be created for you");
       }catch(IOException e){
-         log.info("Error reading LittleRPG quest start file");
+         getLogger().info("Error reading LittleRPG quest start file");
       }catch(Exception e){
-         log.info("Incorrectly formatted LittleRPG quest start file");
+         getLogger().info("Incorrectly formatted LittleRPG quest start file");
       }
 
       // Load up the exp limits
@@ -399,7 +397,7 @@ public class ArpeegeeMain extends JavaPlugin {
       if(spoutEnabled)
          gui = new LittleGUI(this);
 
-      log.info(this.toString() + " enabled");
+      getLogger().info(this.toString() + " enabled");
    }
    
    public void onDisable(){
@@ -428,7 +426,7 @@ public class ArpeegeeMain extends JavaPlugin {
          }
          bw.close();
       }catch(IOException e){
-         log.info("Error saving LittleRPG melee players");
+         getLogger().info("Error saving LittleRPG melee players");
       }
       
       try{
@@ -452,7 +450,7 @@ public class ArpeegeeMain extends JavaPlugin {
          }
          bw.close();
       }catch(IOException e){
-         log.info("Error saving LittleRPG ranged players");
+         getLogger().info("Error saving LittleRPG ranged players");
       }
       
       try{
@@ -476,7 +474,7 @@ public class ArpeegeeMain extends JavaPlugin {
          }
          bw.close();
       }catch(IOException e){
-         log.info("Error saving LittleRPG magic players");
+         getLogger().info("Error saving LittleRPG magic players");
       }
 
       try{
@@ -495,7 +493,7 @@ public class ArpeegeeMain extends JavaPlugin {
          }
          bw.close();
       }catch(IOException e){
-         log.info("Error saving LittleRPG sub-classes");
+         getLogger().info("Error saving LittleRPG sub-classes");
       }
       
       try{
@@ -509,7 +507,7 @@ public class ArpeegeeMain extends JavaPlugin {
          }
          bw.close();
       }catch(IOException e){
-         log.info("Error saving LittleRPG worlds");
+         getLogger().info("Error saving LittleRPG worlds");
       }
       
       try{
@@ -523,7 +521,7 @@ public class ArpeegeeMain extends JavaPlugin {
          }
          bw.close();
       }catch(IOException e){
-         log.info("Error saving LittleRPG texts file");
+         getLogger().info("Error saving LittleRPG texts file");
       }
       
       try{
@@ -541,10 +539,10 @@ public class ArpeegeeMain extends JavaPlugin {
          }
          bw.close();
       }catch(IOException e){
-         log.info("Error saving LittleRPG quest starting points");
+         getLogger().info("Error saving LittleRPG quest starting points");
       }
       
-      log.info(this.toString() + " disabled");
+      getLogger().info(this.toString() + " disabled");
    }
 
    public HashMap<String, RPGMeleePlayer> getMeleePlayerMap() {
