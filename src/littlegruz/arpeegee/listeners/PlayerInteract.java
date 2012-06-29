@@ -16,13 +16,11 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
-import org.bukkit.entity.Squid;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -50,7 +48,7 @@ public class PlayerInteract implements Listener{
          if(playa.getItemInHand().getData().toString().contains("MAGENTA DYE")
                && event.getAction().toString().contains("RIGHT_CLICK")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
-               && playa.getLevel() >= 8){
+               && playa.getLevel() >= 10){
             ItemStack is = new ItemStack(351,1);
             is.setDurability((short)13);
             
@@ -122,7 +120,7 @@ public class PlayerInteract implements Listener{
          // Lightning (area) spell
          else if(playa.getItemInHand().getType().compareTo(Material.BLAZE_ROD) == 0
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
-               && playa.getLevel() >= 13){
+               && playa.getLevel() >= 18){
             event.setCancelled(true);
             /*playa.setLevel(playa.getLevel() + 1);
             plugin.getMagicPlayerMap().get(playa.getName()).setLevel(playa.getLevel());*/
@@ -138,7 +136,7 @@ public class PlayerInteract implements Listener{
          else if(playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
                && event.getAction().toString().contains("RIGHT_CLICK")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
-               && playa.getLevel() >= 10){
+               && playa.getLevel() >= 13){
             event.setCancelled(true);
             
             if(!plugin.getMagicPlayerMap().get(playa.getName()).isSheepReady()){
@@ -169,7 +167,7 @@ public class PlayerInteract implements Listener{
          else if(playa.getItemInHand().getData().toString().contains("RED DYE")
                && event.getAction().toString().contains("RIGHT_CLICK")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
-               && playa.getLevel() >= 5){
+               && playa.getLevel() >= 8){
             event.setCancelled(true);
             
             if(!plugin.getMagicPlayerMap().get(playa.getName()).isFireballReady()){
@@ -448,10 +446,8 @@ public class PlayerInteract implements Listener{
                loc.setY(loc.getY() + 1);
                loc.getWorld().strikeLightningEffect(loc);
                
-               if(e instanceof Animals || e instanceof Squid)
-                  e.damage(spell * 2);
-               else
-                  e.damage(spell);
+               plugin.ohTheDamage(null, e, spell);
+               
                // Check if it is the advanced lightning spell
                if(!area){
                   playa.sendMessage("*Zap*");
@@ -486,7 +482,8 @@ public class PlayerInteract implements Listener{
                            Location enemyLoc = e.getLocation();
                            enemyLoc.setY(enemyLoc.getY() + 1);
                            enemyLoc.getWorld().strikeLightningEffect(enemyLoc);
-                           e.damage(spell/2);
+                           
+                           plugin.ohTheDamage(null, e, spell / 2);
                         }
                      }
                  }, 20L);

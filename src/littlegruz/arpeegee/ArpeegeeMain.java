@@ -44,9 +44,12 @@ import org.bukkit.Material;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Squid;
+import org.bukkit.event.Event;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -798,7 +801,6 @@ public class ArpeegeeMain extends JavaPlugin {
       float amount;
       
       amount = (float) exp / expLevelMap.get(playa.getLevel());
-      getServer().broadcastMessage(Float.toString(amount));
       if(playa.getExp() + amount > 1){
          amount = (amount + playa.getExp()) - 1;
          playa.setLevel(playa.getLevel() + 1);
@@ -806,5 +808,22 @@ public class ArpeegeeMain extends JavaPlugin {
       }
       else
          playa.setExp(playa.getExp() + amount);
+   }
+   
+   /* Sets how effective damage is against certain creatures */
+   public void ohTheDamage(Event event, Entity entity, int dmg){
+      if(event instanceof EntityDamageByEntityEvent){
+         if(entity instanceof Animals || entity instanceof Squid)
+            ((EntityDamageByEntityEvent) event).setDamage(dmg * 2);
+         else
+            ((EntityDamageByEntityEvent) event).setDamage(dmg);
+      }
+      /* If null then it is from the PlayerInteract event */
+      else if(event == null){
+         if(entity instanceof Animals || entity instanceof Squid)
+            ((LivingEntity)entity).damage(dmg * 2);
+         else
+            ((LivingEntity)entity).damage(dmg);
+      }
    }
 }

@@ -67,7 +67,7 @@ public class EntityDamageEntity implements Listener {
             // Advanced heal spell
             else if(playa.getItemInHand().getData().toString().contains("BONE")
                   && plugin.getMagicPlayerMap().get(playa.getName()) != null
-                  && playa.getLevel() >= 11){
+                  && playa.getLevel() >= 15){
                if(!plugin.getMagicPlayerMap().get(playa.getName()).isTeleportReady()){
                   playa.sendMessage("Advanced heal is still on cooldown");
                   return;
@@ -82,7 +82,7 @@ public class EntityDamageEntity implements Listener {
             // Damage by a diamond sword (crit sword)
             else if(playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0
                   && plugin.getMeleePlayerMap().get(playa.getName()) != null
-                  && playa.getLevel() >= 5){
+                  && playa.getLevel() >= 8){
                int blade, crit, level;
                
                // Check if the player can swing yet
@@ -96,24 +96,32 @@ public class EntityDamageEntity implements Listener {
                blade = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlade();
                level = (int) plugin.getMeleePlayerMap().get(playa.getName()).getLevel();
                
-               /* If player is in Berserk mode, attack has an increased chance of
-                * crit (double damage) otherwise the crit is (5 * blade skill)%*/
+               /* Crit chance 5% to 25%. Berserk mode adds 10-20%
+                * Damage in berserk adds 1 to 3 damage*/
                if(plugin.getBerserkMap().get(playa.getName()) != null){
-                  if(plugin.probabilityRoll(5 * blade + level))
+                  if(plugin.probabilityRoll(5 * blade + (level / 2) + 10))
                      crit = 2;
                   else
                      crit = 1;
-                  event.setDamage((blade + (level / 5)) * crit);
                   
+                  if(level >= plugin.MAX_LEVEL)
+                     blade += 3;
+                  else if(level >= 14)
+                     blade += 2;
+                  else if(level >= 7)
+                     blade += 1;
                }
                else{
                   if(plugin.probabilityRoll(5 * blade))
                      crit = 2;
                   else
                      crit = 1;
-                  event.setDamage(blade * crit);
+                  
                   plugin.getMeleePlayerMap().get(playa.getName()).addRage(5);
                }
+               
+               plugin.ohTheDamage(event, victim, blade * crit);
+               
                if(crit == 2)
                   playa.sendMessage("*crit*");
                
@@ -133,8 +141,11 @@ public class EntityDamageEntity implements Listener {
                   return;
                
                blade = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlade();
-   
-               event.setDamage(blade);
+               
+               if(blade > 1)
+                  blade -= 1;
+
+               plugin.ohTheDamage(event, victim, blade);
    
                if(plugin.getBerserkMap().get(playa.getName()) == null)
                   plugin.getMeleePlayerMap().get(playa.getName()).addRage(5);
@@ -142,16 +153,16 @@ public class EntityDamageEntity implements Listener {
                //playa.getItemInHand().setDurability((short) 0);
                
             }
-            else if(playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0
-                  && playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
-                  && playa.getItemInHand().getType().compareTo(Material.STONE_SWORD) == 0
-                  && playa.getItemInHand().getType().compareTo(Material.WOOD_SWORD) == 0
-                  && playa.getItemInHand().getType().compareTo(Material.BOW) == 0
-                  && playa.getItemInHand().getType().compareTo(Material.AIR) == 0
-                  && plugin.getMeleePlayerMap().get(playa.getName()) != null
-                  && plugin.getMagicPlayerMap().get(playa.getName()) != null
-                  && plugin.getRangedPlayerMap().get(playa.getName()) != null){
-               event.setDamage(1);
+            else if((playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0
+                  || playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
+                  || playa.getItemInHand().getType().compareTo(Material.STONE_SWORD) == 0
+                  || playa.getItemInHand().getType().compareTo(Material.WOOD_SWORD) == 0
+                  || playa.getItemInHand().getType().compareTo(Material.BOW) == 0
+                  || playa.getItemInHand().getType().compareTo(Material.AIR) == 0)
+                  && (plugin.getMeleePlayerMap().get(playa.getName()) != null
+                  || plugin.getMagicPlayerMap().get(playa.getName()) != null
+                  || plugin.getRangedPlayerMap().get(playa.getName()) != null)){
+               plugin.ohTheDamage(event, victim, 1);
             }
          }
          // Player taking damage
@@ -178,6 +189,11 @@ public class EntityDamageEntity implements Listener {
                   int block;
                   
                   block = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlock();
+                  
+                  if(playa.isBlocking())
+                     block += 2;
+                  
+                  // Block check from 5% to 35%. Add 10% if blocking.
                   if(plugin.probabilityRoll(5 * block)){
                      event.setCancelled(true);
                      playa.sendMessage("*blocked*");
@@ -212,13 +228,13 @@ public class EntityDamageEntity implements Listener {
                if(type == 2)
                   event.getEntity().setFireTicks(60);
                
-               // If crit, do double damage
-               if(plugin.probabilityRoll(5 * arch)){
+               // If crit do double damage. 0% to 30% chance
+               if(plugin.probabilityRoll(5 * (arch - 1))){
                   event.getEntity().getWorld().strikeLightningEffect(event.getEntity().getLocation());
-                  event.setDamage(1 * arch * 2);
+                  plugin.ohTheDamage(event, event.getEntity(), arch * 2);
                }
                else
-                  event.setDamage(1 * arch);
+                  plugin.ohTheDamage(event, event.getEntity(), arch);
                
                // Remove all arrows that have hit the ground from hashmap
                // The removal is separate to stop concurrency issues

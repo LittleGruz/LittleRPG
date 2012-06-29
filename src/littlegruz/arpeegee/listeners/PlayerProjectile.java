@@ -31,7 +31,7 @@ public class PlayerProjectile implements Listener{
                }
                else if(playa.getInventory().getHeldItemSlot() == 1){
                   // Fire arrow
-                  if(playa.getLevel() >= 5){
+                  if(playa.getLevel() >= 7){
                      plugin.getProjMap().put(event.getProjectile(),
                            Double.toString(plugin.getRangedPlayerMap().get(playa.getName()).getSubClassObject().getArch()) + "|2");
                      playa.getInventory().setItemInHand(null);
@@ -62,7 +62,7 @@ public class PlayerProjectile implements Listener{
          event.setHatching(false);
          // Determining explosion chance by egg skill
          if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null
-               && event.getPlayer().getLevel() >= 7){
+               && event.getPlayer().getLevel() >= 10){
             int egg = (int) plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getSubClassObject().getEgg();
             if(plugin.probabilityRoll(5 * egg)){
                event.getEgg().getLocation().getWorld().createExplosion(event.getEgg().getLocation(), 1F, false);
