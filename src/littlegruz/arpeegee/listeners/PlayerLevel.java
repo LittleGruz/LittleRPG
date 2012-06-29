@@ -120,9 +120,9 @@ public class PlayerLevel implements Listener{
    
    private void levelUp(RPGPlayer rpgPlaya, PlayerLevelChangeEvent event){
 
-      if(event.getNewLevel() > 15){
-         rpgPlaya.setLevel(15);
-         event.getPlayer().setLevel(15);
+      if(event.getNewLevel() > plugin.MAX_LEVEL){
+         rpgPlaya.setLevel(plugin.MAX_LEVEL);
+         event.getPlayer().setLevel(plugin.MAX_LEVEL);
       }
       else
          rpgPlaya.setLevel(event.getNewLevel());

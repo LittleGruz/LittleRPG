@@ -82,10 +82,13 @@ public class ArpeegeeMain extends JavaPlugin {
    private HashMap<Entity, String> projMap;
    private HashMap<String, String> worldsMap;
    private HashMap<String, String> textsMap;
+   private HashMap<Integer, Integer> expLevelMap;
    private int questNumberToSet;
    private boolean questCanSet;
    private boolean questCanUnset;
    private boolean spoutEnabled;
+   
+   public final int MAX_LEVEL = 20;
    
    public void onEnable(){
       BufferedReader br;
@@ -331,6 +334,29 @@ public class ArpeegeeMain extends JavaPlugin {
       }catch(Exception e){
          log.info("Incorrectly formatted LittleRPG quest start file");
       }
+
+      // Load up the exp limits
+      expLevelMap = new HashMap<Integer, Integer>();
+      expLevelMap.put(1, 45);
+      expLevelMap.put(2, 100);
+      expLevelMap.put(3, 160);
+      expLevelMap.put(4, 230);
+      expLevelMap.put(5, 310);
+      expLevelMap.put(6, 400);
+      expLevelMap.put(7, 500);
+      expLevelMap.put(8, 600);
+      expLevelMap.put(9, 710);
+      expLevelMap.put(10, 830);
+      expLevelMap.put(11, 960);
+      expLevelMap.put(12, 1100);
+      expLevelMap.put(13, 1260);
+      expLevelMap.put(14, 1440);
+      expLevelMap.put(15, 1640);
+      expLevelMap.put(16, 1860);
+      expLevelMap.put(17, 2100);
+      expLevelMap.put(18, 2380);
+      expLevelMap.put(19, 2720);
+      expLevelMap.put(20, 3140);
       
       //Get data from config.yml
       questMap = new HashMap<Integer, RPGQuest>();
@@ -767,13 +793,12 @@ public class ArpeegeeMain extends JavaPlugin {
       }
    }
 
-   /* If max exp is represented as 100, then if the player is given 5 exp points
-    * it is divided by their level and 0.33. This will make it longer to level
-    * as the player progresses*/
-   public void giveExp(Player playa, float exp){
+   /* Gets the percentage of the exp gained */
+   public void giveExp(Player playa, int exp){
       float amount;
       
-      amount = (float) ((exp / 100)/(playa.getLevel() * 0.33));
+      amount = (float) exp / expLevelMap.get(playa.getLevel());
+      getServer().broadcastMessage(Float.toString(amount));
       if(playa.getExp() + amount > 1){
          amount = (amount + playa.getExp()) - 1;
          playa.setLevel(playa.getLevel() + 1);

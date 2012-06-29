@@ -41,76 +41,76 @@ public class EnemyDeaths implements Listener{
       if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getName())){
          if(event.getEntity() instanceof Animals
                || event.getEntity() instanceof Monster){
-            float exp;
+            int exp;
             
             event.setDroppedExp(0);
             
             //Base exp values for creatures here
-            exp = (float) 0.15;
+            exp = 15;
             if(event.getEntity() instanceof Animals){
-               exp = (float) 0.05;
+               exp = 5;
                itemDrops(event.getDrops(), 0);
             }
             else if(event.getEntity() instanceof Squid){
-               exp = (float) 0.06;
+               exp = 6;
                itemDrops(event.getDrops(), 0);
             }
             else if(event.getEntity() instanceof PigZombie){
-               exp = (float) 0.25;
+               exp = 25;
                itemDrops(event.getDrops(), 5);
             }
             else if(event.getEntity() instanceof Zombie){
-               exp = (float) 0.15;
+               exp = 15;
                itemDrops(event.getDrops(), 3);
             }
             else if(event.getEntity() instanceof Silverfish){
-               exp = (float) 0.15;
+               exp = 15;
                itemDrops(event.getDrops(), 5);
             }
             else if(event.getEntity() instanceof CaveSpider){
-               exp = (float) 0.30;
+               exp = 30;
                itemDrops(event.getDrops(), 7);
             }
             else if(event.getEntity() instanceof Spider){
-               exp = (float) 0.17;
+               exp = 20;
                itemDrops(event.getDrops(), 4);
             }
             else if(event.getEntity() instanceof Skeleton){
-               exp = (float) 0.20;
+               exp = 17;
                itemDrops(event.getDrops(), 5);
             }
             else if(event.getEntity() instanceof Ghast){
-               exp = (float) 0.30;
+               exp = 35;
                itemDrops(event.getDrops(), 7);
             }
             else if(event.getEntity() instanceof MagmaCube){
                //if(((MagmaCube) event.getEntity()).getSize() > 1)
-               exp = (float) 0.17;
+               exp = 17;
                itemDrops(event.getDrops(), 8);
             }
             else if(event.getEntity() instanceof Slime){
                //if(((Slime) event.getEntity()).getSize() > 1)
-               exp = (float) 0.15;
+               exp = 15;
                itemDrops(event.getDrops(), 8);
             }
             else if(event.getEntity() instanceof Creeper){
-               exp = (float) 0.20;
+               exp = 20;
                itemDrops(event.getDrops(), 5);
             }
             else if(event.getEntity() instanceof Enderman){
-               exp = (float) 0.25;
+               exp = 25;
                itemDrops(event.getDrops(), 7);
             }
             else if(event.getEntity() instanceof Blaze){
-               exp = (float) 0.25;
+               exp = 30;
                itemDrops(event.getDrops(), 7);
             }
             else if(event.getEntity() instanceof EnderDragon){
-               exp = (float) 1.50;
+               exp = 150;
                itemDrops(event.getDrops(), 100);
             }
             
-            for(Entity e : event.getEntity().getNearbyEntities(15, 15, 15)) {
+            for(Entity e : event.getEntity().getNearbyEntities(15, 15, 15)){
                if (e instanceof Player)
                   plugin.giveExp((Player) e, exp);
             }

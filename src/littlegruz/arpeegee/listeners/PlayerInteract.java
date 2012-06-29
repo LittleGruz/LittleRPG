@@ -16,11 +16,13 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Squid;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -330,9 +332,9 @@ public class PlayerInteract implements Listener{
                                  
                                  type = st.nextToken();
                                  if(type.compareToIgnoreCase("xp") == 0){
-                                    float xp;
+                                    int xp;
                                     
-                                    xp = Float.parseFloat(st.nextToken());
+                                    xp = Integer.parseInt(st.nextToken());
                                     plugin.giveExp(event.getPlayer(), xp);
                                     event.getPlayer().sendMessage("You gained " + xp + " experience points!");
                                  }
@@ -446,7 +448,10 @@ public class PlayerInteract implements Listener{
                loc.setY(loc.getY() + 1);
                loc.getWorld().strikeLightningEffect(loc);
                
-               e.damage(spell);
+               if(e instanceof Animals || e instanceof Squid)
+                  e.damage(spell * 2);
+               else
+                  e.damage(spell);
                // Check if it is the advanced lightning spell
                if(!area){
                   playa.sendMessage("*Zap*");
