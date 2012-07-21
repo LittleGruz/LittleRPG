@@ -51,17 +51,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-/* Make armour degrade and then be dropped by mobs
- * Levels and stat increase DONE (but no tested balancing)*/
-
-/* TODO: Feather falling potion effect for ranged.
- * Damaged armour when respawning.
- * Bonus's from wearing a full set of armour.
- * Damage over time attacks.
- * Status ailments.
- * Enchanted melee/ranged weapons.
- * Ability for users to add fetch/travel quests.
- * Parties. Woo PARTAY!*/
+/* TODO: Custom quest giving NPC's
+ * Quest interface
+ * Custom primary classes
+ * Custom secondary classes*/
 
 public class ArpeegeeMain extends JavaPlugin {
    private LittleGUI gui;
@@ -69,13 +62,11 @@ public class ArpeegeeMain extends JavaPlugin {
    private File rangedPlayerFile;
    private File magicPlayerFile;
    private File questStartFile;
-   //private File subClassFile;
    private File worldsFile;
    private File textsFile;
    private HashMap<String, RPGMeleePlayer> meleePlayerMap;
    private HashMap<String, RPGRangedPlayer> rangedPlayerMap;
    private HashMap<String, RPGMagicPlayer> magicPlayerMap;
-   //private HashMap<String, RPGSubClass> subClassMap;
    private HashMap<Integer, RPGQuest> questMap;
    private HashMap<Location, Integer> questStartMap;
    private HashMap<String, String> berserkMap;
@@ -101,41 +92,10 @@ public class ArpeegeeMain extends JavaPlugin {
       rangedPlayerFile = new File(getDataFolder().toString() + "/rangedPlayer.txt");
       magicPlayerFile = new File(getDataFolder().toString() + "/magicPlayer.txt");
       questStartFile = new File(getDataFolder().toString() + "/questStarters.txt");
-      //subClassFile = new File(getDataFolder().toString() + "/subclasses.txt");
       worldsFile = new File(getDataFolder().toString() + "/worlds.txt");
       textsFile = new File(getDataFolder().toString() + "/texts.txt");
       
       spoutEnabled = getServer().getPluginManager().isPluginEnabled("Spout");
-
-      /*subClassMap = new HashMap<String, RPGSubClass>();
-      // Load up the sub-classes from file
-      try{
-         br = new BufferedReader(new FileReader(subClassFile));
-         
-         // Load sub-class file data into the sub-class HashMap
-         while((input = br.readLine()) != null){
-            String name;
-            st = new StringTokenizer(input, " ");
-            name = st.nextToken();
-            subClassMap.put(name, new RPGSubClass(name,
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken())));
-         }
-         br.close();
-
-      }catch(FileNotFoundException e){
-         getLogger().info("No original LittleRPG sub-class file found. One will be created for you");
-         subClassMap.put("Wizard", new RPGSubClass("Wizard", 0, 0, 0, 1, 2));
-         subClassMap.put("Warrior", new RPGSubClass("Warrior", 0, 1, 1, 0, 0));
-         subClassMap.put("Archer", new RPGSubClass("Archer", 1, 0, 0, 1, 0));
-      }catch(IOException e){
-         getLogger().info("Error reading LittleRPG sub-class file");
-      }catch(Exception e){
-         getLogger().info("Incorrectly formatted LittleRPG sub-class file");
-      }*/
 
       meleePlayerMap = new HashMap<String, RPGMeleePlayer>();
       // Load up the melee players from file
@@ -156,17 +116,10 @@ public class ArpeegeeMain extends JavaPlugin {
                   Double.parseDouble(st.nextToken()),
                   Double.parseDouble(st.nextToken()),
                   Double.parseDouble(st.nextToken()));
-            
-            /*if(subClassMap.get(rpgSubClass.getName()) == null)
-               getLogger().warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");*/
 
-            //TODO (Remove eventually) This stuff is here to make upgrading past v1.1 un-noticable for users
             level = Integer.parseInt(st.nextToken());
             rage = Integer.parseInt(st.nextToken());
-            if(st.hasMoreTokens())
-               meleePlayerMap.put(name, new RPGMeleePlayer(name, rpgSubClass, level, rage, st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
-            else
-               meleePlayerMap.put(name, new RPGMeleePlayer(name, rpgSubClass, level, rage, "none", "none", -1));
+            meleePlayerMap.put(name, new RPGMeleePlayer(name, rpgSubClass, level, rage, st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
          }
          br.close();
          
@@ -197,16 +150,9 @@ public class ArpeegeeMain extends JavaPlugin {
                   Double.parseDouble(st.nextToken()),
                   Double.parseDouble(st.nextToken()),
                   Double.parseDouble(st.nextToken()));
-            
-            /*if(subClassMap.get(rpgSubClass.getName()) == null)
-               getLogger().warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");*/
 
-            // This stuff is here to make upgrading un-noticable for users
             level = Integer.parseInt(st.nextToken());
-            if(st.hasMoreTokens())
-               rangedPlayerMap.put(name, new RPGRangedPlayer(name, rpgSubClass, level, st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
-            else
-               rangedPlayerMap.put(name, new RPGRangedPlayer(name, rpgSubClass, level, "none", "none", -1));
+            rangedPlayerMap.put(name, new RPGRangedPlayer(name, rpgSubClass, level, st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
          }
          br.close();
          
@@ -237,16 +183,9 @@ public class ArpeegeeMain extends JavaPlugin {
                   Double.parseDouble(st.nextToken()),
                   Double.parseDouble(st.nextToken()),
                   Double.parseDouble(st.nextToken()));
-            
-            /*if(subClassMap.get(rpgSubClass.getName()) == null)
-               getLogger().warning("Player " + name + " has an unfound sub-class name. Please fix this before they login.");*/
-            
-            // This stuff is here to make upgrading un-noticable for users
+
             level = Integer.parseInt(st.nextToken());
-            if(st.hasMoreTokens())
-               magicPlayerMap.put(name, new RPGMagicPlayer(name, rpgSubClass, level, st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
-            else
-               magicPlayerMap.put(name, new RPGMagicPlayer(name, rpgSubClass, level, "none", "none", -1));
+            magicPlayerMap.put(name, new RPGMagicPlayer(name, rpgSubClass, level, st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
          }
          br.close();
          
@@ -377,7 +316,6 @@ public class ArpeegeeMain extends JavaPlugin {
       if(spoutEnabled)
          getServer().getPluginManager().registerEvents(new ButtonListener(this), this);
 
-      //getCommand("displaysubclass").setExecutor(new Display(this));
       getCommand("ichoosemelee").setExecutor(new Begin(this));
       getCommand("ichooseranged").setExecutor(new Begin(this));
       getCommand("ichoosemagic").setExecutor(new Begin(this));
@@ -478,25 +416,6 @@ public class ArpeegeeMain extends JavaPlugin {
       }catch(IOException e){
          getLogger().info("Error saving LittleRPG magic players");
       }
-/*
-      try{
-         bw = new BufferedWriter(new FileWriter(subClassFile));
-         
-         // Save classes to file
-         Iterator<Map.Entry<String, RPGSubClass>> it = subClassMap.entrySet().iterator();
-         while(it.hasNext()){
-            Entry<String, RPGSubClass> subClassIter = it.next();
-            bw.write(subClassIter.getKey() + " "
-                  + Double.toString(subClassIter.getValue().getArch()) + " "
-                  + Double.toString(subClassIter.getValue().getBlade()) + " "
-                  + Double.toString(subClassIter.getValue().getBlock()) + " "
-                  + Double.toString(subClassIter.getValue().getEgg()) + " "
-                  + Double.toString(subClassIter.getValue().getSpell()) + "\n");
-         }
-         bw.close();
-      }catch(IOException e){
-         getLogger().info("Error saving LittleRPG sub-classes");
-      }*/
       
       try{
          bw = new BufferedWriter(new FileWriter(worldsFile));
@@ -558,10 +477,6 @@ public class ArpeegeeMain extends JavaPlugin {
    public HashMap<String, RPGMagicPlayer> getMagicPlayerMap() {
       return magicPlayerMap;
    }
-   
-   /*public HashMap<String, RPGSubClass> getSubClassMap() {
-      return subClassMap;
-   }*/
    
    public HashMap<Integer, RPGQuest> getQuestMap() {
       return questMap;

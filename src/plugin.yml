@@ -1,4 +1,4 @@
-name: LittleRPG
+name: LittleRPG2
 main: littlegruz.arpeegee.ArpeegeeMain
 version: 1.5
 
@@ -35,19 +35,16 @@ commands:
       usage: /setrpgreturn <message>
 
 permissions:
-   arpeegee.world:
+   rpg.world:
       description: Adding or removing worlds where LittleRPG is active
       default: op
-   arpeegee.questing:
+   rpg.questing:
       description: Setting up quests
       default: op
-   arpeegee.text:
+   rpg.text:
       description: Setting up joining text
       default: op
-   arpeegee.display:
-      description: Displaying [sub-]classes
-      default: true
-   arpeegee.begin:
+   rpg.begin:
       description: Choosing starting classes
       default: true
 
