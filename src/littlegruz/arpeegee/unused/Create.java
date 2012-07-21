@@ -1,7 +1,6 @@
 package littlegruz.arpeegee.unused;
 
 import littlegruz.arpeegee.ArpeegeeMain;
-import littlegruz.arpeegee.entities.RPGSubClass;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,6 +8,7 @@ import org.bukkit.command.CommandSender;
 
 // This class is not used
 public class Create implements CommandExecutor{
+@SuppressWarnings("unused")
 private ArpeegeeMain plugin;
    
    public Create(ArpeegeeMain instance){
@@ -22,7 +22,7 @@ private ArpeegeeMain plugin;
          // Add a sub-class
          if(cmd.getName().compareToIgnoreCase("addsubclass") == 0){
             if(args.length == 8){
-               if(plugin.getSubClassMap().get(args[0]) == null){
+               /*if(plugin.getSubClassMap().get(args[0]) == null){
                   plugin.getSubClassMap().put(args[0], new RPGSubClass(args[0],
                         Double.parseDouble(args[1]), Double.parseDouble(args[2]),
                         Double.parseDouble(args[3]), Double.parseDouble(args[4]),
@@ -30,7 +30,7 @@ private ArpeegeeMain plugin;
                   sender.sendMessage("Sub-class addition successful");
                }
                else
-                  sender.sendMessage("A sub-class with the name \"" + args[0] + "\" already exists");
+                  sender.sendMessage("A sub-class with the name \"" + args[0] + "\" already exists");*/
             }
             else
                sender.sendMessage("Wrong number of parameters");

@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 
 // This class is not used
 public class Remove implements CommandExecutor {
+   @SuppressWarnings("unused")
    private ArpeegeeMain plugin;
    
    public Remove(ArpeegeeMain instance){
@@ -20,10 +21,10 @@ public class Remove implements CommandExecutor {
       if(sender.hasPermission("arpeegee.remove")){
          // Remove a sub-class
          if(cmd.getName().compareToIgnoreCase("removesubclass") == 0){
-            if(plugin.getSubClassMap().remove(args[0]) == null)
+            /*if(plugin.getSubClassMap().remove(args[0]) == null)
                sender.sendMessage("A sub-class with the name \"" + args[0] + "\" does not exist");
             else
-               sender.sendMessage("Removal successful");
+               sender.sendMessage("Removal successful");*/
          }
       }
       else

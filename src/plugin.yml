@@ -3,9 +3,6 @@ main: littlegruz.arpeegee.ArpeegeeMain
 version: 1.5
 
 commands:
-   displaysubclass:
-      description: Displays all sub-classes or the stats of just one
-      usage: /displaysubclass [name]
    ichoosemelee:
       description: Sets your class as melee
       usage: /ichoosemelee
