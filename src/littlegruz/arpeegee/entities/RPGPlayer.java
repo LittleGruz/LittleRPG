@@ -1,8 +1,8 @@
 package littlegruz.arpeegee.entities;
 
 public class RPGPlayer {
-   private String name, incomplete, complete;
-   private int level, party;
+   private String name, incomplete, complete, party;
+   private int level;
    private RPGSubClass subObj;
 
    // New RPGPlayer
@@ -12,30 +12,21 @@ public class RPGPlayer {
       level = 1;
       incomplete = "none";
       complete = "none";
-      party = -1;
+      party = "none";
    }
    
    // Restoring an RPGPlayer from a saved state (with party id [unimplemented])
-   public RPGPlayer(String name, RPGSubClass subClassObj, int level, String incomplete, String complete, int party){
+   public RPGPlayer(String name, RPGSubClass subClassObj, int level, String incomplete, String complete, String party){
       this.name = name;
       subObj = subClassObj;
       this.level = level;
-
-      // TODO This is here because I was an idiot and did not change all -1 values in the previous version
-      if(incomplete.compareTo("-1") == 0)
-         this.incomplete = incomplete.replace("-1", "none");
-      else if(incomplete.contains("-1"))
-         this.incomplete = incomplete.replace("-1", "");
+      this.incomplete = incomplete;
+      this.complete = complete;
+      // TODO Remove after enough updates (put in at v1.5.1)
+      if(party.compareTo("-1") == 0)
+         this.party = "none";
       else
-         this.incomplete = incomplete;
-      if(complete.compareTo("-1") == 0)
-         this.complete = complete.replace("-1", "none");
-      else if(complete.contains("-1"))
-         this.complete = complete.replace("-1", "");
-      else
-         this.complete = complete;
-      
-      this.party = party;
+         this.party = party;
    }
 
    public String getName() {
@@ -54,11 +45,11 @@ public class RPGPlayer {
       level = lvl;
    }
 
-   public int getParty(){
+   public String getParty(){
       return party;
    }
 
-   public void setParty(int party){
+   public void setParty(String party){
       this.party = party;
    }
 

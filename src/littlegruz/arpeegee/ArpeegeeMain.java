@@ -18,10 +18,13 @@ import java.util.Map.Entry;
 
 import littlegruz.arpeegee.commands.Begin;
 import littlegruz.arpeegee.commands.Join;
+import littlegruz.arpeegee.commands.Party;
 import littlegruz.arpeegee.commands.Quests;
 import littlegruz.arpeegee.commands.Worlds;
 import littlegruz.arpeegee.entities.RPGMagicPlayer;
 import littlegruz.arpeegee.entities.RPGMeleePlayer;
+import littlegruz.arpeegee.entities.RPGParty;
+import littlegruz.arpeegee.entities.RPGPlayer;
 import littlegruz.arpeegee.entities.RPGQuest;
 import littlegruz.arpeegee.entities.RPGRangedPlayer;
 import littlegruz.arpeegee.entities.RPGSubClass;
@@ -64,6 +67,7 @@ public class ArpeegeeMain extends JavaPlugin {
    private HashMap<String, RPGMagicPlayer> magicPlayerMap;
    private HashMap<Integer, RPGQuest> questMap;
    private HashMap<Location, Integer> questStartMap;
+   private HashMap<String, RPGParty> partyMap;
    private HashMap<String, String> berserkMap;
    private HashMap<Entity, String> projMap;
    private HashMap<String, String> worldsMap;
@@ -114,7 +118,7 @@ public class ArpeegeeMain extends JavaPlugin {
 
             level = Integer.parseInt(st.nextToken());
             rage = Integer.parseInt(st.nextToken());
-            meleePlayerMap.put(name, new RPGMeleePlayer(name, rpgSubClass, level, rage, st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
+            meleePlayerMap.put(name, new RPGMeleePlayer(name, rpgSubClass, level, rage, st.nextToken(), st.nextToken(), st.nextToken()));
          }
          br.close();
          
@@ -147,7 +151,7 @@ public class ArpeegeeMain extends JavaPlugin {
                   Double.parseDouble(st.nextToken()));
 
             level = Integer.parseInt(st.nextToken());
-            rangedPlayerMap.put(name, new RPGRangedPlayer(name, rpgSubClass, level, st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
+            rangedPlayerMap.put(name, new RPGRangedPlayer(name, rpgSubClass, level, st.nextToken(), st.nextToken(), st.nextToken()));
          }
          br.close();
          
@@ -180,7 +184,7 @@ public class ArpeegeeMain extends JavaPlugin {
                   Double.parseDouble(st.nextToken()));
             
             level = Integer.parseInt(st.nextToken());
-            magicPlayerMap.put(name, new RPGMagicPlayer(name, rpgSubClass, level, st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
+            magicPlayerMap.put(name, new RPGMagicPlayer(name, rpgSubClass, level, st.nextToken(), st.nextToken(), st.nextToken()));
          }
          br.close();
          
@@ -271,6 +275,29 @@ public class ArpeegeeMain extends JavaPlugin {
       }catch(Exception e){
          getLogger().info("Incorrectly formatted LittleRPG quest start file");
       }
+      
+      partyMap = new HashMap<String, RPGParty>();
+      // Load up the quest starting points from file
+      /*try{
+         Location loc;
+         br = new BufferedReader(new FileReader(questStartFile));
+         
+         // Load quest start file data into the world HashMap
+         while((input = br.readLine()) != null){
+            st = new StringTokenizer(input, " ");
+            loc = new Location(getServer().getWorld(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+            
+            partyMap.put(loc, Integer.parseInt(st.nextToken()));
+         }
+         br.close();
+         
+      }catch(FileNotFoundException e){
+         getLogger().info("No original LittleRPG quest start file found. One will be created for you");
+      }catch(IOException e){
+         getLogger().info("Error reading LittleRPG quest start file");
+      }catch(Exception e){
+         getLogger().info("Incorrectly formatted LittleRPG quest start file");
+      }*/
 
       // Load up the exp limits
       expLevelMap = new HashMap<Integer, Integer>();
@@ -314,13 +341,22 @@ public class ArpeegeeMain extends JavaPlugin {
       getCommand("ichoosemelee").setExecutor(new Begin(this));
       getCommand("ichooseranged").setExecutor(new Begin(this));
       getCommand("ichoosemagic").setExecutor(new Begin(this));
+      
       getCommand("addrpgworld").setExecutor(new Worlds(this));
       getCommand("removerpgworld").setExecutor(new Worlds(this));
+      
       getCommand("setquest").setExecutor(new Quests(this));
       getCommand("unsetquest").setExecutor(new Quests(this));
       getCommand("displayquests").setExecutor(new Quests(this));
+      
       getCommand("setrpgintro").setExecutor(new Join(this));
       getCommand("setrpgreturn").setExecutor(new Join(this));
+      
+      getCommand("createparty").setExecutor(new Party(this));
+      getCommand("joinparty").setExecutor(new Party(this));
+      getCommand("leaveparty").setExecutor(new Party(this));
+      getCommand("sendpartyinvite").setExecutor(new Party(this));
+      getCommand("removepartyinvite").setExecutor(new Party(this));
 
       berserkMap = new HashMap<String, String>();
       projMap = new HashMap<Entity, String>();
@@ -331,6 +367,8 @@ public class ArpeegeeMain extends JavaPlugin {
       
       if(spoutEnabled)
          gui = new LittleGUI(this);
+      else
+         getLogger().info("Spout not found. Some effects will be disabled");
 
       getLogger().info(this.toString() + " enabled");
    }
@@ -357,7 +395,7 @@ public class ArpeegeeMain extends JavaPlugin {
                   + Integer.toString(player.getValue().getRage()) + " "
                   + player.getValue().getIncomplete() + " "
                   + player.getValue().getComplete() + " "
-                  + Integer.toString(player.getValue().getParty()) + "\n");
+                  + player.getValue().getParty() + "\n");
          }
          bw.close();
       }catch(IOException e){
@@ -381,7 +419,7 @@ public class ArpeegeeMain extends JavaPlugin {
                   + Integer.toString(player.getValue().getLevel()) + " "
                   + player.getValue().getIncomplete() + " "
                   + player.getValue().getComplete() + " "
-                  + Integer.toString(player.getValue().getParty()) + "\n");
+                  + player.getValue().getParty() + "\n");
          }
          bw.close();
       }catch(IOException e){
@@ -405,7 +443,7 @@ public class ArpeegeeMain extends JavaPlugin {
                   + Integer.toString(player.getValue().getLevel()) + " "
                   + player.getValue().getIncomplete() + " "
                   + player.getValue().getComplete() + " "
-                  + Integer.toString(player.getValue().getParty()) + "\n");
+                  + player.getValue().getParty() + "\n");
          }
          bw.close();
       }catch(IOException e){
@@ -476,7 +514,11 @@ public class ArpeegeeMain extends JavaPlugin {
    public HashMap<Integer, RPGQuest> getQuestMap() {
       return questMap;
    }
-   
+
+   public HashMap<String, RPGParty> getPartyMap(){
+      return partyMap;
+   }
+
    public HashMap<String, String> getBerserkMap() {
       return berserkMap;
    }
@@ -735,5 +777,16 @@ public class ArpeegeeMain extends JavaPlugin {
          else
             ((LivingEntity)entity).damage(dmg);
       }
+   }
+   
+   public RPGPlayer getRPGPlayer(String name){
+      if(meleePlayerMap.get(name) != null)
+         return meleePlayerMap.get(name);
+      else if(rangedPlayerMap.get(name) != null)
+         return rangedPlayerMap.get(name);
+      else if(magicPlayerMap.get(name) != null)
+         return magicPlayerMap.get(name);
+      else
+         return null;
    }
 }
