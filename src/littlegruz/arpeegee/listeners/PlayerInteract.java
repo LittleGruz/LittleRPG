@@ -153,14 +153,14 @@ public class PlayerInteract implements Listener{
             
             loc.setY(loc.getY() + 1.5);
             loc.setX(loc.getX() + 1);
-            loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
+            loc.getWorld().spawnEntity(loc, EntityType.SHEEP);
             loc.setX(loc.getX() - 2);
-            loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
+            loc.getWorld().spawnEntity(loc, EntityType.SHEEP);
             loc.setX(loc.getX() + 1);
             loc.setZ(loc.getZ() + 1);
-            loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
+            loc.getWorld().spawnEntity(loc, EntityType.SHEEP);
             loc.setZ(loc.getZ() - 2);
-            loc.getWorld().spawnCreature(loc, EntityType.SHEEP);
+            loc.getWorld().spawnEntity(loc, EntityType.SHEEP);
          }
          // This fireball creation code is based off MadMatt199's code (https://github.com/madmatt199/GhastBlast)
          // Casting weapon to launch a fireball
