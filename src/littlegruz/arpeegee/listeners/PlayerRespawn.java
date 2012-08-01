@@ -102,12 +102,12 @@ public class PlayerRespawn implements Listener{
                event.getPlayer().getInventory().setChestplate(new ItemStack(Material.GOLD_CHESTPLATE,1,(short) 57));
             }*/
             // Fireball
-            if(rpgPlaya.getLevel() >= 5){
+            if(rpgPlaya.getLevel() >= 8){
                is.setDurability((short)1);
                event.getPlayer().getInventory().setItem(2, is);
             }
             // Teleport
-            if(rpgPlaya.getLevel() >= 8){
+            if(rpgPlaya.getLevel() >= 10){
                is.setDurability((short)13);
                event.getPlayer().getInventory().setItem(3, is);
             }
@@ -116,17 +116,17 @@ public class PlayerRespawn implements Listener{
                event.getPlayer().getInventory().setChestplate(new ItemStack(Material.GOLD_CHESTPLATE,1,(short) 39));
             }*/
             // Sheep summon
-            if(rpgPlaya.getLevel() >= 10){
+            if(rpgPlaya.getLevel() >= 13){
                is.setType(Material.WHEAT);
                event.getPlayer().getInventory().setItem(4, is);
             }
             // Advanced heal
-            if(rpgPlaya.getLevel() >= 11){
+            if(rpgPlaya.getLevel() >= 15){
                is.setType(Material.BONE);
                event.getPlayer().getInventory().setItem(5, is);
             }
             // Advanced lightning
-            if(rpgPlaya.getLevel() >= 13){
+            if(rpgPlaya.getLevel() >= 18){
                is.setType(Material.BLAZE_ROD);
                event.getPlayer().getInventory().setItem(6, is);
             }

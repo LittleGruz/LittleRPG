@@ -16,7 +16,7 @@ public class Join implements CommandExecutor{
    @Override
    public boolean onCommand(CommandSender sender, Command cmd,
          String commandLabel, String[] args){
-      if(sender.hasPermission("arpeegee.text")){
+      if(sender.hasPermission("rpg.text")){
          if(cmd.getName().compareToIgnoreCase("setrpgintro") == 0){
             if(args.length > 0){
                String msg;

@@ -1,6 +1,6 @@
 name: LittleRPG2
 main: littlegruz.arpeegee.ArpeegeeMain
-version: 1.5
+version: 1.5.1
 
 commands:
    ichoosemelee:

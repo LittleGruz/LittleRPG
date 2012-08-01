@@ -51,11 +51,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-/* TODO: Custom quest giving NPC's
- * Quest interface
- * Custom primary classes
- * Custom secondary classes*/
-
 public class ArpeegeeMain extends JavaPlugin {
    private LittleGUI gui;
    private File meleePlayerFile;
@@ -183,7 +178,7 @@ public class ArpeegeeMain extends JavaPlugin {
                   Double.parseDouble(st.nextToken()),
                   Double.parseDouble(st.nextToken()),
                   Double.parseDouble(st.nextToken()));
-
+            
             level = Integer.parseInt(st.nextToken());
             magicPlayerMap.put(name, new RPGMagicPlayer(name, rpgSubClass, level, st.nextToken(), st.nextToken(), Integer.parseInt(st.nextToken())));
          }
