@@ -33,6 +33,21 @@ commands:
    setrpgreturn:
       description: Sets the introduction message for returning players
       usage: /setrpgreturn <message>
+   createparty:
+      description: Create a party
+      usage: /createparty <party_name> [player_name] ...
+   joinparty:
+      description: Join a party
+      usage: /joinparty <party_name>
+   leaveparty:
+      description: Leave current party
+      usage: /leaveparty
+   sendpartyinvite:
+      description: Send invites for the party you are in
+      usage: /sendpartyinvite <player_name> [player_name] ...
+   removepartyinvite:
+      description: Remove party invite for a player
+      usage: /removepartyinvite <player_name> [player_name] ...
 
 permissions:
    rpg.world:
