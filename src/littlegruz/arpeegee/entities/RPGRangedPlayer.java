@@ -9,7 +9,7 @@ public class RPGRangedPlayer extends RPGPlayer{
       fireBow = true;
    }
 
-   public RPGRangedPlayer(String name, RPGSubClass subClassObj, int level, String incomplete, String complete, int party){
+   public RPGRangedPlayer(String name, RPGSubClass subClassObj, int level, String incomplete, String complete, String party){
       super(name, subClassObj, level, incomplete, complete, party);
       egg = true;
       fireBow = true;

@@ -1,4 +1,4 @@
-name: LittleRPG
+name: LittleRPG2
 main: littlegruz.arpeegee.ArpeegeeMain
 version: 1.5.1
 
@@ -33,18 +33,33 @@ commands:
    setrpgreturn:
       description: Sets the introduction message for returning players
       usage: /setrpgreturn <message>
+   createparty:
+      description: Create a party
+      usage: /createparty <party_name> [player_name] ...
+   joinparty:
+      description: Join a party
+      usage: /joinparty <party_name>
+   leaveparty:
+      description: Leave current party
+      usage: /leaveparty
+   sendpartyinvite:
+      description: Send invites for the party you are in
+      usage: /sendpartyinvite <player_name> [player_name] ...
+   removepartyinvite:
+      description: Remove party invite for a player
+      usage: /removepartyinvite <player_name> [player_name] ...
 
 permissions:
-   arpeegee.world:
+   rpg.world:
       description: Adding or removing worlds where LittleRPG is active
       default: op
-   arpeegee.questing:
+   rpg.questing:
       description: Setting up quests
       default: op
-   arpeegee.text:
+   rpg.text:
       description: Setting up joining text
       default: op
-   arpeegee.begin:
+   rpg.begin:
       description: Choosing starting classes
       default: true
 

@@ -23,7 +23,7 @@ public class Begin implements CommandExecutor{
    @Override
    public boolean onCommand(CommandSender sender, Command cmd,
          String commandLabel, String[] args){
-      if(sender.hasPermission("arpeegee.begin") && sender instanceof Player){
+      if(sender.hasPermission("rpg.begin") && sender instanceof Player){
          if(plugin.getMeleePlayerMap().get(sender.getName()) == null
             && plugin.getRangedPlayerMap().get(sender.getName()) == null
             && plugin.getMagicPlayerMap().get(sender.getName()) == null){

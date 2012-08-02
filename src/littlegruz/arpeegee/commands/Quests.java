@@ -21,7 +21,7 @@ public class Quests implements CommandExecutor{
    @Override
    public boolean onCommand(CommandSender sender, Command cmd,
          String commandLabel, String[] args){
-      if(sender.hasPermission("arpeegee.questing")){
+      if(sender.hasPermission("rpg.questing")){
          if(cmd.getName().compareToIgnoreCase("setquest") == 0){
             if(args.length == 1){
                try{

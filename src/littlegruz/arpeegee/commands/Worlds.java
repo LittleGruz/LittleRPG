@@ -17,7 +17,7 @@ public class Worlds implements CommandExecutor{
    @Override
    public boolean onCommand(CommandSender sender, Command cmd,
          String commandLabel, String[] args){
-      if(sender.hasPermission("arpeegee.world")){
+      if(sender.hasPermission("rpg.world")){
          if(sender instanceof Player){
             Player playa = (Player) sender;
             if(cmd.getName().compareToIgnoreCase("addrpgworld") == 0){

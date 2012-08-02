@@ -14,7 +14,7 @@ public class RPGMagicPlayer extends RPGPlayer{
       sheeeep = true;
    }
 
-   public RPGMagicPlayer(String name, RPGSubClass subClassObj, int level, String incomplete, String complete, int party){
+   public RPGMagicPlayer(String name, RPGSubClass subClassObj, int level, String incomplete, String complete, String party){
       super(name, subClassObj, level, incomplete, complete, party);
       heal = true;
       advHeal = true;
