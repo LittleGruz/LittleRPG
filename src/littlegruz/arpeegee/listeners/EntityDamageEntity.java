@@ -51,7 +51,7 @@ public class EntityDamageEntity implements Listener {
             if(playa.getItemInHand().getData().toString().contains("WHITE DYE")
                   && plugin.getMagicPlayerMap().get(playa.getName()) != null
                   && playa.getLevel() >= 3){
-               if(!plugin.getMagicPlayerMap().get(playa.getName()).isTeleportReady()){
+               if(!plugin.getMagicPlayerMap().get(playa.getName()).isHealReady()){
                   playa.sendMessage("Heal is still on cooldown");
                   return;
                }
@@ -62,22 +62,17 @@ public class EntityDamageEntity implements Listener {
                   plugin.giveCooldown(playa, "heal", "magic", 7);
                   plugin.getMagicPlayerMap().get(playa.getName()).setHealReadiness(false);
                }
-               healSpell(playa, victim, 1);
-            }
-            // Advanced heal spell
-            else if(playa.getItemInHand().getData().toString().contains("BONE")
-                  && plugin.getMagicPlayerMap().get(playa.getName()) != null
-                  && playa.getLevel() >= 15){
-               if(!plugin.getMagicPlayerMap().get(playa.getName()).isTeleportReady()){
-                  playa.sendMessage("Advanced heal is still on cooldown");
-                  return;
+               
+               // Normal heal/undead damage
+               if(plugin.getBuildUpMap().get(playa.getName()) == null){
+                  healSpell(playa, victim, 1);
+                  plugin.getMagicPlayerMap().get(playa.getName()).addBuildUp(6);
                }
+               // Advanced heal/undead damage
                else{
-                  playa.getInventory().remove(Material.BONE);
-                  plugin.giveCooldown(playa, "advHeal", "magic", 11);
-                  plugin.getMagicPlayerMap().get(playa.getName()).setAdvHealReadiness(false);
+                  healSpell(playa, victim, 2);
+                  plugin.getBuildUpMap().remove(playa.getName());
                }
-               healSpell(playa, victim, 2);
             }
             // Damage by a diamond sword (crit sword)
             else if(playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0
@@ -93,8 +88,9 @@ public class EntityDamageEntity implements Listener {
                else
                   return;
                
-               blade = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlade();
-               level = (int) plugin.getMeleePlayerMap().get(playa.getName()).getLevel();
+               // TODO change to be properly based off gear
+               blade = plugin.getMeleePlayerMap().get(playa.getName()).getGearLevel();
+               level = plugin.getMeleePlayerMap().get(playa.getName()).getLevel();
                
                /* Crit chance 5% to 25%. Berserk mode adds 10-20%
                 * Damage in berserk adds 1 to 3 damage*/
@@ -139,8 +135,8 @@ public class EntityDamageEntity implements Listener {
                }
                else
                   return;
-               
-               blade = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlade();
+               // TODO change to be properly based off gear
+               blade = plugin.getMeleePlayerMap().get(playa.getName()).getGearLevel();
                
                if(blade > 1)
                   blade -= 1;
@@ -187,8 +183,8 @@ public class EntityDamageEntity implements Listener {
                // Damage block check
                if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0){
                   int block;
-                  
-                  block = (int) plugin.getMeleePlayerMap().get(playa.getName()).getSubClassObject().getBlock();
+                  // TODO change to be properly based off gear
+                  block = plugin.getMeleePlayerMap().get(playa.getName()).getGearLevel();
                   
                   if(playa.isBlocking())
                      block += 2;
@@ -254,7 +250,8 @@ public class EntityDamageEntity implements Listener {
    }
    
    private void healSpell(Player playa, LivingEntity fortunate, int adv){
-      int spell = (int) plugin.getMagicPlayerMap().get(playa.getName()).getSubClassObject().getSpell();
+      // TODO change to be properly based off gear
+      int spell = plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel();
       if(fortunate instanceof Player){
          playa.playEffect(fortunate.getLocation(), Effect.SMOKE, 1);
          if(fortunate.getHealth() + (spell * adv) > fortunate.getMaxHealth())
