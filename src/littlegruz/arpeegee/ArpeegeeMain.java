@@ -159,14 +159,15 @@ public class ArpeegeeMain extends JavaPlugin {
          // Load magic player file data into the magic player HashMap
          while((input = br.readLine()) != null){
             String name;
-            int level, gear;
+            int level, gear, buildUp;
             
             st = new StringTokenizer(input, " ");
             name = st.nextToken();
             
             level = Integer.parseInt(st.nextToken());
             gear = Integer.parseInt(st.nextToken());
-            magicPlayerMap.put(name, new RPGMagicPlayer(name, level, gear, st.nextToken(), st.nextToken(), st.nextToken()));
+            buildUp = Integer.parseInt(st.nextToken());
+            magicPlayerMap.put(name, new RPGMagicPlayer(name, level, gear, buildUp, st.nextToken(), st.nextToken(), st.nextToken()));
          }
          br.close();
          
@@ -409,6 +410,7 @@ public class ArpeegeeMain extends JavaPlugin {
             bw.write(player.getKey() + " "
                   + Integer.toString(player.getValue().getLevel()) + " "
                   + Integer.toString(player.getValue().getGearLevel()) + " "
+                  + Integer.toString(player.getValue().getBuildUp()) + " "
                   + player.getValue().getIncomplete() + " "
                   + player.getValue().getComplete() + " "
                   + player.getValue().getParty() + "\n");

@@ -100,7 +100,7 @@ public class PlayerInteract implements Listener{
             else
                playa.sendMessage("You can not flash that far!");
          }
-         // Lightning (single target) spell
+         // Lightning spell
          else if(playa.getItemInHand().getData().toString().contains("YELLOW DYE")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null){
             event.setCancelled(true);
@@ -110,25 +110,17 @@ public class PlayerInteract implements Listener{
                return;
             }
             
-            callThor(playa, false);
-            
-            if(plugin.getBuildUpMap().get(playa.getName()) == null)
+            // Single target
+            if(plugin.getBuildUpMap().get(playa.getName()) == null){
+               callThor(playa, false);
                plugin.getMagicPlayerMap().get(playa.getName()).addBuildUp(6);
-         }
-         // Lightning (area) spell TODO change to only go off with mage innate ability
-         else if(playa.getItemInHand().getType().compareTo(Material.BLAZE_ROD) == 0
-               && plugin.getMagicPlayerMap().get(playa.getName()) != null
-               && playa.getLevel() >= 18){
-            event.setCancelled(true);
-            /*playa.setLevel(playa.getLevel() + 1);
-            plugin.getMagicPlayerMap().get(playa.getName()).setLevel(playa.getLevel());*/
-            
-            if(!plugin.getMagicPlayerMap().get(playa.getName()).isAdvLightningReady()){
-               playa.sendMessage("Mega lightning is still on cooldown");
-               return;
+            }
+            // Area of effect
+            else{
+               callThor(playa, true);
+               plugin.getBuildUpMap().remove(playa.getName());
             }
             
-            callThor(playa, true);
          }
          // Melancholy. Spawns sheep around mage. TODO change to make sheep slow on contact
          else if(playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
@@ -229,7 +221,7 @@ public class PlayerInteract implements Listener{
                else
                   playa.sendMessage("Not enough rage. Current rage: " + Integer.toString(plugin.getMeleePlayerMap().get(pName).getRage()));
             }
-            else if(plugin.getMagicPlayerMap().get(pName) != null){//TODO force discharge at 100 add some disadvantage for that
+            else if(plugin.getMagicPlayerMap().get(pName) != null){
                if(plugin.getMagicPlayerMap().get(pName).getBuildUp() >= 100){
                   playa.sendMessage("Magic discharge initiated");
                   plugin.getMagicPlayerMap().get(pName).setBuildUp(plugin.getMagicPlayerMap().get(pName).getBuildUp() - 51);
