@@ -1,28 +1,42 @@
 package littlegruz.arpeegee.entities;
 
 public class RPGMagicPlayer extends RPGPlayer{
-   private boolean heal, advHeal, lightning, advLightning, tele, fire, sheeeep;
+   private int buildUp;
+   private boolean heal, advHeal, lightning, advLightning, fire, sheeeep;
 
-   public RPGMagicPlayer(String name, RPGSubClass subClassObj){
-      super(name, subClassObj);
+   public RPGMagicPlayer(String name){
+      super(name);
       heal = true;
       advHeal = true;
       lightning = true;
       advLightning = true;
-      tele = true;
       fire = true;
       sheeeep = true;
    }
 
-   public RPGMagicPlayer(String name, RPGSubClass subClassObj, int level, String incomplete, String complete, String party){
-      super(name, subClassObj, level, incomplete, complete, party);
+   public RPGMagicPlayer(String name, int level, int gear, String incomplete, String complete, String party){
+      super(name, level, gear, incomplete, complete, party);
       heal = true;
       advHeal = true;
       lightning = true;
       advLightning = true;
-      tele = true;
       fire = true;
       sheeeep = true;
+   }
+
+   public int getBuildUp(){
+      return buildUp;
+   }
+   
+   public void setbuildUp(int buildUp){
+      this.buildUp = buildUp;
+   }
+   
+   public void addBuildUp(int add){
+      if(buildUp + add > 100)
+         buildUp = 100;
+      else
+         buildUp += add;
    }
 
    public boolean isHealReady(){
@@ -57,19 +71,11 @@ public class RPGMagicPlayer extends RPGPlayer{
       this.advLightning = advLightning;
    }
 
-   public boolean isTeleportReady(){
-      return tele;
-   }
-
-   public void setTeleportReadiness(boolean tele){
-      this.tele = tele;
-   }
-
-   public boolean isFireballReady(){
+   public boolean isFireReady(){
       return fire;
    }
 
-   public void setFireballReadiness(boolean fire){
+   public void setFireReadiness(boolean fire){
       this.fire = fire;
    }
 

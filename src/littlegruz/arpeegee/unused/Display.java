@@ -1,7 +1,6 @@
 package littlegruz.arpeegee.unused;
 
 import littlegruz.arpeegee.ArpeegeeMain;
-import littlegruz.arpeegee.entities.RPGSubClass;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,7 +17,6 @@ public class Display implements CommandExecutor{
    @Override
    public boolean onCommand(CommandSender sender, Command cmd,
          String commandLabel, String[] args){
-      RPGSubClass rpgSubClass;
       
       if(sender.hasPermission("arpeegee.display")){
          // Display sub-class info

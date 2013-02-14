@@ -1,18 +1,22 @@
 package littlegruz.arpeegee.entities;
 
 public class RPGRangedPlayer extends RPGPlayer{
-   private boolean egg, fireBow; 
+   private boolean egg, slowBow, sheepBow, blindBow; 
 
-   public RPGRangedPlayer(String name, RPGSubClass subClassObj){
-      super(name, subClassObj);
+   public RPGRangedPlayer(String name){
+      super(name);
       egg = true;
-      fireBow = true;
+      slowBow = true;
+      sheepBow = true;
+      blindBow = true;
    }
 
-   public RPGRangedPlayer(String name, RPGSubClass subClassObj, int level, String incomplete, String complete, String party){
-      super(name, subClassObj, level, incomplete, complete, party);
+   public RPGRangedPlayer(String name, int level, int gear, String incomplete, String complete, String party){
+      super(name, level, gear, incomplete, complete, party);
       egg = true;
-      fireBow = true;
+      slowBow = true;
+      sheepBow = true;
+      blindBow = true;
    }
 
    public boolean isEggReady(){
@@ -23,11 +27,27 @@ public class RPGRangedPlayer extends RPGPlayer{
       this.egg = egg;
    }
 
-   public boolean isFireBowReady(){
-      return fireBow;
+   public boolean isSlowBowReady(){
+      return slowBow;
    }
    
-   public void setFireBowReadiness(boolean fire){
-      fireBow = egg;
+   public void setSlowBowReadiness(boolean slow){
+      slowBow = slow;
+   }
+
+   public boolean isSheepBowReady(){
+      return sheepBow;
+   }
+   
+   public void setSheepBowReadiness(boolean sheep){
+      sheepBow = sheep;
+   }
+
+   public boolean isBlindBowReady(){
+      return blindBow;
+   }
+   
+   public void setBlindBowReadiness(boolean blind){
+      blindBow = blind;
    }
 }

@@ -2,18 +2,24 @@ package littlegruz.arpeegee.entities;
 
 public class RPGMeleePlayer extends RPGPlayer{
    private int rage;
-   private boolean attack;
+   private boolean jump, silence, punch, imob;
    
-   public RPGMeleePlayer(String name, RPGSubClass subClassObj){
-      super(name, subClassObj);
+   public RPGMeleePlayer(String name){
+      super(name);
       rage = 0;
-      attack = true;
+      jump = true;
+      silence = true;
+      punch = true;
+      imob = true;
    }
 
-   public RPGMeleePlayer(String name, RPGSubClass subClassObj, int level, int rage, String incomplete, String complete, String party){
-      super(name, subClassObj, level, incomplete, complete, party);
+   public RPGMeleePlayer(String name, int level, int gear, int rage, String incomplete, String complete, String party){
+      super(name, level, gear, incomplete, complete, party);
       this.rage = rage;
-      attack = true;
+      jump = true;
+      silence = true;
+      punch = true;
+      imob = true;
    }
 
    public int getRage(){
@@ -31,11 +37,35 @@ public class RPGMeleePlayer extends RPGPlayer{
          rage += add;
    }
 
-   public boolean isAttackReady(){
-      return attack;
+   public boolean isJumpReady(){
+      return jump;
    }
 
-   public void setAttackReadiness(boolean attack){
-      this.attack = attack;
+   public void setJumpReadiness(boolean jump){
+      this.jump = jump;
+   }
+
+   public boolean isSilenceReady(){
+      return silence;
+   }
+
+   public void setSilenceReadiness(boolean silence){
+      this.silence = silence;
+   }
+
+   public boolean isPunchReady(){
+      return punch;
+   }
+
+   public void setPunchReadiness(boolean punch){
+      this.punch = punch;
+   }
+
+   public boolean isImobiliseReady(){
+      return imob;
+   }
+
+   public void setImobiliseReadiness(boolean imob){
+      this.imob = imob;
    }
 }

@@ -8,14 +8,9 @@ import littlegruz.arpeegee.ArpeegeeMain;
 import littlegruz.arpeegee.entities.RPGPlayer;
 import littlegruz.arpeegee.entities.RPGQuest;
 
-import net.minecraft.server.EntityLiving;
-import net.minecraft.server.EntitySmallFireball;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -44,7 +39,7 @@ public class PlayerInteract implements Listener{
       if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getName())){
          Player playa = event.getPlayer();
    
-         // Casting weapon for "Flash"
+         // Casting weapon for "Flash" TODO change for warrior
          if(playa.getItemInHand().getData().toString().contains("MAGENTA DYE")
                && event.getAction().toString().contains("RIGHT_CLICK")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
@@ -117,7 +112,7 @@ public class PlayerInteract implements Listener{
             
             callThor(playa, false);
          }
-         // Lightning (area) spell
+         // Lightning (area) spell TODO change to only go off with mage innate ability
          else if(playa.getItemInHand().getType().compareTo(Material.BLAZE_ROD) == 0
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
                && playa.getLevel() >= 18){
@@ -126,13 +121,13 @@ public class PlayerInteract implements Listener{
             plugin.getMagicPlayerMap().get(playa.getName()).setLevel(playa.getLevel());*/
             
             if(!plugin.getMagicPlayerMap().get(playa.getName()).isAdvLightningReady()){
-               playa.sendMessage("Advanced lightning is still on cooldown");
+               playa.sendMessage("Mega lightning is still on cooldown");
                return;
             }
             
             callThor(playa, true);
          }
-         // Melancholy. Spawns sheep around mage.
+         // Melancholy. Spawns sheep around mage. TODO change to make sheep slow on contact
          else if(playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
                && event.getAction().toString().contains("RIGHT_CLICK")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
@@ -163,14 +158,14 @@ public class PlayerInteract implements Listener{
             loc.getWorld().spawnEntity(loc, EntityType.SHEEP);
          }
          // This fireball creation code is based off MadMatt199's code (https://github.com/madmatt199/GhastBlast)
-         // Casting weapon to launch a fireball
+         // Casting weapon to launch a fireball TODO Change
          else if(playa.getItemInHand().getData().toString().contains("RED DYE")
                && event.getAction().toString().contains("RIGHT_CLICK")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
                && playa.getLevel() >= 8){
             event.setCancelled(true);
             
-            if(!plugin.getMagicPlayerMap().get(playa.getName()).isFireballReady()){
+            if(!plugin.getMagicPlayerMap().get(playa.getName()).isFireReady()){
                playa.sendMessage("Fireball is still on cooldown");
                return;
             }
@@ -179,7 +174,7 @@ public class PlayerInteract implements Listener{
                is.setDurability((short)1);
                playa.getInventory().remove(is);
                plugin.giveCooldown(playa, "fire", "magic", 5);
-               plugin.getMagicPlayerMap().get(playa.getName()).setFireballReadiness(false);
+               plugin.getMagicPlayerMap().get(playa.getName()).setFireReadiness(false);
             }
             
             Vector dir = playa.getLocation().getDirection().multiply(10);
@@ -419,8 +414,8 @@ public class PlayerInteract implements Listener{
       BlockIterator bItr;
       ArrayList<LivingEntity> enemies = new ArrayList<LivingEntity>();
       
-      // Base range is 10 blocks plus the casters spell ability
-      spell = (int) plugin.getMagicPlayerMap().get(playa.getName()).getSubClassObject().getSpell();
+      // Base range is 10 blocks plus the casters spell ability TODO Fix gear damage
+      spell = (int) plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel();
       range = 10 + spell;
       
       for(Entity e : playa.getNearbyEntities(range, range, range)) {

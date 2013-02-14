@@ -27,7 +27,6 @@ import littlegruz.arpeegee.entities.RPGParty;
 import littlegruz.arpeegee.entities.RPGPlayer;
 import littlegruz.arpeegee.entities.RPGQuest;
 import littlegruz.arpeegee.entities.RPGRangedPlayer;
-import littlegruz.arpeegee.entities.RPGSubClass;
 import littlegruz.arpeegee.gui.LittleGUI;
 import littlegruz.arpeegee.listeners.ButtonListener;
 import littlegruz.arpeegee.listeners.EnemyDeaths;
@@ -104,21 +103,15 @@ public class ArpeegeeMain extends JavaPlugin {
          // Load player file data into the player HashMap
          while((input = br.readLine()) != null){
             String name;
-            RPGSubClass rpgSubClass;
-            int level, rage;
+            int level, gear, rage;
             
             st = new StringTokenizer(input, " ");
             name = st.nextToken();
-            rpgSubClass = new RPGSubClass(st.nextToken(),
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken()));
 
             level = Integer.parseInt(st.nextToken());
+            gear = Integer.parseInt(st.nextToken());
             rage = Integer.parseInt(st.nextToken());
-            meleePlayerMap.put(name, new RPGMeleePlayer(name, rpgSubClass, level, rage, st.nextToken(), st.nextToken(), st.nextToken()));
+            meleePlayerMap.put(name, new RPGMeleePlayer(name, level, gear, rage, st.nextToken(), st.nextToken(), st.nextToken()));
          }
          br.close();
          
@@ -138,20 +131,14 @@ public class ArpeegeeMain extends JavaPlugin {
          // Load ranged player file data into the ranged player HashMap
          while((input = br.readLine()) != null){
             String name;
-            RPGSubClass rpgSubClass;
-            int level;
+            int level, gear;
             
             st = new StringTokenizer(input, " ");
             name = st.nextToken();
-            rpgSubClass = new RPGSubClass(st.nextToken(),
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken()));
 
             level = Integer.parseInt(st.nextToken());
-            rangedPlayerMap.put(name, new RPGRangedPlayer(name, rpgSubClass, level, st.nextToken(), st.nextToken(), st.nextToken()));
+            gear = Integer.parseInt(st.nextToken());
+            rangedPlayerMap.put(name, new RPGRangedPlayer(name, level, gear, st.nextToken(), st.nextToken(), st.nextToken()));
          }
          br.close();
          
@@ -171,20 +158,14 @@ public class ArpeegeeMain extends JavaPlugin {
          // Load magic player file data into the magic player HashMap
          while((input = br.readLine()) != null){
             String name;
-            RPGSubClass rpgSubClass;
-            int level;
+            int level, gear;
             
             st = new StringTokenizer(input, " ");
             name = st.nextToken();
-            rpgSubClass = new RPGSubClass(st.nextToken(),
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken()),
-                  Double.parseDouble(st.nextToken()));
             
             level = Integer.parseInt(st.nextToken());
-            magicPlayerMap.put(name, new RPGMagicPlayer(name, rpgSubClass, level, st.nextToken(), st.nextToken(), st.nextToken()));
+            gear = Integer.parseInt(st.nextToken());
+            magicPlayerMap.put(name, new RPGMagicPlayer(name, level, gear, st.nextToken(), st.nextToken(), st.nextToken()));
          }
          br.close();
          
@@ -385,13 +366,8 @@ public class ArpeegeeMain extends JavaPlugin {
          while(it.hasNext()){
             Entry<String, RPGMeleePlayer> player = it.next();
             bw.write(player.getKey() + " "
-                  + player.getValue().getSubClassObject().getName() + " "
-                  + Double.toString(player.getValue().getSubClassObject().getArch()) + " "
-                  + Double.toString(player.getValue().getSubClassObject().getBlade()) + " "
-                  + Double.toString(player.getValue().getSubClassObject().getBlock()) + " "
-                  + Double.toString(player.getValue().getSubClassObject().getEgg()) + " "
-                  + Double.toString(player.getValue().getSubClassObject().getSpell()) + " "
                   + Integer.toString(player.getValue().getLevel()) + " "
+                  + Integer.toString(player.getValue().getGearLevel()) + " "
                   + Integer.toString(player.getValue().getRage()) + " "
                   + player.getValue().getIncomplete() + " "
                   + player.getValue().getComplete() + " "
@@ -410,13 +386,8 @@ public class ArpeegeeMain extends JavaPlugin {
          while(it.hasNext()){
             Entry<String, RPGRangedPlayer> player = it.next();
             bw.write(player.getKey() + " "
-                  + player.getValue().getSubClassObject().getName() + " "
-                  + Double.toString(player.getValue().getSubClassObject().getArch()) + " "
-                  + Double.toString(player.getValue().getSubClassObject().getBlade()) + " "
-                  + Double.toString(player.getValue().getSubClassObject().getBlock()) + " "
-                  + Double.toString(player.getValue().getSubClassObject().getEgg()) + " "
-                  + Double.toString(player.getValue().getSubClassObject().getSpell()) + " "
                   + Integer.toString(player.getValue().getLevel()) + " "
+                  + Integer.toString(player.getValue().getGearLevel()) + " "
                   + player.getValue().getIncomplete() + " "
                   + player.getValue().getComplete() + " "
                   + player.getValue().getParty() + "\n");
@@ -434,13 +405,8 @@ public class ArpeegeeMain extends JavaPlugin {
          while(it.hasNext()){
             Entry<String, RPGMagicPlayer> player = it.next();
             bw.write(player.getKey() + " "
-                  + player.getValue().getSubClassObject().getName() + " "
-                  + Double.toString(player.getValue().getSubClassObject().getArch()) + " "
-                  + Double.toString(player.getValue().getSubClassObject().getBlade()) + " "
-                  + Double.toString(player.getValue().getSubClassObject().getBlock()) + " "
-                  + Double.toString(player.getValue().getSubClassObject().getEgg()) + " "
-                  + Double.toString(player.getValue().getSubClassObject().getSpell()) + " "
                   + Integer.toString(player.getValue().getLevel()) + " "
+                  + Integer.toString(player.getValue().getGearLevel()) + " "
                   + player.getValue().getIncomplete() + " "
                   + player.getValue().getComplete() + " "
                   + player.getValue().getParty() + "\n");
@@ -632,14 +598,9 @@ public class ArpeegeeMain extends JavaPlugin {
                   playa.getInventory().setItem(6, is);
                }
                else if(type.compareTo("fire") == 0){
-                  rpgPlaya.setFireballReadiness(true);
+                  rpgPlaya.setFireReadiness(true);
                   is.setDurability((short)1);
                   playa.getInventory().setItem(2, is);
-               }
-               else if(type.compareTo("tele") == 0){
-                  rpgPlaya.setTeleportReadiness(true);
-                  is.setDurability((short)13);
-                  playa.getInventory().setItem(3, is);
                }
                else if(type.compareTo("baaa") == 0){
                   rpgPlaya.setSheepReadiness(true);
