@@ -110,16 +110,7 @@ public class PlayerInteract implements Listener{
                return;
             }
             
-            // Single target
-            if(plugin.getBuildUpMap().get(playa.getName()) == null){
-               callThor(playa, false);
-               plugin.getMagicPlayerMap().get(playa.getName()).addBuildUp(6);
-            }
-            // Area of effect
-            else{
-               callThor(playa, true);
-               plugin.getBuildUpMap().remove(playa.getName());
-            }
+            callThor(playa);
             
          }
          // Melancholy. Spawns sheep around mage. TODO change to make sheep slow on contact
@@ -417,7 +408,7 @@ public class PlayerInteract implements Listener{
    
    /* The ranged entity seeking code is borrowed from code listed by
     * DirtyStarfish on the bukkit.org forums (with modifications)*/
-   private void callThor(Player playa, boolean area){
+   private void callThor(Player playa){
       Location loc;
       Block block;
       int bx, by, bz, range;
@@ -427,7 +418,7 @@ public class PlayerInteract implements Listener{
       ArrayList<LivingEntity> enemies = new ArrayList<LivingEntity>();
       
       // Base range is 10 blocks plus the casters spell ability TODO Fix gear damage
-      spell = (int) plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel();
+      spell = plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel();
       range = 10 + spell;
       
       for(Entity e : playa.getNearbyEntities(range, range, range)) {
@@ -455,27 +446,23 @@ public class PlayerInteract implements Listener{
                
                plugin.ohTheDamage(null, e, spell);
                
-               // Check if it is the advanced lightning spell
-               if(!area){
+               // Remove item from inventory
+               ItemStack is = new ItemStack(351,1);
+               is.setDurability((short)11);
+               playa.getInventory().remove(is);
+               
+               // Set cooldown
+               plugin.giveCooldown(playa, "light", "magic", 1.5);
+               plugin.getMagicPlayerMap().get(playa.getName()).setLightningReadiness(false);
+               
+               if(plugin.getBuildUpMap().get(playa.getName()) == null){
                   playa.sendMessage("*Zap*");
-                  
-                  // Give cooldown and remove item from inventory
-                  ItemStack is = new ItemStack(351,1);
-                  is.setDurability((short)11);
-                  playa.getInventory().remove(is);
-                  plugin.giveCooldown(playa, "light", "magic", 1.5);
-                  plugin.getMagicPlayerMap().get(playa.getName()).setLightningReadiness(false);
+                  plugin.getMagicPlayerMap().get(playa.getName()).addBuildUp(6);
                }
+               // Advanced lightning skill (area lighting)
                else{
                   final ArrayList<LivingEntity> nearEnemies = new ArrayList<LivingEntity>();
                   
-                  playa.sendMessage("*Zap zap zap*");
-                  
-                  // Give cooldown and remove item from inventory
-                  playa.getInventory().remove(Material.BLAZE_ROD);
-                  plugin.giveCooldown(playa, "advLight", "magic", 4);
-                  plugin.getMagicPlayerMap().get(playa.getName()).setAdvLightningReadiness(false);
-
                   nearEnemies.add(e);
                   for(Entity victims : e.getNearbyEntities(5, 5, 5)) {
                      if (plugin.isEnemy(victims)) {
@@ -483,6 +470,10 @@ public class PlayerInteract implements Listener{
                      }
                   }
                   
+                  playa.sendMessage("*Zap zap zap*");
+                  plugin.getBuildUpMap().remove(playa.getName());
+                  
+                  // Schedule the area lightning to be delayed
                   plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                      public void run() {
                         for(LivingEntity e : nearEnemies) {
