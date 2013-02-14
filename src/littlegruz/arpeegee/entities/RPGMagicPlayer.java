@@ -28,7 +28,7 @@ public class RPGMagicPlayer extends RPGPlayer{
       return buildUp;
    }
    
-   public void setbuildUp(int buildUp){
+   public void setBuildUp(int buildUp){
       this.buildUp = buildUp;
    }
    

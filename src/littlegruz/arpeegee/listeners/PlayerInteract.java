@@ -111,6 +111,9 @@ public class PlayerInteract implements Listener{
             }
             
             callThor(playa, false);
+            
+            if(plugin.getBuildUpMap().get(playa.getName()) == null)
+               plugin.getMagicPlayerMap().get(playa.getName()).addBuildUp(6);
          }
          // Lightning (area) spell TODO change to only go off with mage innate ability
          else if(playa.getItemInHand().getType().compareTo(Material.BLAZE_ROD) == 0
@@ -156,9 +159,12 @@ public class PlayerInteract implements Listener{
             loc.getWorld().spawnEntity(loc, EntityType.SHEEP);
             loc.setZ(loc.getZ() - 2);
             loc.getWorld().spawnEntity(loc, EntityType.SHEEP);
+            
+            if(plugin.getBuildUpMap().get(playa.getName()) == null)
+               plugin.getMagicPlayerMap().get(playa.getName()).addBuildUp(6);
          }
          // This fireball creation code is based off MadMatt199's code (https://github.com/madmatt199/GhastBlast)
-         // Casting weapon to launch a fireball TODO Change
+         // Casting weapon to launch a fireball TODO Change to just set enemy alight
          else if(playa.getItemInHand().getData().toString().contains("RED DYE")
                && event.getAction().toString().contains("RIGHT_CLICK")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
@@ -194,16 +200,18 @@ public class PlayerInteract implements Listener{
             ((CraftWorld) playa.getWorld()).getHandle().addEntity(fireball);
    
             playa.sendMessage("*Fwoosh*");
+
+            if(plugin.getBuildUpMap().get(playa.getName()) == null)
+               plugin.getMagicPlayerMap().get(playa.getName()).addBuildUp(6);
          }
-         // Active berserk mode if player has gained enough rage
+         // Active berserk mode if player has gained enough rage TODO add 'discharge' mode for mages
          else if(event.getAction().toString().contains("RIGHT_CLICK")
-               && plugin.getMeleePlayerMap().get(playa.getName()) != null
-               && (playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
-                     || playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0)){
+               && (plugin.getMeleePlayerMap().get(playa.getName()) != null
+               || plugin.getMagicPlayerMap().get(playa.getName()) != null)){
             final String pName = playa.getName();
             
             if(plugin.getMeleePlayerMap().get(pName) != null){
-               if(plugin.getMeleePlayerMap().get(pName).getRage() == 100){
+               if(plugin.getMeleePlayerMap().get(pName).getRage() >= 100){
                   playa.sendMessage("RAAAAGE (Berserker mode activated)");
                   plugin.getMeleePlayerMap().get(pName).setRage(0);
                   plugin.getBerserkMap().put(pName, pName);
@@ -221,8 +229,20 @@ public class PlayerInteract implements Listener{
                else
                   playa.sendMessage("Not enough rage. Current rage: " + Integer.toString(plugin.getMeleePlayerMap().get(pName).getRage()));
             }
-            else
-               playa.sendMessage("Your class does not use rage...why do you have this weapon?");
+            else if(plugin.getMagicPlayerMap().get(pName) != null){//TODO force discharge at 100 add some disadvantage for that
+               if(plugin.getMagicPlayerMap().get(pName).getBuildUp() >= 100){
+                  playa.sendMessage("Magic discharge initiated");
+                  plugin.getMagicPlayerMap().get(pName).setBuildUp(plugin.getMagicPlayerMap().get(pName).getBuildUp() - 51);
+                  plugin.getBuildUpMap().put(pName, pName);
+               }
+               else if(plugin.getMagicPlayerMap().get(pName).getBuildUp() >= 25){
+                  playa.sendMessage("Magic discharge initiated");
+                  plugin.getMagicPlayerMap().get(pName).setBuildUp(plugin.getMagicPlayerMap().get(pName).getBuildUp() - 25);
+                  plugin.getBuildUpMap().put(pName, pName);
+               }
+               else
+                  playa.sendMessage("Not enough excess magic");
+            }
          }
          else if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
                && plugin.getMeleePlayerMap().get(playa.getName()) != null)

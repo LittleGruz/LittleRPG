@@ -68,6 +68,7 @@ public class ArpeegeeMain extends JavaPlugin {
    private HashMap<Location, Integer> questStartMap;
    private HashMap<String, RPGParty> partyMap;
    private HashMap<String, String> berserkMap;
+   private HashMap<String, String> buildUpMap;
    private HashMap<Entity, String> projMap;
    private HashMap<String, String> worldsMap;
    private HashMap<String, String> textsMap;
@@ -340,6 +341,7 @@ public class ArpeegeeMain extends JavaPlugin {
       getCommand("removepartyinvite").setExecutor(new Party(this));
 
       berserkMap = new HashMap<String, String>();
+      buildUpMap = new HashMap<String, String>();
       projMap = new HashMap<Entity, String>();
       
       questNumberToSet = -1;
@@ -487,6 +489,10 @@ public class ArpeegeeMain extends JavaPlugin {
 
    public HashMap<String, String> getBerserkMap() {
       return berserkMap;
+   }
+
+   public HashMap<String, String> getBuildUpMap() {
+      return buildUpMap;
    }
    
    public HashMap<Entity, String> getProjMap() {
