@@ -32,17 +32,6 @@ public class PlayerLevel implements Listener{
    
             // Increase player stats
             levelUp(rpgPlaya, event);
-            
-            if(rpgPlaya.getLevel() >= 4)
-               event.getPlayer().getInventory().setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
-            if(rpgPlaya.getLevel() >= 8)
-               event.getPlayer().getInventory().setItem(1, new ItemStack(Material.DIAMOND_SWORD,1));
-            if(rpgPlaya.getLevel() >= 10)
-               event.getPlayer().getInventory().setBoots(new ItemStack(Material.IRON_BOOTS));
-            if(rpgPlaya.getLevel() >= 14)
-               event.getPlayer().getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
-            if(rpgPlaya.getLevel() >= 17)
-               event.getPlayer().getInventory().setHelmet(new ItemStack(Material.IRON_HELMET));
          }
          // New weapon for the ranged class
          else if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null){
@@ -51,18 +40,8 @@ public class PlayerLevel implements Listener{
             // Increase player stats
             levelUp(rpgPlaya, event);
    
-            if(rpgPlaya.getLevel() >= 3)
-               event.getPlayer().getInventory().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
-            if(rpgPlaya.getLevel() >= 6)
-               event.getPlayer().getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS));
             if(rpgPlaya.getLevel() >= 7)
                event.getPlayer().getInventory().setItem(1, new ItemStack(Material.BOW,1));
-            if(rpgPlaya.getLevel() >= 9)
-               event.getPlayer().getInventory().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
-            if(rpgPlaya.getLevel() >= 10)
-               event.getPlayer().getInventory().setItem(2, new ItemStack(Material.EGG,1));
-            if(rpgPlaya.getLevel() >= 13)
-               event.getPlayer().getInventory().setHelmet(new ItemStack(Material.LEATHER_HELMET));
          }
          // New weapons for the magic class
          else if(plugin.getMagicPlayerMap().get(event.getPlayer().getName()) != null){
@@ -78,36 +57,15 @@ public class PlayerLevel implements Listener{
                is.setDurability((short)15);
                event.getPlayer().getInventory().setItem(1, is);
             }
-            // Robe
-            if(rpgPlaya.getLevel() >= 5)
-               event.getPlayer().getInventory().setChestplate(new ItemStack(Material.GOLD_CHESTPLATE));
-            // Fireball
+            // Fire
             if(rpgPlaya.getLevel() >= 8){
                is.setDurability((short)1);
                event.getPlayer().getInventory().setItem(2, is);
             }
-            // Teleport
-            if(rpgPlaya.getLevel() >= 10){
-               is.setDurability((short)13);
-               event.getPlayer().getInventory().setItem(3, is);
-            }
-            // Wizard hat
-            if(rpgPlaya.getLevel() >= 11)
-               event.getPlayer().getInventory().setHelmet(new ItemStack(Material.GOLD_HELMET));
             // Sheep summon
             if(rpgPlaya.getLevel() >= 13){
                is.setType(Material.WHEAT);
                event.getPlayer().getInventory().setItem(4, is);
-            }
-            // Advanced heal
-            if(rpgPlaya.getLevel() >= 15){
-               is.setType(Material.BONE);
-               event.getPlayer().getInventory().setItem(5, is);
-            }
-            // Advanced lightning
-            if(rpgPlaya.getLevel() >= 18){
-               is.setType(Material.BLAZE_ROD);
-               event.getPlayer().getInventory().setItem(6, is);
             }
          }
       }
