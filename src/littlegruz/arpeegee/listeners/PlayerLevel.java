@@ -32,8 +32,6 @@ public class PlayerLevel implements Listener{
    
             // Increase player stats
             levelUp(rpgPlaya, event);
-            rpgPlaya.getSubClassObject().setBlade((rpgPlaya.getLevel() - 1) * 0.2 + 1.0);
-            rpgPlaya.getSubClassObject().setBlock((rpgPlaya.getLevel() - 1) * 0.35 + 1.0);
             
             if(rpgPlaya.getLevel() >= 4)
                event.getPlayer().getInventory().setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
@@ -52,8 +50,6 @@ public class PlayerLevel implements Listener{
             
             // Increase player stats
             levelUp(rpgPlaya, event);
-            rpgPlaya.getSubClassObject().setArch((rpgPlaya.getLevel() - 1) * 0.3 + 1.0);
-            rpgPlaya.getSubClassObject().setEgg((rpgPlaya.getLevel() - 1) * 0.4 + 1.0);
    
             if(rpgPlaya.getLevel() >= 3)
                event.getPlayer().getInventory().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
@@ -74,7 +70,6 @@ public class PlayerLevel implements Listener{
             
             // Increase player stats
             levelUp(rpgPlaya, event);
-            rpgPlaya.getSubClassObject().setSpell((rpgPlaya.getLevel() - 1) * 0.3 + 1.0);
             
             // Create the base dye type first
             ItemStack is = new ItemStack(351,1);

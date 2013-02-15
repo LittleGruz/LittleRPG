@@ -568,15 +568,6 @@ public class ArpeegeeMain extends JavaPlugin {
       return false;
    }
 
-   /* Sets a task to turn off a melee ability to attack*/
-   public void giveCooldown(final RPGMeleePlayer playa, int delay){
-      getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-         public void run() {
-            meleePlayerMap.get(playa.getName()).setAttackReadiness(true);
-         }
-     }, (delay * 20) - playa.getLevel());
-   }
-
    /* Sets a task to turn off a magical ability's cooldown*/
    public void giveCooldown(final Player playa, final String type, String classType, double delay){
       if(classType.compareTo("magic") == 0){
@@ -590,20 +581,10 @@ public class ArpeegeeMain extends JavaPlugin {
                   is.setDurability((short)15);
                   playa.getInventory().setItem(1, is);
                }
-               else if(type.compareTo("advHeal") == 0){
-                  rpgPlaya.setAdvHealReadiness(true);
-                  is.setType(Material.BONE);
-                  playa.getInventory().setItem(5, is);
-               }
                else if(type.compareTo("light") == 0){
                   rpgPlaya.setLightningReadiness(true);
                   is.setDurability((short)11);
                   playa.getInventory().setItem(0, is);
-               }
-               else if(type.compareTo("advLight") == 0){
-                  rpgPlaya.setAdvLightningReadiness(true);
-                  is.setType(Material.BLAZE_ROD);
-                  playa.getInventory().setItem(6, is);
                }
                else if(type.compareTo("fire") == 0){
                   rpgPlaya.setFireReadiness(true);
@@ -628,12 +609,44 @@ public class ArpeegeeMain extends JavaPlugin {
                   rpgPlaya.setEggReadiness(true);
                   playa.getInventory().setItem(2, new ItemStack(Material.EGG,1));
                }
-               else if(type.compareTo("fire") == 0){
-                  rpgPlaya.setFireBowReadiness(true);
+               else if(type.compareTo("slow") == 0){
+                  rpgPlaya.setSlowBowReadiness(true);
                   playa.getInventory().setItem(1, new ItemStack(Material.BOW,1));
+               }
+               else if(type.compareTo("ICANTSEE") == 0){
+                  rpgPlaya.setBlindBowReadiness(true);
+                  playa.getInventory().setItem(3, new ItemStack(Material.BOW,1));
+               }
+               else if(type.compareTo("woof") == 0){
+                  rpgPlaya.setSheepBowReadiness(true);
+                  playa.getInventory().setItem(4, new ItemStack(Material.BOW,1));
                }
             }
         }, (long) (delay * 20)); // Multiplied by 20 to turn the delay time into seconds
+      }
+      /* Sets a task to turn off a ranged ability's cooldown*/
+      else if(classType.compareTo("melee") == 0){
+         getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            public void run() {
+               RPGMeleePlayer rpgPlaya = meleePlayerMap.get(playa.getName());
+               
+               if(type.compareTo("imob") == 0){
+                  rpgPlaya.setImobiliseReadiness(true);
+               }
+               else if(type.compareTo("jump") == 0){
+                  rpgPlaya.setJumpReadiness(true);
+               }
+               else if(type.compareTo("falcon") == 0){
+                  rpgPlaya.setPunchReadiness(true);
+               }
+               else if(type.compareTo("sssh") == 0){
+                  rpgPlaya.setSilenceReadiness(true);
+               }
+               else if(type.compareTo("slash") == 0){
+                  rpgPlaya.setSlashReadiness(true);
+               }
+            }
+        }, (long) (delay * 20));
       }
    }
 

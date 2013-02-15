@@ -43,6 +43,10 @@ public class RPGPlayer {
       return gear;
    }
    
+   public void setGearLevel(int gear){
+      this.gear = gear;
+   }
+   
    public void calcGearLevel(PlayerInventory playerInv){
       gear = 0;
       

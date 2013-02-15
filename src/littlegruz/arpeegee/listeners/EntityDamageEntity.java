@@ -74,16 +74,16 @@ public class EntityDamageEntity implements Listener {
                   plugin.getBuildUpMap().remove(playa.getName());
                }
             }
-            // Damage by a diamond sword (crit sword)
+            // Damage by a diamond sword (crit sword) TODO combine with iron?
             else if(playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0
                   && plugin.getMeleePlayerMap().get(playa.getName()) != null
                   && playa.getLevel() >= 8){
                int blade, crit, level;
                
                // Check if the player can swing yet
-               if(plugin.getMeleePlayerMap().get(playa.getName()).isAttackReady()){
-                  plugin.giveCooldown(plugin.getMeleePlayerMap().get(playa.getName()), 1);
-                  plugin.getMeleePlayerMap().get(playa.getName()).setAttackReadiness(false);
+               if(plugin.getMeleePlayerMap().get(playa.getName()).isSlashReady()){
+                  plugin.giveCooldown(playa, "slash", "melee", 1);
+                  plugin.getMeleePlayerMap().get(playa.getName()).setSlashReadiness(false);
                }
                else
                   return;
@@ -123,15 +123,15 @@ public class EntityDamageEntity implements Listener {
                
                //playa.getItemInHand().setDurability((short) 0);
             }
-            // Damage by an iron sword (block sword)
+            // Damage by an iron sword (block sword) TODO combine with diamond?
             else if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
                   && plugin.getMeleePlayerMap().get(playa.getName()) != null){
                int blade;
    
                // Check if the player can swing yet
-               if(plugin.getMeleePlayerMap().get(playa.getName()).isAttackReady()){
-                  plugin.giveCooldown(plugin.getMeleePlayerMap().get(playa.getName()), 1);
-                  plugin.getMeleePlayerMap().get(playa.getName()).setAttackReadiness(false);
+               if(plugin.getMeleePlayerMap().get(playa.getName()).isSlashReady()){
+                  plugin.giveCooldown(playa, "slash", "melee", 1);
+                  plugin.getMeleePlayerMap().get(playa.getName()).setSlashReadiness(false);
                }
                else
                   return;
