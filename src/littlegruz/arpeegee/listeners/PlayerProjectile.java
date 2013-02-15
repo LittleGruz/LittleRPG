@@ -27,27 +27,43 @@ public class PlayerProjectile implements Listener{
                // Normal arrow
                if(playa.getInventory().getHeldItemSlot() == 0){
                plugin.getProjMap().put(event.getProjectile(),
-                     Double.toString(plugin.getRangedPlayerMap().get(playa.getName()).getSubClassObject().getArch()) + "|1");
+                     Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
                }
                else if(playa.getInventory().getHeldItemSlot() == 1){
-                  // Fire arrow
+                  // Slow arrow
                   if(playa.getLevel() >= 7){
                      plugin.getProjMap().put(event.getProjectile(),
-                           Double.toString(plugin.getRangedPlayerMap().get(playa.getName()).getSubClassObject().getArch()) + "|2");
+                           Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|2");
                      playa.getInventory().setItemInHand(null);
-                     plugin.getRangedPlayerMap().get(playa.getName()).setFireBowReadiness(false);
-                     plugin.giveCooldown(playa, "fire", "ranged", 3);
+                     plugin.getRangedPlayerMap().get(playa.getName()).setSlowBowReadiness(false);
+                     plugin.giveCooldown(playa, "slow", "ranged", 3);
+                  }
+                  // Sheep arrow
+                  else if(playa.getLevel() >= 7){
+                     plugin.getProjMap().put(event.getProjectile(),
+                           Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|3");
+                     playa.getInventory().setItemInHand(null);
+                     plugin.getRangedPlayerMap().get(playa.getName()).setSheepBowReadiness(false);
+                     plugin.giveCooldown(playa, "woof", "ranged", 3);
+                  }
+                  // Blind arrow
+                  else if(playa.getLevel() >= 7){
+                     plugin.getProjMap().put(event.getProjectile(),
+                           Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|4");
+                     playa.getInventory().setItemInHand(null);
+                     plugin.getRangedPlayerMap().get(playa.getName()).setBlindBowReadiness(false);
+                     plugin.giveCooldown(playa, "ICANTSEE", "ranged", 3);
                   }
                   // Normal arrow
                   else{
                      plugin.getProjMap().put(event.getProjectile(),
-                           Double.toString(plugin.getRangedPlayerMap().get(playa.getName()).getSubClassObject().getArch()) + "|1");
+                           Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
                   }
                }
                // Normal arrow
                else if(playa.getInventory().getHeldItemSlot() > 1){
                   plugin.getProjMap().put(event.getProjectile(),
-                        Double.toString(plugin.getRangedPlayerMap().get(playa.getName()).getSubClassObject().getArch()) + "|1");
+                        Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
                }
                if(playa.getInventory().getItem(9).getAmount() < 2)
                   playa.getInventory().getItem(9).setAmount(10);
@@ -63,7 +79,7 @@ public class PlayerProjectile implements Listener{
          // Determining explosion chance by egg skill
          if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null
                && event.getPlayer().getLevel() >= 10){
-            int egg = (int) plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getSubClassObject().getEgg();
+            int egg = plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getGearLevel();
             if(plugin.probabilityRoll(5 * egg)){
                event.getEgg().getLocation().getWorld().createExplosion(event.getEgg().getLocation(), 1F, false);
             }
