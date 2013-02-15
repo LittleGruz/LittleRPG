@@ -5,11 +5,11 @@ import org.bukkit.inventory.PlayerInventory;
 
 public class RPGMeleePlayer extends RPGPlayer{
    private int rage;
-   private boolean jump, silence, punch, imob, slash;
+   private boolean flash, silence, punch, imob, slash;
    public RPGMeleePlayer(String name){
       super(name);
       rage = 0;
-      jump = true;
+      flash = true;
       silence = true;
       punch = true;
       imob = true;
@@ -19,7 +19,7 @@ public class RPGMeleePlayer extends RPGPlayer{
    public RPGMeleePlayer(String name, int level, int gear, int rage, String incomplete, String complete, String party){
       super(name, level, gear, incomplete, complete, party);
       this.rage = rage;
-      jump = true;
+      flash = true;
       silence = true;
       punch = true;
       imob = true;
@@ -41,12 +41,12 @@ public class RPGMeleePlayer extends RPGPlayer{
          rage += add;
    }
 
-   public boolean isJumpReady(){
-      return jump;
+   public boolean isFlashReady(){
+      return flash;
    }
 
-   public void setJumpReadiness(boolean jump){
-      this.jump = jump;
+   public void setFlashReadiness(boolean flash){
+      this.flash = flash;
    }
 
    public boolean isSilenceReady(){

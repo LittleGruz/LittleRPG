@@ -633,8 +633,8 @@ public class ArpeegeeMain extends JavaPlugin {
                if(type.compareTo("imob") == 0){
                   rpgPlaya.setImobiliseReadiness(true);
                }
-               else if(type.compareTo("jump") == 0){
-                  rpgPlaya.setJumpReadiness(true);
+               else if(type.compareTo("flash") == 0){
+                  rpgPlaya.setFlashReadiness(true);
                }
                else if(type.compareTo("falcon") == 0){
                   rpgPlaya.setPunchReadiness(true);

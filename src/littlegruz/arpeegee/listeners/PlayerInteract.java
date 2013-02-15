@@ -25,7 +25,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.BlockIterator;
-import org.bukkit.util.Vector;
 
 public class PlayerInteract implements Listener{
    private ArpeegeeMain plugin;
@@ -39,27 +38,27 @@ public class PlayerInteract implements Listener{
       if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getName())){
          Player playa = event.getPlayer();
    
-         // Casting weapon for "Flash" TODO change for warrior
+         // Casting weapon for "Flash"
          if(playa.getItemInHand().getData().toString().contains("MAGENTA DYE")
                && event.getAction().toString().contains("RIGHT_CLICK")
-               && plugin.getMagicPlayerMap().get(playa.getName()) != null
+               && plugin.getMeleePlayerMap().get(playa.getName()) != null
                && playa.getLevel() >= 10){
             ItemStack is = new ItemStack(351,1);
             is.setDurability((short)13);
             
             event.setCancelled(true);
             
-            if(!plugin.getMagicPlayerMap().get(playa.getName()).isTeleportReady()){
-               playa.sendMessage("Teleport is still on cooldown");
+            if(!plugin.getMeleePlayerMap().get(playa.getName()).isFlashReady()){
+               playa.sendMessage("Flash is still on cooldown");
                return;
             }
             
             HashSet<Byte> hs = new HashSet<Byte>();
-            int spell;
+            int gear;
             Block block;
             Location loc;
             
-            spell = (int) plugin.getMagicPlayerMap().get(playa.getName()).getSubClassObject().getSpell();
+            gear = plugin.getMeleePlayerMap().get(playa.getName()).getGearLevel();
       
             hs.add((byte)0); //Air
             hs.add((byte)8); //Flowing water
@@ -68,7 +67,7 @@ public class PlayerInteract implements Listener{
             hs.add((byte)101); //Iron bar
             hs.add((byte)102); //Glass pane
             
-            block = playa.getTargetBlock(hs, 3 * spell);
+            block = playa.getTargetBlock(hs, 3 * gear); //TODO change to appropriate
             loc = block.getLocation();
             
             //playa.sendMessage(block.getType().toString());
@@ -91,8 +90,8 @@ public class PlayerInteract implements Listener{
                   
                   // Give cooldown and remove item from inventory
                   playa.getInventory().remove(is);
-                  plugin.giveCooldown(playa, "tele", "magic", 10);
-                  plugin.getMagicPlayerMap().get(playa.getName()).setTeleportReadiness(false);
+                  plugin.giveCooldown(playa, "flash", "melee", 10);
+                  plugin.getMeleePlayerMap().get(playa.getName()).setFlashReadiness(false);
                }
                else
                   playa.sendMessage("You can not flash to there");
@@ -146,7 +145,6 @@ public class PlayerInteract implements Listener{
             if(plugin.getBuildUpMap().get(playa.getName()) == null)
                plugin.getMagicPlayerMap().get(playa.getName()).addBuildUp(6);
          }
-         // This fireball creation code is based off MadMatt199's code (https://github.com/madmatt199/GhastBlast)
          // Casting weapon to launch a fireball TODO Change to just set enemy alight
          else if(playa.getItemInHand().getData().toString().contains("RED DYE")
                && event.getAction().toString().contains("RIGHT_CLICK")
@@ -166,26 +164,54 @@ public class PlayerInteract implements Listener{
                plugin.getMagicPlayerMap().get(playa.getName()).setFireReadiness(false);
             }
             
-            Vector dir = playa.getLocation().getDirection().multiply(10);
-            Location loc = playa.getLocation();
+            Block block;
+            int bx, by, bz, range;
+            int spell;
+            double ex, ey, ez;
+            BlockIterator bItr;
+            ArrayList<LivingEntity> enemies = new ArrayList<LivingEntity>();
             
-            EntityLiving entityPlaya = ((CraftPlayer) playa).getHandle();
-            EntitySmallFireball fireball = new EntitySmallFireball(
-                  ((CraftWorld) playa.getWorld()).getHandle(), entityPlaya,
-                  dir.getX(), dir.getY(), dir.getZ());
+            // Base range is 10 blocks plus the casters spell ability TODO Fix gear damage
+            spell = plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel();
+            range = 10 + spell;
             
-            // Spawn the fireball a bit away from the player at chest height
-            fireball.locX = loc.getX() + (dir.getX()/5.0);
-            fireball.locY = loc.getY() + playa.getEyeHeight() - 0.8;
-            fireball.locZ = loc.getZ() + (dir.getZ()/5.0);
-            dir = dir.multiply(10);
+            for(Entity e : playa.getNearbyEntities(range, range, range)){
+               if(plugin.isEnemy(e)){
+                  enemies.add((LivingEntity)e);
+               }
+            }
             
-            ((CraftWorld) playa.getWorld()).getHandle().addEntity(fireball);
-   
-            playa.sendMessage("*Fwoosh*");
-
-            if(plugin.getBuildUpMap().get(playa.getName()) == null)
-               plugin.getMagicPlayerMap().get(playa.getName()).addBuildUp(6);
+            bItr = new BlockIterator(playa.getLocation(), 0, range);
+            
+            while(bItr.hasNext()){
+               block = bItr.next();
+               bx = block.getX();
+               by = block.getY();
+               bz = block.getZ();
+               for(LivingEntity e : enemies){
+                  ex = e.getLocation().getX();
+                  ey = e.getLocation().getY();
+                  ez = e.getLocation().getZ();
+                  // If entity is within the boundaries then it is the one being looked at
+                  if((bx - 0.75 <= ex && ex <= bx + 0.75) && (bz - 0.75 <= ez && ez <= bz + 0.75) && (by - 1 <= ey && ey <= by + 1)){
+                     
+                     
+                     // Normal fwoosh
+                     if(plugin.getBuildUpMap().get(playa.getName()) == null){
+                        e.setFireTicks(spell); //TODO alter to do appropriate damage
+                        playa.sendMessage("*fwoosh*");
+                        plugin.getMagicPlayerMap().get(playa.getName()).addBuildUp(6);
+                     }
+                     // Advanced fwoosh skill (longer lasting flavour)
+                     else{
+                        e.setFireTicks((int) (spell * 1.5)); //TODO alter to do appropriate damage
+                        playa.sendMessage("*big fwoosh*");
+                        plugin.getBuildUpMap().remove(playa.getName());
+                     }
+                     return;
+                  }
+               }
+            }
          }
          // Active berserk mode if player has gained enough rage TODO add 'discharge' mode for mages
          else if(event.getAction().toString().contains("RIGHT_CLICK")
@@ -213,18 +239,22 @@ public class PlayerInteract implements Listener{
                   playa.sendMessage("Not enough rage. Current rage: " + Integer.toString(plugin.getMeleePlayerMap().get(pName).getRage()));
             }
             else if(plugin.getMagicPlayerMap().get(pName) != null){
-               if(plugin.getMagicPlayerMap().get(pName).getBuildUp() >= 100){
-                  playa.sendMessage("Magic discharge initiated");
-                  plugin.getMagicPlayerMap().get(pName).setBuildUp(plugin.getMagicPlayerMap().get(pName).getBuildUp() - 51);
-                  plugin.getBuildUpMap().put(pName, pName);
-               }
-               else if(plugin.getMagicPlayerMap().get(pName).getBuildUp() >= 25){
-                  playa.sendMessage("Magic discharge initiated");
-                  plugin.getMagicPlayerMap().get(pName).setBuildUp(plugin.getMagicPlayerMap().get(pName).getBuildUp() - 25);
-                  plugin.getBuildUpMap().put(pName, pName);
+               if(plugin.getBuildUpMap().get(pName) != null){
+                  if(plugin.getMagicPlayerMap().get(pName).getBuildUp() >= 100){
+                     playa.sendMessage("Magic discharge initiated");
+                     plugin.getMagicPlayerMap().get(pName).setBuildUp(plugin.getMagicPlayerMap().get(pName).getBuildUp() - 51);
+                     plugin.getBuildUpMap().put(pName, pName);
+                  }
+                  else if(plugin.getMagicPlayerMap().get(pName).getBuildUp() >= 25){
+                     playa.sendMessage("Magic discharge initiated");
+                     plugin.getMagicPlayerMap().get(pName).setBuildUp(plugin.getMagicPlayerMap().get(pName).getBuildUp() - 25);
+                     plugin.getBuildUpMap().put(pName, pName);
+                  }
+                  else
+                     playa.sendMessage("Not enough excess magic");
                }
                else
-                  playa.sendMessage("Not enough excess magic");
+                  playa.sendMessage("You are already going to discharge");
             }
          }
          else if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
@@ -421,26 +451,26 @@ public class PlayerInteract implements Listener{
       spell = plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel();
       range = 10 + spell;
       
-      for(Entity e : playa.getNearbyEntities(range, range, range)) {
-         if (plugin.isEnemy(e)) {
+      for(Entity e : playa.getNearbyEntities(range, range, range)){
+         if(plugin.isEnemy(e)){
             enemies.add((LivingEntity)e);
          }
       }
       
       bItr = new BlockIterator(playa.getLocation(), 0, range);
       
-      while (bItr.hasNext()) {
+      while(bItr.hasNext()){
          block = bItr.next();
          bx = block.getX();
          by = block.getY();
          bz = block.getZ();
-         for (LivingEntity e : enemies) {
+         for(LivingEntity e : enemies){
             loc = e.getLocation();
             ex = loc.getX();
             ey = loc.getY();
             ez = loc.getZ();
             // If entity is within the boundaries then it is the one being looked at
-            if ((bx - 0.75 <= ex && ex <= bx + 0.75) && (bz - 0.75 <= ez && ez <= bz + 0.75) && (by - 1 <= ey && ey <= by + 1)){
+            if((bx - 0.75 <= ex && ex <= bx + 0.75) && (bz - 0.75 <= ez && ez <= bz + 0.75) && (by - 1 <= ey && ey <= by + 1)){
                loc.setY(loc.getY() + 1);
                loc.getWorld().strikeLightningEffect(loc);
                
@@ -464,7 +494,7 @@ public class PlayerInteract implements Listener{
                   final ArrayList<LivingEntity> nearEnemies = new ArrayList<LivingEntity>();
                   
                   nearEnemies.add(e);
-                  for(Entity victims : e.getNearbyEntities(5, 5, 5)) {
+                  for(Entity victims : e.getNearbyEntities(5, 5, 5)){
                      if (plugin.isEnemy(victims)) {
                         nearEnemies.add((LivingEntity) victims);
                      }
@@ -475,8 +505,8 @@ public class PlayerInteract implements Listener{
                   
                   // Schedule the area lightning to be delayed
                   plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                     public void run() {
-                        for(LivingEntity e : nearEnemies) {
+                     public void run(){
+                        for(LivingEntity e : nearEnemies){
                            Location enemyLoc = e.getLocation();
                            enemyLoc.setY(enemyLoc.getY() + 1);
                            enemyLoc.getWorld().strikeLightningEffect(enemyLoc);
