@@ -67,7 +67,7 @@ public class PlayerInteract implements Listener{
             hs.add((byte)101); //Iron bar
             hs.add((byte)102); //Glass pane
             
-            block = playa.getTargetBlock(hs, 3 * gear); //TODO change to appropriate
+            block = playa.getTargetBlock(hs, 3 * gear); //TODO change to appropriate block
             loc = block.getLocation();
             
             //playa.sendMessage(block.getType().toString());
@@ -142,8 +142,14 @@ public class PlayerInteract implements Listener{
             loc.setZ(loc.getZ() - 2);
             loc.getWorld().spawnEntity(loc, EntityType.SHEEP);
             
-            if(plugin.getBuildUpMap().get(playa.getName()) == null)
+            if(plugin.getBuildUpMap().get(playa.getName()) == null){
                plugin.getMagicPlayerMap().get(playa.getName()).addBuildUp(6);
+               if(plugin.getMagicPlayerMap().get(playa.getName()).getBuildUp() >= 100){
+                  playa.sendMessage("Magic discharge initiated");
+                  plugin.getMagicPlayerMap().get(playa.getName()).setBuildUp(plugin.getMagicPlayerMap().get(playa.getName()).getBuildUp() - 51);
+                  plugin.getBuildUpMap().put(playa.getName(), playa.getName());
+               }
+            }
          }
          // Casting weapon to launch a fireball TODO Change to just set enemy alight
          else if(playa.getItemInHand().getData().toString().contains("RED DYE")
@@ -201,6 +207,11 @@ public class PlayerInteract implements Listener{
                         e.setFireTicks(spell); //TODO alter to do appropriate damage
                         playa.sendMessage("*fwoosh*");
                         plugin.getMagicPlayerMap().get(playa.getName()).addBuildUp(6);
+                        if(plugin.getMagicPlayerMap().get(playa.getName()).getBuildUp() >= 100){
+                           playa.sendMessage("Magic discharge initiated");
+                           plugin.getMagicPlayerMap().get(playa.getName()).setBuildUp(plugin.getMagicPlayerMap().get(playa.getName()).getBuildUp() - 51);
+                           plugin.getBuildUpMap().put(playa.getName(), playa.getName());
+                        }
                      }
                      // Advanced fwoosh skill (longer lasting flavour)
                      else{
@@ -219,6 +230,7 @@ public class PlayerInteract implements Listener{
                || plugin.getMagicPlayerMap().get(playa.getName()) != null)){
             final String pName = playa.getName();
             
+            // Activate berserk mode and effects
             if(plugin.getMeleePlayerMap().get(pName) != null){
                if(plugin.getMeleePlayerMap().get(pName).getRage() >= 100){
                   playa.sendMessage("RAAAAGE (Berserker mode activated)");
@@ -238,14 +250,10 @@ public class PlayerInteract implements Listener{
                else
                   playa.sendMessage("Not enough rage. Current rage: " + Integer.toString(plugin.getMeleePlayerMap().get(pName).getRage()));
             }
+            // Activate discharge and effects
             else if(plugin.getMagicPlayerMap().get(pName) != null){
                if(plugin.getBuildUpMap().get(pName) != null){
-                  if(plugin.getMagicPlayerMap().get(pName).getBuildUp() >= 100){
-                     playa.sendMessage("Magic discharge initiated");
-                     plugin.getMagicPlayerMap().get(pName).setBuildUp(plugin.getMagicPlayerMap().get(pName).getBuildUp() - 51);
-                     plugin.getBuildUpMap().put(pName, pName);
-                  }
-                  else if(plugin.getMagicPlayerMap().get(pName).getBuildUp() >= 25){
+                  if(plugin.getMagicPlayerMap().get(pName).getBuildUp() >= 25){
                      playa.sendMessage("Magic discharge initiated");
                      plugin.getMagicPlayerMap().get(pName).setBuildUp(plugin.getMagicPlayerMap().get(pName).getBuildUp() - 25);
                      plugin.getBuildUpMap().put(pName, pName);
@@ -488,6 +496,11 @@ public class PlayerInteract implements Listener{
                if(plugin.getBuildUpMap().get(playa.getName()) == null){
                   playa.sendMessage("*Zap*");
                   plugin.getMagicPlayerMap().get(playa.getName()).addBuildUp(6);
+                  if(plugin.getMagicPlayerMap().get(playa.getName()).getBuildUp() >= 100){
+                     playa.sendMessage("Magic discharge initiated");
+                     plugin.getMagicPlayerMap().get(playa.getName()).setBuildUp(plugin.getMagicPlayerMap().get(playa.getName()).getBuildUp() - 51);
+                     plugin.getBuildUpMap().put(playa.getName(), playa.getName());
+                  }
                }
                // Advanced lightning skill (area lighting)
                else{

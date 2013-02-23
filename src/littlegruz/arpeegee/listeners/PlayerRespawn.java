@@ -4,9 +4,6 @@ import java.util.ArrayList;
 
 import littlegruz.arpeegee.ArpeegeeMain;
 import littlegruz.arpeegee.entities.RPGMagicPlayer;
-import littlegruz.arpeegee.entities.RPGMeleePlayer;
-import littlegruz.arpeegee.entities.RPGPlayer;
-import littlegruz.arpeegee.entities.RPGRangedPlayer;
 
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -28,9 +25,6 @@ public class PlayerRespawn implements Listener{
       if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getName())){
          // Restore weapons and levels for the melee class
          if(plugin.getMeleePlayerMap().get(event.getPlayer().getName()) != null){
-            RPGMeleePlayer rpgPlaya = plugin.getMeleePlayerMap().get(event.getPlayer().getName());
-   
-            event.getPlayer().setLevel(newLevel(rpgPlaya, event.getPlayer().getLevel()));
    
             // Give player back their base weapon
             event.getPlayer().getInventory().setItem(0, new ItemStack(Material.IRON_SWORD,1));
@@ -53,9 +47,6 @@ public class PlayerRespawn implements Listener{
          }
          // Restore weapons and levels for the ranged class
          else if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null){
-            RPGRangedPlayer rpgPlaya = plugin.getRangedPlayerMap().get(event.getPlayer().getName());
-   
-            event.getPlayer().setLevel(newLevel(rpgPlaya, event.getPlayer().getLevel()));
    
             // Give player back their base weapon
             event.getPlayer().getInventory().setItem(0, new ItemStack(Material.BOW,1));
@@ -83,8 +74,6 @@ public class PlayerRespawn implements Listener{
          else if(plugin.getMagicPlayerMap().get(event.getPlayer().getName()) != null){
             RPGMagicPlayer rpgPlaya = plugin.getMagicPlayerMap().get(event.getPlayer().getName());
    
-            event.getPlayer().setLevel(newLevel(rpgPlaya, rpgPlaya.getLevel()));
-            
             // Create the base dye type first
             ItemStack is = new ItemStack(351,1);
             
@@ -169,22 +158,6 @@ public class PlayerRespawn implements Listener{
          for(i = 0; i < removeList.size(); i++)
             event.getDrops().remove(removeList.get(i));
          removeList.clear();
-      }
-   }
-   
-   // Determines how many levels the player looses upon respawning
-   private int newLevel(RPGPlayer rpgPlaya, int level){
-      if(level <= 3){
-         rpgPlaya.setLevel(1);
-         return 1;
-      }
-      else if(level <= 7){
-         rpgPlaya.setLevel(level - 2);
-         return level - 2;
-      }
-      else{
-         rpgPlaya.setLevel(level - 1);
-         return level - 1;
       }
    }
 }
