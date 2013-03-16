@@ -7,12 +7,15 @@ import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
 import littlegruz.arpeegee.ArpeegeeMain;
+import littlegruz.arpeegee.entities.RPGMagicPlayer;
+import littlegruz.arpeegee.entities.RPGSheep;
 
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
@@ -20,6 +23,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class EntityDamageEntity implements Listener {
    private ArpeegeeMain plugin;
@@ -45,7 +50,7 @@ public class EntityDamageEntity implements Listener {
             Player playa = (Player) event.getDamager();
             LivingEntity victim = (LivingEntity) event.getEntity();
             
-            event.setDamage(0);
+            event.setDamage(1);
             
             // Heal spell
             if(playa.getItemInHand().getData().toString().contains("WHITE DYE")
@@ -209,40 +214,104 @@ public class EntityDamageEntity implements Listener {
             // Check that it came from a player
             if(plugin.getProjMap().get(event.getDamager()) != null){
                ArrayList<Entity> ent = new ArrayList<Entity>();
-               int arch, type, i;
+               int gear, type, i;
                String arrowData;
                StringTokenizer st;
                
                arrowData = plugin.getProjMap().get(event.getDamager()).replace("grounded", "");
                st = new StringTokenizer(arrowData, "|");
                
-               arch = (int) Double.parseDouble(st.nextToken());
+               gear = (int) Double.parseDouble(st.nextToken());
                type = Integer.parseInt(st.nextToken());
                
-               /* If the arrow is a fire type, then set the entity on fire for
-                * 3 seconds */
-               if(type == 2)
-                  event.getEntity().setFireTicks(60);
+               // Type 2 is the slow arrow
+               if(type == 2){
+                  if(event.getEntity() instanceof LivingEntity){
+                     ((LivingEntity) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, gear, 1), true);
+                     gear /= 2;
+                  }
+               }
+               // Type 3 is the sheep arrow
+               else if(type == 3){
+                  final RPGSheep sheep;
+                  
+                  sheep = new RPGSheep(gear);
+                  
+                  plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                     public void run(){
+                        sheep.getLocation().getWorld().createExplosion(sheep.getLocation(), sheep.getDamage(), sheep.isIncedenary());
+                        sheep.remove();
+                     }
+                 }, 40L);
+               }
+               // Type 4 is the blind arrow
+               else if(type == 4){
+                  if(event.getEntity() instanceof Player){
+                     final RPGMagicPlayer rpgmp;
+                     rpgmp = plugin.getMagicPlayerMap().get(((Player) event.getEntity()).getName());
+                     
+                     rpgmp.blindPlayer();
+                     
+                     plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                        public void run(){
+                           rpgmp.unblindPlayer();
+                        }
+                    }, gear * 20L);
+                  }
+               }
                
-               // If crit do double damage. 0% to 30% chance
-               if(plugin.probabilityRoll(5 * (arch - 1))){
+               // If crit do double damage. 0% to 30% chance TODO this chance has probably changed
+               if(plugin.probabilityRoll(5 * (gear - 1))){
                   event.getEntity().getWorld().strikeLightningEffect(event.getEntity().getLocation());
-                  plugin.ohTheDamage(event, event.getEntity(), arch * 2);
+                  plugin.ohTheDamage(event, event.getEntity(), gear * 2);
                }
                else
-                  plugin.ohTheDamage(event, event.getEntity(), arch);
+                  plugin.ohTheDamage(event, event.getEntity(), gear);
                
                // Remove all arrows that have hit the ground from hashmap
-               // The removal is separate to stop concurrency issues
                Iterator<Map.Entry<Entity, String>> it = plugin.getProjMap().entrySet().iterator();
                while(it.hasNext()){
                   Entry<Entity, String> arrow = it.next();
                   if(arrow.getValue().contains("grounded"))
                      ent.add(arrow.getKey());
                }
+               // The removal is separate to stop concurrency issues
                for(i = ent.size() - 1; ent.size() > 0; i--){
                   plugin.getProjMap().remove(ent.get(i));
                   ent.remove(i);
+               }
+            }
+         }
+         // Player fireball hit
+         else if(event.getDamager() instanceof Fireball){
+            // Check that it came from a player
+            if(plugin.getProjMap().get(event.getDamager()) != null){
+               ArrayList<Entity> entList = new ArrayList<Entity>();
+               int magic, i;
+               char discharge;
+               String ballData;
+               StringTokenizer st;
+               
+               ballData = plugin.getProjMap().get(event.getDamager());
+               st = new StringTokenizer(ballData, "|");
+               
+               magic = (int) Double.parseDouble(st.nextToken());
+               discharge = st.nextToken().charAt(0);
+               
+               if(discharge == 'y')
+                  magic = (int)(magic * 1.5);
+               
+               // Remove all arrows that have hit the ground from hashmap
+               Iterator<Map.Entry<Entity, String>> it = plugin.getProjMap().entrySet().iterator();
+               while(it.hasNext()){
+                  Entry<Entity, String> arrow = it.next();
+                  if(arrow.getValue().contains("grounded"))
+                     entList.add(arrow.getKey());
+               }
+               // The removal is separate to stop concurrency issues
+               for(i = entList.size() - 1; entList.size() > 0; i--){
+                  plugin.getProjMap().remove(entList.get(i));
+                  entList.remove(i);
                }
             }
          }

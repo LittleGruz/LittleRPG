@@ -68,5 +68,18 @@ public class RPGMagicPlayer extends RPGPlayer{
    public void setSheepReadiness(boolean sheep){
       this.sheeeep = sheep;
    }
-
+   
+   public void blindPlayer(){
+      heal = false;
+      lightning = false;
+      fire = false;
+      sheeeep = false;
+   }
+   
+   public void unblindPlayer(){
+      heal = true;
+      lightning = true;
+      fire = true;
+      sheeeep = true;
+   }
 }

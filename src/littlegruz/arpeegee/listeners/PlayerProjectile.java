@@ -9,6 +9,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 
 import littlegruz.arpeegee.ArpeegeeMain;
+import littlegruz.arpeegee.entities.RPGSheep;
 
 public class PlayerProjectile implements Listener{
    private ArpeegeeMain plugin;
@@ -45,6 +46,7 @@ public class PlayerProjectile implements Listener{
                      playa.getInventory().setItemInHand(null);
                      plugin.getRangedPlayerMap().get(playa.getName()).setSheepBowReadiness(false);
                      plugin.giveCooldown(playa, "woof", "ranged", 3);
+                     event.setProjectile(new RPGSheep(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()));
                   }
                   // Blind arrow
                   else if(playa.getLevel() >= 7){
@@ -59,6 +61,10 @@ public class PlayerProjectile implements Listener{
                      plugin.getProjMap().put(event.getProjectile(),
                            Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
                   }
+               }
+               // Test arrow
+               else if(playa.getInventory().getHeldItemSlot() == 2){
+                  event.setProjectile(new RPGSheep(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()));
                }
                // Normal arrow
                else if(playa.getInventory().getHeldItemSlot() > 1){
@@ -91,13 +97,11 @@ public class PlayerProjectile implements Listener{
    public void onProjectileHit(ProjectileHitEvent event){
       if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getName())){
          // Projectile hitting something
-         Entity ent = event.getEntity();
-         if(plugin.getProjMap().get(ent) != null){
-            plugin.getProjMap().put(ent, plugin.getProjMap().get(ent) + "grounded");
+         Entity entity = event.getEntity();
+         if(plugin.getProjMap().get(entity) != null){
+            plugin.getProjMap().put(entity, plugin.getProjMap().get(entity) + "grounded");
             return;
          }
-         /*else if(ent instanceof CraftSmallFireball)
-            return;*/
       }
    }
 }

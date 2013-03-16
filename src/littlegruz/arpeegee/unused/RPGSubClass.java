@@ -1,4 +1,4 @@
-package littlegruz.arpeegee.entities;
+package littlegruz.arpeegee.unused;
 
 public class RPGSubClass {
    private String name;

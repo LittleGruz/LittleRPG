@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
@@ -151,12 +152,13 @@ public class PlayerInteract implements Listener{
                }
             }
          }
-         // Casting weapon to launch a fireball TODO Change to just set enemy alight
+         // Casting weapon to set enemy alight
          else if(playa.getItemInHand().getData().toString().contains("RED DYE")
                && event.getAction().toString().contains("RIGHT_CLICK")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
                && playa.getLevel() >= 8){
             event.setCancelled(true);
+            String data;
             
             if(!plugin.getMagicPlayerMap().get(playa.getName()).isFireReady()){
                playa.sendMessage("Fireball is still on cooldown");
@@ -169,8 +171,16 @@ public class PlayerInteract implements Listener{
                plugin.giveCooldown(playa, "fire", "magic", 5);
                plugin.getMagicPlayerMap().get(playa.getName()).setFireReadiness(false);
             }
+
+            event.getPlayer().launchProjectile(Fireball.class);
+            if(plugin.getBuildUpMap().get(playa.getName()) != null)
+               data = Integer.toString((int)(plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel() * 1.5)) + "|y";
+            else
+               data = Integer.toString(plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel()) + "|n";
             
-            Block block;
+            plugin.getProjMap().put(event.getPlayer().launchProjectile(Fireball.class), data);
+            
+            /*Block block;
             int bx, by, bz, range;
             int spell;
             double ex, ey, ez;
@@ -201,9 +211,9 @@ public class PlayerInteract implements Listener{
                   // If entity is within the boundaries then it is the one being looked at
                   if((bx - 0.75 <= ex && ex <= bx + 0.75) && (bz - 0.75 <= ez && ez <= bz + 0.75) && (by - 1 <= ey && ey <= by + 1)){
                      
-                     
                      // Normal fwoosh
                      if(plugin.getBuildUpMap().get(playa.getName()) == null){
+                        plugin.ohTheDamage(null, e, spell); //TODO alter to do appropriate damage
                         e.setFireTicks(spell); //TODO alter to do appropriate damage
                         playa.sendMessage("*fwoosh*");
                         plugin.getMagicPlayerMap().get(playa.getName()).addBuildUp(6);
@@ -213,16 +223,17 @@ public class PlayerInteract implements Listener{
                            plugin.getBuildUpMap().put(playa.getName(), playa.getName());
                         }
                      }
-                     // Advanced fwoosh skill (longer lasting flavour)
+                     // Advanced fwoosh skill (longer lasting flavour and strength)
                      else{
+                        plugin.ohTheDamage(null, e, spell * 2); //TODO alter to do appropriate damage
                         e.setFireTicks((int) (spell * 1.5)); //TODO alter to do appropriate damage
-                        playa.sendMessage("*big fwoosh*");
+                        playa.sendMessage("*FWOOSH*");
                         plugin.getBuildUpMap().remove(playa.getName());
                      }
                      return;
                   }
                }
-            }
+            }*/
          }
          // Active berserk mode if player has gained enough rage TODO add 'discharge' mode for mages
          else if(event.getAction().toString().contains("RIGHT_CLICK")
@@ -262,7 +273,7 @@ public class PlayerInteract implements Listener{
                      playa.sendMessage("Not enough excess magic");
                }
                else
-                  playa.sendMessage("You are already going to discharge");
+                  playa.sendMessage("You are already set to discharge");
             }
          }
          else if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
