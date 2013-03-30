@@ -156,7 +156,7 @@ public class PlayerInteract implements Listener{
          else if(playa.getItemInHand().getData().toString().contains("RED DYE")
                && event.getAction().toString().contains("RIGHT_CLICK")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
-               && playa.getLevel() >= 8){
+               && playa.getLevel() >= 0){
             event.setCancelled(true);
             String data;
             Fireball ballOfFire;

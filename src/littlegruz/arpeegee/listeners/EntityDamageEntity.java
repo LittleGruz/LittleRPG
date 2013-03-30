@@ -19,6 +19,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.SmallFireball;
+import org.bukkit.entity.Snowball;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -212,10 +215,9 @@ public class EntityDamageEntity implements Listener {
          }
          // Player arrow hit
          else if(event.getDamager() instanceof Arrow){
-            // Check that it came from a player
+            // Check that it came from the right player
             if(plugin.getProjMap().get(event.getDamager()) != null){
-               ArrayList<Entity> ent = new ArrayList<Entity>();
-               int gear, type, i;
+               int gear, type;
                String arrowData;
                StringTokenizer st;
                
@@ -225,30 +227,8 @@ public class EntityDamageEntity implements Listener {
                gear = (int) Double.parseDouble(st.nextToken());
                type = Integer.parseInt(st.nextToken());
                
-               // Type 2 is the slow arrow
-               if(type == 2){
-                  if(event.getEntity() instanceof LivingEntity){
-                     ((LivingEntity) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, gear, 1), true);
-                     gear /= 2;
-                  }
-               }
-               // Type 3 is the sheep arrow
-               else if(type == 3){
-                  final RPGSheep sheep;
-                  
-                  //sheep = new RPGSheep(gear);
-                  sheep = event.getDamager().getWorld().spawn(event.getDamager().getLocation(), RPGSheep.class);
-                  sheep.setDamage(gear);
-                  
-                  plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                     public void run(){
-                        sheep.getLocation().getWorld().createExplosion(sheep.getLocation(), sheep.getDamage(), sheep.isIncedenary());
-                        sheep.remove();
-                     }
-                 }, 40L);
-               }
                // Type 4 is the blind arrow
-               else if(type == 4){
+               if(type == 4){
                   if(event.getEntity() instanceof Player){
                      if(plugin.getMagicPlayerMap().get(((Player) event.getEntity()).getName()) != null){
                         final RPGMagicPlayer rpgmp;
@@ -287,26 +267,75 @@ public class EntityDamageEntity implements Listener {
                else
                   plugin.ohTheDamage(event, event.getEntity(), gear);
                
-               // Remove all arrows that have hit the ground from hashmap
-               Iterator<Map.Entry<Entity, String>> it = plugin.getProjMap().entrySet().iterator();
-               while(it.hasNext()){
-                  Entry<Entity, String> arrow = it.next();
-                  if(arrow.getValue().contains("grounded"))
-                     ent.add(arrow.getKey());
-               }
-               // The removal is separate to stop concurrency issues
-               for(i = ent.size() - 1; ent.size() > 0; i--){
-                  plugin.getProjMap().remove(ent.get(i));
-                  ent.remove(i);
-               }
+               clearGroundedProjectiles();
             }
          }
-         // Fireball hit
-         else if(event.getDamager() instanceof Fireball){
-            // Check that it came from a player
+         // Slow bow hit
+         else if(event.getDamager() instanceof Snowball){
+            // Check that it came from the right player
             if(plugin.getProjMap().get(event.getDamager()) != null){
-               ArrayList<Entity> entList = new ArrayList<Entity>();
-               int magic, i;
+               int bow;
+               
+               bow = Integer.parseInt(plugin.getProjMap().get(event.getDamager()));
+               
+               plugin.getProjMap().remove(event.getDamager());
+               // TODO add damage
+               //bow = 4;
+               
+               event.setCancelled(true);
+               
+               if(event.getEntity() instanceof LivingEntity){
+                  ((LivingEntity) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, bow * 20, 2), true);
+                  bow /= 2;
+               }
+               
+               clearGroundedProjectiles();
+            }
+         }
+         // Sheep bow hit
+         else if(event.getDamager() instanceof SmallFireball){
+            // Check that it came from the right player
+            if(plugin.getProjMap().get(event.getDamager()) != null){
+               int bow;
+               final Sheep primedSheep;
+               
+               bow = Integer.parseInt(plugin.getProjMap().get(event.getDamager()));
+               
+               plugin.getProjMap().remove(event.getDamager());
+               
+               // TODO add damage
+               //bow = 3;
+               if(event.getEntity() instanceof LivingEntity){
+                  final LivingEntity le = (LivingEntity) event.getEntity();
+                  event.setDamage(0);
+                  
+                  // Stop fire ticks later because doing it now wont do anything
+                  plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                     public void run(){
+                        le.setFireTicks(0);
+                        le.setVelocity(le.getVelocity().multiply(0.5F));
+                     }
+                  }, 1L);
+               }
+               
+               primedSheep = event.getDamager().getWorld().spawn(event.getDamager().getLocation(), RPGSheep.class);
+               primedSheep.setHealth(bow);
+               
+               plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                  public void run(){
+                     primedSheep.getLocation().getWorld().createExplosion(primedSheep.getLocation(), primedSheep.getHealth());
+                     primedSheep.remove();
+                  }
+               }, 30L);
+
+               clearGroundedProjectiles();
+            }
+         }
+         // Fireball spell hit
+         else if(event.getDamager() instanceof Fireball){
+            // Check that it came from the right player
+            if(plugin.getProjMap().get(event.getDamager()) != null){
+               int magic;
                char discharge;
                String ballData;
                StringTokenizer st;
@@ -323,18 +352,7 @@ public class EntityDamageEntity implements Listener {
                plugin.getProjMap().remove(event.getDamager());
                // TODO add damage
                
-               // Remove all arrows that have hit the ground from hashmap
-               Iterator<Map.Entry<Entity, String>> it = plugin.getProjMap().entrySet().iterator();
-               while(it.hasNext()){
-                  Entry<Entity, String> arrow = it.next();
-                  if(arrow.getValue().contains("grounded"))
-                     entList.add(arrow.getKey());
-               }
-               // The removal is separate to stop concurrency issues
-               for(i = entList.size() - 1; entList.size() > 0; i--){
-                  plugin.getProjMap().remove(entList.get(i));
-                  entList.remove(i);
-               }
+               clearGroundedProjectiles();
             }
          }
       }
@@ -368,5 +386,23 @@ public class EntityDamageEntity implements Listener {
          playa.getInventory().getHelmet().setDurability((short) (playa.getInventory().getHelmet().getDurability() + dmg));
       if(playa.getInventory().getLeggings() != null)
          playa.getInventory().getLeggings().setDurability((short) (playa.getInventory().getLeggings().getDurability() + dmg));
+   }
+   
+   private void clearGroundedProjectiles(){
+      int i;
+      ArrayList<Entity> entList = new ArrayList<Entity>();
+      
+      // Remove all arrows that have hit the ground from hashmap
+      Iterator<Map.Entry<Entity, String>> it = plugin.getProjMap().entrySet().iterator();
+      while(it.hasNext()){
+         Entry<Entity, String> arrow = it.next();
+         if(arrow.getValue().contains("grounded"))
+            entList.add(arrow.getKey());
+      }
+      // The removal is separate to stop concurrency issues
+      for(i = entList.size() - 1; entList.size() > 0; i--){
+         plugin.getProjMap().remove(entList.get(i));
+         entList.remove(i);
+      }
    }
 }

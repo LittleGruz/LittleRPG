@@ -61,7 +61,6 @@ public class PlayerProjectile implements Listener{
       }
    }
 
-   /* Test snowball*/
    @EventHandler
    public void onProjectileLaunch(ProjectileLaunchEvent event){
       if(event.getEntity() instanceof Arrow){
@@ -73,9 +72,11 @@ public class PlayerProjectile implements Listener{
                if(playa.getItemInHand().getType() == Material.BOW
                      && playa.getInventory().getHeldItemSlot() == 2){
                   event.setCancelled(true);
-                  playa.launchProjectile(Snowball.class).setVelocity(arrow.getVelocity());
-                  plugin.getProjMap().put(arrow,
-                        Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|2");
+                  Snowball sb = playa.launchProjectile(Snowball.class);
+                  
+                  sb.setVelocity(arrow.getVelocity());
+                  plugin.getProjMap().put(sb,
+                        Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()));
                   playa.getInventory().setItemInHand(null);
                   plugin.getRangedPlayerMap().get(playa.getName()).setSlowBowReadiness(false);
                   plugin.giveCooldown(playa, "slow", "ranged", 2);
@@ -85,9 +86,10 @@ public class PlayerProjectile implements Listener{
                      && playa.getInventory().getHeldItemSlot() == 3){
                   event.setCancelled(true);
                   SmallFireball sf = playa.launchProjectile(SmallFireball.class); 
+                  
                   sf.setVelocity(arrow.getVelocity());
                   plugin.getProjMap().put(sf,
-                        Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|2");
+                        Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()));
                   playa.getInventory().setItemInHand(null);
                   plugin.getRangedPlayerMap().get(playa.getName()).setSheepBowReadiness(false);
                   plugin.giveCooldown(playa, "woof", "ranged", 2);

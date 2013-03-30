@@ -9,6 +9,7 @@ public class RPGRangedPlayer extends RPGPlayer{
       slowBow = true;
       sheepBow = true;
       blindBow = true;
+      arrow = true;
    }
 
    public RPGRangedPlayer(String name, int level, int gear, String incomplete, String complete, String party){
@@ -17,6 +18,7 @@ public class RPGRangedPlayer extends RPGPlayer{
       slowBow = true;
       sheepBow = true;
       blindBow = true;
+      arrow = true;
    }
 
    public boolean isEggReady(){
