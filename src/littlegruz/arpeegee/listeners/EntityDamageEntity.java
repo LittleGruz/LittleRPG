@@ -8,6 +8,7 @@ import java.util.StringTokenizer;
 
 import littlegruz.arpeegee.ArpeegeeMain;
 import littlegruz.arpeegee.entities.RPGMagicPlayer;
+import littlegruz.arpeegee.entities.RPGMeleePlayer;
 import littlegruz.arpeegee.entities.RPGSheep;
 
 import org.bukkit.Effect;
@@ -86,9 +87,9 @@ public class EntityDamageEntity implements Listener {
                int blade, crit, level;
                
                // Check if the player can swing yet
-               if(plugin.getMeleePlayerMap().get(playa.getName()).isSlashReady()){
+               if(plugin.getMeleePlayerMap().get(playa.getName()).isSwordReady()){
                   plugin.giveCooldown(playa, "slash", "melee", 1);
-                  plugin.getMeleePlayerMap().get(playa.getName()).setSlashReadiness(false);
+                  plugin.getMeleePlayerMap().get(playa.getName()).setSwordReadiness(false);
                }
                else
                   return;
@@ -134,9 +135,9 @@ public class EntityDamageEntity implements Listener {
                int blade;
    
                // Check if the player can swing yet
-               if(plugin.getMeleePlayerMap().get(playa.getName()).isSlashReady()){
+               if(plugin.getMeleePlayerMap().get(playa.getName()).isSwordReady()){
                   plugin.giveCooldown(playa, "slash", "melee", 1);
-                  plugin.getMeleePlayerMap().get(playa.getName()).setSlashReadiness(false);
+                  plugin.getMeleePlayerMap().get(playa.getName()).setSwordReadiness(false);
                }
                else
                   return;
@@ -235,7 +236,9 @@ public class EntityDamageEntity implements Listener {
                else if(type == 3){
                   final RPGSheep sheep;
                   
-                  sheep = new RPGSheep(gear);
+                  //sheep = new RPGSheep(gear);
+                  sheep = event.getDamager().getWorld().spawn(event.getDamager().getLocation(), RPGSheep.class);
+                  sheep.setDamage(gear);
                   
                   plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                      public void run(){
@@ -247,16 +250,32 @@ public class EntityDamageEntity implements Listener {
                // Type 4 is the blind arrow
                else if(type == 4){
                   if(event.getEntity() instanceof Player){
-                     final RPGMagicPlayer rpgmp;
-                     rpgmp = plugin.getMagicPlayerMap().get(((Player) event.getEntity()).getName());
-                     
-                     rpgmp.blindPlayer();
-                     
-                     plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                        public void run(){
-                           rpgmp.unblindPlayer();
-                        }
-                    }, gear * 20L);
+                     if(plugin.getMagicPlayerMap().get(((Player) event.getEntity()).getName()) != null){
+                        final RPGMagicPlayer rpgmp;
+                        rpgmp = plugin.getMagicPlayerMap().get(((Player) event.getEntity()).getName());
+                        
+                        rpgmp.blindPlayer();
+                        
+                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                           public void run(){
+                              rpgmp.unblindPlayer();
+                           }
+                        }, gear * 20L);
+                     }
+                  }
+                  else if(event.getEntity() instanceof Player){
+                     if(plugin.getMeleePlayerMap().get(((Player) event.getEntity()).getName()) != null){
+                        final RPGMeleePlayer rpgmp;
+                        rpgmp = plugin.getMeleePlayerMap().get(((Player) event.getEntity()).getName());
+                        
+                        rpgmp.blindPlayer();
+                        
+                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                           public void run(){
+                              rpgmp.unblindPlayer();
+                           }
+                        }, gear * 20L);
+                     }
                   }
                }
                
@@ -282,7 +301,7 @@ public class EntityDamageEntity implements Listener {
                }
             }
          }
-         // Player fireball hit
+         // Fireball hit
          else if(event.getDamager() instanceof Fireball){
             // Check that it came from a player
             if(plugin.getProjMap().get(event.getDamager()) != null){
@@ -300,6 +319,9 @@ public class EntityDamageEntity implements Listener {
                
                if(discharge == 'y')
                   magic = (int)(magic * 1.5);
+               
+               plugin.getProjMap().remove(event.getDamager());
+               // TODO add damage
                
                // Remove all arrows that have hit the ground from hashmap
                Iterator<Map.Entry<Entity, String>> it = plugin.getProjMap().entrySet().iterator();

@@ -43,12 +43,22 @@ public class RPGSheep implements Sheep{
       fire = true;
    }
    
+   public RPGSheep(){
+      damage = 0;
+      fire = true;
+   }
+   
    public int getDamage(){
       return damage;
    }
    
    public boolean isIncedenary(){
       return fire;
+   }
+   
+   public RPGSheep setDamage(int dam){
+      damage = dam;
+      return this;
    }
 
    @Override
@@ -78,7 +88,7 @@ public class RPGSheep implements Sheep{
 
    @Override
    public void setAge(int arg0){
-      
+
    }
 
    @Override
@@ -518,5 +528,4 @@ public class RPGSheep implements Sheep{
    public void setSheared(boolean arg0){
       
    }
-
 }

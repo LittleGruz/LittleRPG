@@ -73,12 +73,22 @@ public class RPGMeleePlayer extends RPGPlayer{
       this.imob = imob;
    }
 
-   public boolean isSlashReady(){
+   public boolean isSwordReady(){
       return slash;
    }
 
-   public void setSlashReadiness(boolean slash){
+   public void setSwordReadiness(boolean slash){
       this.slash = slash;
+   }
+   
+   public void blindPlayer(){
+      slash = false;
+      punch = false;
+   }
+   
+   public void unblindPlayer(){
+      slash = true;
+      punch = true;
    }
    
    public void calcGearLevel(PlayerInventory playerInv){

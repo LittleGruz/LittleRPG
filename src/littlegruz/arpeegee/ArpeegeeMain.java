@@ -643,7 +643,7 @@ public class ArpeegeeMain extends JavaPlugin {
                   rpgPlaya.setSilenceReadiness(true);
                }
                else if(type.compareTo("slash") == 0){
-                  rpgPlaya.setSlashReadiness(true);
+                  rpgPlaya.setSwordReadiness(true);
                }
             }
         }, (long) (delay * 20));

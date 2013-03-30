@@ -1,7 +1,7 @@
 package littlegruz.arpeegee.entities;
 
 public class RPGRangedPlayer extends RPGPlayer{
-   private boolean egg, slowBow, sheepBow, blindBow; 
+   private boolean egg, slowBow, sheepBow, blindBow, arrow; 
 
    public RPGRangedPlayer(String name){
       super(name);
@@ -49,5 +49,21 @@ public class RPGRangedPlayer extends RPGPlayer{
    
    public void setBlindBowReadiness(boolean blind){
       blindBow = blind;
+   }
+   
+   public boolean isArrowReady(){
+      return arrow;
+   }
+
+   public void setArrowReadiness(boolean arrow){
+      this.arrow = arrow;
+   }
+
+   public void blindPlayer(){
+      arrow = false;
+   }
+   
+   public void unblindPlayer(){
+      arrow = true;
    }
 }

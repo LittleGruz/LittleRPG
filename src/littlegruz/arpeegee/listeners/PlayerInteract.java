@@ -159,6 +159,7 @@ public class PlayerInteract implements Listener{
                && playa.getLevel() >= 8){
             event.setCancelled(true);
             String data;
+            Fireball ballOfFire;
             
             if(!plugin.getMagicPlayerMap().get(playa.getName()).isFireReady()){
                playa.sendMessage("Fireball is still on cooldown");
@@ -172,13 +173,13 @@ public class PlayerInteract implements Listener{
                plugin.getMagicPlayerMap().get(playa.getName()).setFireReadiness(false);
             }
 
-            event.getPlayer().launchProjectile(Fireball.class);
+            ballOfFire = event.getPlayer().launchProjectile(Fireball.class);
             if(plugin.getBuildUpMap().get(playa.getName()) != null)
                data = Integer.toString((int)(plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel() * 1.5)) + "|y";
             else
                data = Integer.toString(plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel()) + "|n";
             
-            plugin.getProjMap().put(event.getPlayer().launchProjectile(Fireball.class), data);
+            plugin.getProjMap().put(ballOfFire, data);
             
             /*Block block;
             int bx, by, bz, range;
