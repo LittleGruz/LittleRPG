@@ -64,6 +64,7 @@ public class ArpeegeeMain extends JavaPlugin {
    private HashMap<String, RPGMeleePlayer> meleePlayerMap;
    private HashMap<String, RPGRangedPlayer> rangedPlayerMap;
    private HashMap<String, RPGMagicPlayer> magicPlayerMap;
+   private HashMap<String, Integer> bideMap;
    private HashMap<Integer, RPGQuest> questMap;
    private HashMap<Location, Integer> questStartMap;
    private HashMap<String, RPGParty> partyMap;
@@ -344,6 +345,7 @@ public class ArpeegeeMain extends JavaPlugin {
       berserkMap = new HashMap<String, String>();
       buildUpMap = new HashMap<String, String>();
       projMap = new HashMap<Entity, String>();
+      bideMap = new HashMap<String, Integer>();
       
       questNumberToSet = -1;
       questCanSet = false;
@@ -481,6 +483,10 @@ public class ArpeegeeMain extends JavaPlugin {
       return magicPlayerMap;
    }
    
+   public HashMap<String, Integer> getBideMap(){
+      return bideMap;
+   }
+
    public HashMap<Integer, RPGQuest> getQuestMap() {
       return questMap;
    }
@@ -565,6 +571,8 @@ public class ArpeegeeMain extends JavaPlugin {
          return true;
       else if(ent instanceof EnderDragon)
          return true;
+      else if(ent instanceof Player)
+         return true;
       return false;
    }
 
@@ -640,8 +648,9 @@ public class ArpeegeeMain extends JavaPlugin {
                else if(type.compareTo("flash") == 0){
                   rpgPlaya.setFlashReadiness(true);
                }
-               else if(type.compareTo("falcon") == 0){
-                  rpgPlaya.setPunchReadiness(true);
+               else if(type.compareTo("bide") == 0){
+                  rpgPlaya.setBide(0);
+                  playa.getInventory().setItem(2, new ItemStack(Material.POTATO_ITEM,1));
                }
                else if(type.compareTo("sssh") == 0){
                   rpgPlaya.setSilenceReadiness(true);
@@ -748,20 +757,41 @@ public class ArpeegeeMain extends JavaPlugin {
          playa.setExp(playa.getExp() + amount);
    }
    
-   /* Sets how effective damage is against certain creatures */
+   /* Sets how effective damage is against certain creatures and abilities*/
    public void ohTheDamage(Event event, Entity entity, int dmg){
+      boolean otherMother;
+      
+      otherMother = true;
       if(event instanceof EntityDamageByEntityEvent){
          if(entity instanceof Animals || entity instanceof Squid)
             ((EntityDamageByEntityEvent) event).setDamage(dmg * 2);
-         else
-            ((EntityDamageByEntityEvent) event).setDamage(dmg);
+         else{
+            if(entity instanceof Player){
+               if(meleePlayerMap.get(((Player) entity).getName()) != null){
+                  meleeBide((Player) entity, dmg);
+                  otherMother = false;
+               }
+            }
+            
+            if(otherMother)
+               ((EntityDamageByEntityEvent) event).setDamage(dmg);
+         }
       }
       /* If null then it is from the PlayerInteract event */
       else if(event == null){
          if(entity instanceof Animals || entity instanceof Squid)
             ((LivingEntity)entity).damage(dmg * 2);
-         else
-            ((LivingEntity)entity).damage(dmg);
+         else{
+            if(entity instanceof Player){
+               if(meleePlayerMap.get(((Player) entity).getName()) != null){
+                  meleeBide((Player) entity, dmg);
+                  otherMother = false;
+               }
+            }
+
+            if(otherMother)
+               ((LivingEntity)entity).damage(dmg);
+         }
       }
    }
    
@@ -774,5 +804,17 @@ public class ArpeegeeMain extends JavaPlugin {
          return magicPlayerMap.get(name);
       else
          return null;
+   }
+   
+   public void meleeBide(Player playa, int damage){
+      RPGMeleePlayer rpgmp = meleePlayerMap.get(playa.getName());
+      
+      this.getServer().broadcastMessage("Biding");
+      if(!rpgmp.addBide(damage)){
+         playa.getWorld().createExplosion(playa.getLocation(), damage);
+         this.getServer().getScheduler().cancelTask(bideMap.get(rpgmp.getName()));
+         bideMap.remove(rpgmp.getName());
+         this.getServer().broadcastMessage("Canceled *explode*");
+      }
    }
 }

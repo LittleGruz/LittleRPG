@@ -38,7 +38,7 @@ public class PlayerProjectile implements Listener{
                   // Blind arrow
                   if(playa.getLevel() >= 7){
                      plugin.getProjMap().put(event.getProjectile(),
-                           Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|4");
+                           Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|2");
                      playa.getInventory().setItemInHand(null);
                      plugin.getRangedPlayerMap().get(playa.getName()).setBlindBowReadiness(false);
                      plugin.giveCooldown(playa, "ICANTSEE", "ranged", 3);

@@ -83,11 +83,12 @@ public class EntityDamageEntity implements Listener {
                   plugin.getBuildUpMap().remove(playa.getName());
                }
             }
-            // Damage by a diamond sword (crit sword) TODO combine with iron?
-            else if(playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0
-                  && plugin.getMeleePlayerMap().get(playa.getName()) != null
-                  && playa.getLevel() >= 8){
-               int blade, crit, level;
+            // Damage by a sword by melee player
+            else if(playa.getItemInHand().getType().toString().contains("SWORD")
+                  && plugin.getMeleePlayerMap().get(playa.getName()) != null){
+               int blade, crit;
+               
+               playa.sendMessage("Swing");
                
                // Check if the player can swing yet
                if(plugin.getMeleePlayerMap().get(playa.getName()).isSwordReady()){
@@ -99,22 +100,14 @@ public class EntityDamageEntity implements Listener {
                
                // TODO change to be properly based off gear
                blade = plugin.getMeleePlayerMap().get(playa.getName()).getGearLevel();
-               level = plugin.getMeleePlayerMap().get(playa.getName()).getLevel();
                
-               /* Crit chance 5% to 25%. Berserk mode adds 10-20%
+               /* Crit chance 5% to 25%. Berserk mode adds 10%
                 * Damage in berserk adds 1 to 3 damage*/
                if(plugin.getBerserkMap().get(playa.getName()) != null){
-                  if(plugin.probabilityRoll(5 * blade + (level / 2) + 10))
+                  if(plugin.probabilityRoll(5 * blade + 10))
                      crit = 2;
                   else
                      crit = 1;
-                  
-                  if(level >= plugin.MAX_LEVEL)
-                     blade += 3;
-                  else if(level >= 14)
-                     blade += 2;
-                  else if(level >= 7)
-                     blade += 1;
                }
                else{
                   if(plugin.probabilityRoll(5 * blade))
@@ -132,32 +125,6 @@ public class EntityDamageEntity implements Listener {
                
                //playa.getItemInHand().setDurability((short) 0);
             }
-            // Damage by an iron sword (block sword) TODO combine with diamond?
-            else if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
-                  && plugin.getMeleePlayerMap().get(playa.getName()) != null){
-               int blade;
-   
-               // Check if the player can swing yet
-               if(plugin.getMeleePlayerMap().get(playa.getName()).isSwordReady()){
-                  plugin.giveCooldown(playa, "slash", "melee", 1);
-                  plugin.getMeleePlayerMap().get(playa.getName()).setSwordReadiness(false);
-               }
-               else
-                  return;
-               // TODO change to be properly based off gear
-               blade = plugin.getMeleePlayerMap().get(playa.getName()).getGearLevel();
-               
-               if(blade > 1)
-                  blade -= 1;
-
-               plugin.ohTheDamage(event, victim, blade);
-   
-               if(plugin.getBerserkMap().get(playa.getName()) == null)
-                  plugin.getMeleePlayerMap().get(playa.getName()).addRage(5);
-               
-               //playa.getItemInHand().setDurability((short) 0);
-               
-            }
             else if((playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0
                   || playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
                   || playa.getItemInHand().getType().compareTo(Material.STONE_SWORD) == 0
@@ -170,47 +137,34 @@ public class EntityDamageEntity implements Listener {
                plugin.ohTheDamage(event, victim, 1);
             }
          }
+         // TODO END OF PLAYER DAMAGE TO LIVINGENTITY
          // Player taking damage
          else if(event.getEntity() instanceof Player){
+            double damage;
             Player playa = (Player) event.getEntity();
-            // Melee player taking (reduced) damage and possibly blocking an attack
+            
+            // Melee player potentially adds to its bide
             if(plugin.getMeleePlayerMap().get(playa.getName()) != null){
-               int dmg;
-               
-               /* The amount that is decreased from the damage to be taken depends
-                * on the players level */
-               if(playa.getLevel() < 5)
-                  dmg = event.getDamage();
-               else if(playa.getLevel() < 10)
-                  dmg = (int) (event.getDamage() * (event.getDamage() * 0.67) / event.getDamage());
-               else
-                  dmg = (int) (event.getDamage() * (event.getDamage() * 0.5) / event.getDamage());
-               
-               event.setDamage(dmg);
-               armourDamage(playa,3);
-               
-               // Damage block check
-               if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0){
-                  int block;
-                  // TODO change to be properly based off gear
-                  block = plugin.getMeleePlayerMap().get(playa.getName()).getGearLevel();
-                  
-                  if(playa.isBlocking())
-                     block += 2;
-                  
-                  // Block check from 5% to 35%. Add 10% if blocking.
-                  if(plugin.probabilityRoll(5 * block)){
-                     event.setCancelled(true);
-                     playa.sendMessage("*blocked*");
-                     return;
-                  }
+               if(plugin.getBideMap().get(playa.getName()) != null){
+                  plugin.meleeBide(playa, event.getDamage());
+                  event.setDamage(0);
                }
+               else if(plugin.getBerserkMap().get(playa.getName()) != null){
+                  damage = event.getDamage() * 0.6;
+                  event.setDamage((int)damage);
+               }
+               
+               return;
             }
-            else if(plugin.getRangedPlayerMap().get(playa.getName()) != null){
-               armourDamage(playa,1);
-            }
-            else if(plugin.getMagicPlayerMap().get(playa.getName()) != null){
-               armourDamage(playa,2);
+            
+            if(playa.isBlocking()){
+               
+               damage = event.getDamage() * 0.9;
+               
+               // Stops smaller damages from being mostly ignored
+               if(damage < event.getDamage() - 0.6){
+                  event.setDamage((int)damage);
+               }
             }
          }
          // Player arrow hit
@@ -227,8 +181,8 @@ public class EntityDamageEntity implements Listener {
                gear = (int) Double.parseDouble(st.nextToken());
                type = Integer.parseInt(st.nextToken());
                
-               // Type 4 is the blind arrow
-               if(type == 4){
+               // Type 2 is the blind arrow
+               if(type == 2){
                   if(event.getEntity() instanceof Player){
                      if(plugin.getMagicPlayerMap().get(((Player) event.getEntity()).getName()) != null){
                         final RPGMagicPlayer rpgmp;
@@ -375,17 +329,6 @@ public class EntityDamageEntity implements Listener {
          fortunate.damage(spell * adv);
          playa.sendMessage("Undead damage!");
       }
-   }
-   
-   private void armourDamage(Player playa, int dmg){
-      if(playa.getInventory().getBoots() != null)
-         playa.getInventory().getBoots().setDurability((short) (playa.getInventory().getBoots().getDurability() + dmg));
-      if(playa.getInventory().getChestplate() != null)
-         playa.getInventory().getChestplate().setDurability((short) (playa.getInventory().getChestplate().getDurability() + dmg));
-      if(playa.getInventory().getHelmet() != null)
-         playa.getInventory().getHelmet().setDurability((short) (playa.getInventory().getHelmet().getDurability() + dmg));
-      if(playa.getInventory().getLeggings() != null)
-         playa.getInventory().getLeggings().setDurability((short) (playa.getInventory().getLeggings().getDurability() + dmg));
    }
    
    private void clearGroundedProjectiles(){

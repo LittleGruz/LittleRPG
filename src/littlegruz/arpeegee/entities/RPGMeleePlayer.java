@@ -4,14 +4,14 @@ import org.bukkit.Material;
 import org.bukkit.inventory.PlayerInventory;
 
 public class RPGMeleePlayer extends RPGPlayer{
-   private int rage;
-   private boolean flash, silence, punch, imob, slash;
+   private int rage, bide;
+   private boolean flash, silence, imob, slash;
    public RPGMeleePlayer(String name){
       super(name);
       rage = 0;
+      bide = 0;
       flash = true;
       silence = true;
-      punch = true;
       imob = true;
       slash = true;
    }
@@ -19,9 +19,9 @@ public class RPGMeleePlayer extends RPGPlayer{
    public RPGMeleePlayer(String name, int level, int gear, int rage, String incomplete, String complete, String party){
       super(name, level, gear, incomplete, complete, party);
       this.rage = rage;
+      bide = 0;
       flash = true;
       silence = true;
-      punch = true;
       imob = true;
       slash = true;
    }
@@ -40,6 +40,23 @@ public class RPGMeleePlayer extends RPGPlayer{
       else
          rage += add;
    }
+   
+   public int getBide(){
+      return bide;
+   }
+   
+   public boolean addBide(int add){
+      bide += add;
+      
+      if(bide > 2 * super.getGearLevel()) //TODO create suitable limit
+         return false;
+      else
+         return true;
+   }
+   
+   public void setBide(int bide){
+      this.bide = bide;
+   }
 
    public boolean isFlashReady(){
       return flash;
@@ -55,14 +72,6 @@ public class RPGMeleePlayer extends RPGPlayer{
 
    public void setSilenceReadiness(boolean silence){
       this.silence = silence;
-   }
-
-   public boolean isPunchReady(){
-      return punch;
-   }
-
-   public void setPunchReadiness(boolean punch){
-      this.punch = punch;
    }
 
    public boolean isImobiliseReady(){
@@ -83,12 +92,10 @@ public class RPGMeleePlayer extends RPGPlayer{
    
    public void blindPlayer(){
       slash = false;
-      punch = false;
    }
    
    public void unblindPlayer(){
       slash = true;
-      punch = true;
    }
    
    public void calcGearLevel(PlayerInventory playerInv){
