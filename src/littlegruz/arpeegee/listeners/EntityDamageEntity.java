@@ -9,7 +9,6 @@ import java.util.StringTokenizer;
 import littlegruz.arpeegee.ArpeegeeMain;
 import littlegruz.arpeegee.entities.RPGMagicPlayer;
 import littlegruz.arpeegee.entities.RPGMeleePlayer;
-import littlegruz.arpeegee.entities.RPGSheep;
 
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
@@ -88,8 +87,6 @@ public class EntityDamageEntity implements Listener {
                   && plugin.getMeleePlayerMap().get(playa.getName()) != null){
                int blade, crit;
                
-               playa.sendMessage("Swing");
-               
                // Check if the player can swing yet
                if(plugin.getMeleePlayerMap().get(playa.getName()).isSwordReady()){
                   plugin.giveCooldown(playa, "slash", "melee", 1);
@@ -108,6 +105,7 @@ public class EntityDamageEntity implements Listener {
                      crit = 2;
                   else
                      crit = 1;
+                  blade++;
                }
                else{
                   if(plugin.probabilityRoll(5 * blade))
@@ -125,10 +123,7 @@ public class EntityDamageEntity implements Listener {
                
                //playa.getItemInHand().setDurability((short) 0);
             }
-            else if((playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0
-                  || playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
-                  || playa.getItemInHand().getType().compareTo(Material.STONE_SWORD) == 0
-                  || playa.getItemInHand().getType().compareTo(Material.WOOD_SWORD) == 0
+            else if((playa.getItemInHand().getType().toString().contains("SWORD")
                   || playa.getItemInHand().getType().compareTo(Material.BOW) == 0
                   || playa.getItemInHand().getType().compareTo(Material.AIR) == 0)
                   && (plugin.getMeleePlayerMap().get(playa.getName()) != null
@@ -272,7 +267,7 @@ public class EntityDamageEntity implements Listener {
                   }, 1L);
                }
                
-               primedSheep = event.getDamager().getWorld().spawn(event.getDamager().getLocation(), RPGSheep.class);
+               primedSheep = event.getDamager().getWorld().spawn(event.getDamager().getLocation(), Sheep.class);
                primedSheep.setHealth(bow);
                
                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
