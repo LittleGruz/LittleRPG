@@ -32,6 +32,7 @@ import littlegruz.arpeegee.listeners.ButtonListener;
 import littlegruz.arpeegee.listeners.EnemyDeaths;
 import littlegruz.arpeegee.listeners.EntityDamageEntity;
 import littlegruz.arpeegee.listeners.PlayerInteract;
+import littlegruz.arpeegee.listeners.PlayerItemHeld;
 import littlegruz.arpeegee.listeners.PlayerJoin;
 import littlegruz.arpeegee.listeners.PlayerLevel;
 import littlegruz.arpeegee.listeners.PlayerProjectile;
@@ -314,6 +315,7 @@ public class ArpeegeeMain extends JavaPlugin {
       getServer().getPluginManager().registerEvents(new EnemyDeaths(this), this);
       getServer().getPluginManager().registerEvents(new EntityDamageEntity(this), this);
       getServer().getPluginManager().registerEvents(new PlayerInteract(this), this);
+      getServer().getPluginManager().registerEvents(new PlayerItemHeld(this), this);
       getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
       getServer().getPluginManager().registerEvents(new PlayerLevel(this), this);
       getServer().getPluginManager().registerEvents(new PlayerProjectile(this), this);
@@ -650,7 +652,7 @@ public class ArpeegeeMain extends JavaPlugin {
                }
                else if(type.compareTo("bide") == 0){
                   rpgPlaya.setBide(0);
-                  playa.getInventory().setItem(2, new ItemStack(Material.POTATO_ITEM,1));
+                  playa.getInventory().setItem(4, new ItemStack(Material.POTATO_ITEM,1));
                }
                else if(type.compareTo("sssh") == 0){
                   rpgPlaya.setSilenceReadiness(true);

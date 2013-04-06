@@ -85,6 +85,8 @@ public class RPGPlayer {
          gear += 3;
       else if(playerInv.getBoots().getType().compareTo(Material.DIAMOND_BOOTS) == 0)
          gear += 4;
+      
+      //TODO add a division by 4 for the gear var?
    }
 
    public String getParty(){

@@ -4,12 +4,14 @@ import org.bukkit.Material;
 import org.bukkit.inventory.PlayerInventory;
 
 public class RPGMeleePlayer extends RPGPlayer{
-   private int rage, bide;
+   private int rage, bide, onHit;
    private boolean flash, silence, imob, slash;
+   
    public RPGMeleePlayer(String name){
       super(name);
       rage = 0;
       bide = 0;
+      onHit = 0;
       flash = true;
       silence = true;
       imob = true;
@@ -20,6 +22,7 @@ public class RPGMeleePlayer extends RPGPlayer{
       super(name, level, gear, incomplete, complete, party);
       this.rage = rage;
       bide = 0;
+      onHit = 0;
       flash = true;
       silence = true;
       imob = true;
@@ -90,6 +93,15 @@ public class RPGMeleePlayer extends RPGPlayer{
       this.slash = slash;
    }
    
+   public int getOnHit(){
+      return onHit;
+   }
+   
+   /* 0 is normal, 1 is silence, 2 is imobilise*/
+   public void setOnHit(int hit){
+      onHit = hit;
+   }
+
    public void blindPlayer(){
       slash = false;
    }
