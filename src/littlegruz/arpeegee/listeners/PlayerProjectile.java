@@ -31,12 +31,23 @@ public class PlayerProjectile implements Listener{
             if(plugin.getRangedPlayerMap().get(playa.getName()) != null){
                // Normal arrow
                if(playa.getInventory().getHeldItemSlot() == 0){
-               plugin.getProjMap().put(event.getProjectile(),
-                     Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
+                  if(plugin.getRangedPlayerMap().get(playa.getName()).isArrowReady()){
+                     playa.sendMessage("Arrow is still on cooldown");
+                     return;
+                  }
+                  
+                  plugin.getProjMap().put(event.getProjectile(),
+                        Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
+                  plugin.giveCooldown(playa, "arrow", "ranged", 2);
                }
                else if(playa.getInventory().getHeldItemSlot() == 1){
                   // Blind arrow
                   if(playa.getLevel() >= 7){
+                     if(plugin.getRangedPlayerMap().get(playa.getName()).isBlindBowReady()){
+                        playa.sendMessage("Blind arrow is still on cooldown");
+                        return;
+                     }
+                     
                      plugin.getProjMap().put(event.getProjectile(),
                            Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|2");
                      playa.getInventory().setItemInHand(null);
@@ -45,14 +56,26 @@ public class PlayerProjectile implements Listener{
                   }
                   // Normal arrow
                   else{
+                     if(plugin.getRangedPlayerMap().get(playa.getName()).isArrowReady()){
+                        playa.sendMessage("Arrow is still on cooldown");
+                        return;
+                     }
+                     
                      plugin.getProjMap().put(event.getProjectile(),
                            Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
+                     plugin.giveCooldown(playa, "arrow", "ranged", 2);
                   }
                }
                // Normal arrow
                else if(playa.getInventory().getHeldItemSlot() > 1){
+                  if(plugin.getRangedPlayerMap().get(playa.getName()).isArrowReady()){
+                     playa.sendMessage("Arrow is still on cooldown");
+                     return;
+                  }
+                  
                   plugin.getProjMap().put(event.getProjectile(),
                         Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
+                  plugin.giveCooldown(playa, "arrow", "ranged", 2);
                }
                if(playa.getInventory().getItem(9).getAmount() < 2)
                   playa.getInventory().getItem(9).setAmount(10);
@@ -72,6 +95,11 @@ public class PlayerProjectile implements Listener{
                if(playa.getItemInHand().getType() == Material.BOW
                      && playa.getInventory().getHeldItemSlot() == 2){
                   event.setCancelled(true);
+                  if(plugin.getRangedPlayerMap().get(playa.getName()).isSlowBowReady()){
+                     playa.sendMessage("Slow arrow is still on cooldown");
+                     return;
+                  }
+                  
                   Snowball sb = playa.launchProjectile(Snowball.class);
                   
                   sb.setVelocity(arrow.getVelocity());
@@ -85,6 +113,11 @@ public class PlayerProjectile implements Listener{
                else if(playa.getItemInHand().getType() == Material.BOW
                      && playa.getInventory().getHeldItemSlot() == 3){
                   event.setCancelled(true);
+                  if(plugin.getRangedPlayerMap().get(playa.getName()).isSheepBowReady()){
+                     playa.sendMessage("Sheep arrow is still on cooldown");
+                     return;
+                  }
+                  
                   SmallFireball sf = playa.launchProjectile(SmallFireball.class); 
                   
                   sf.setVelocity(arrow.getVelocity());

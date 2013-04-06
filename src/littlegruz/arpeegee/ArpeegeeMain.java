@@ -616,7 +616,7 @@ public class ArpeegeeMain extends JavaPlugin {
                RPGRangedPlayer rpgPlaya = rangedPlayerMap.get(playa.getName());
                
                if(type.compareTo("arrow") == 0){
-                  rpgPlaya.setSlowBowReadiness(true);
+                  rpgPlaya.setArrowReadiness(true);
                   playa.getInventory().setItem(0, new ItemStack(Material.BOW,1));
                }
                else if(type.compareTo("egg") == 0){
