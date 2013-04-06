@@ -31,7 +31,7 @@ public class PlayerProjectile implements Listener{
             if(plugin.getRangedPlayerMap().get(playa.getName()) != null){
                // Normal arrow
                if(playa.getInventory().getHeldItemSlot() == 0){
-                  if(plugin.getRangedPlayerMap().get(playa.getName()).isArrowReady()){
+                  if(!plugin.getRangedPlayerMap().get(playa.getName()).isArrowReady()){
                      playa.sendMessage("Arrow is still on cooldown");
                      return;
                   }
@@ -43,7 +43,7 @@ public class PlayerProjectile implements Listener{
                else if(playa.getInventory().getHeldItemSlot() == 1){
                   // Blind arrow
                   if(playa.getLevel() >= 7){
-                     if(plugin.getRangedPlayerMap().get(playa.getName()).isBlindBowReady()){
+                     if(!plugin.getRangedPlayerMap().get(playa.getName()).isBlindBowReady()){
                         playa.sendMessage("Blind arrow is still on cooldown");
                         return;
                      }
@@ -56,7 +56,7 @@ public class PlayerProjectile implements Listener{
                   }
                   // Normal arrow
                   else{
-                     if(plugin.getRangedPlayerMap().get(playa.getName()).isArrowReady()){
+                     if(!plugin.getRangedPlayerMap().get(playa.getName()).isArrowReady()){
                         playa.sendMessage("Arrow is still on cooldown");
                         return;
                      }
@@ -68,7 +68,7 @@ public class PlayerProjectile implements Listener{
                }
                // Normal arrow
                else if(playa.getInventory().getHeldItemSlot() > 1){
-                  if(plugin.getRangedPlayerMap().get(playa.getName()).isArrowReady()){
+                  if(!plugin.getRangedPlayerMap().get(playa.getName()).isArrowReady()){
                      playa.sendMessage("Arrow is still on cooldown");
                      return;
                   }
@@ -95,7 +95,7 @@ public class PlayerProjectile implements Listener{
                if(playa.getItemInHand().getType() == Material.BOW
                      && playa.getInventory().getHeldItemSlot() == 2){
                   event.setCancelled(true);
-                  if(plugin.getRangedPlayerMap().get(playa.getName()).isSlowBowReady()){
+                  if(!plugin.getRangedPlayerMap().get(playa.getName()).isSlowBowReady()){
                      playa.sendMessage("Slow arrow is still on cooldown");
                      return;
                   }
@@ -113,7 +113,7 @@ public class PlayerProjectile implements Listener{
                else if(playa.getItemInHand().getType() == Material.BOW
                      && playa.getInventory().getHeldItemSlot() == 3){
                   event.setCancelled(true);
-                  if(plugin.getRangedPlayerMap().get(playa.getName()).isSheepBowReady()){
+                  if(!plugin.getRangedPlayerMap().get(playa.getName()).isSheepBowReady()){
                      playa.sendMessage("Sheep arrow is still on cooldown");
                      return;
                   }
