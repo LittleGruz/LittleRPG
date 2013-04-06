@@ -110,13 +110,18 @@ public class PlayerInteract implements Listener{
             final String name = playa.getName();
             int taskID;
             
+            if(!plugin.getMeleePlayerMap().get(playa.getName()).isBideReady()){
+               playa.sendMessage("Bide is still on cooldown");
+               return;
+            }
+            
             if(plugin.getBideMap().get(name) == null){
                taskID = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                   public void run(){
                      for(Entity victim : plugin.getServer().getPlayer(name).getNearbyEntities(5, 5, 5)){
                         if(plugin.isEnemy(victim)){
                            if(victim instanceof LivingEntity){
-                              ((LivingEntity) victim).damage(plugin.getMeleePlayerMap().get(name).getBide());//TODO damage
+                              ((LivingEntity) victim).damage(plugin.getMeleePlayerMap().get(name).getBideAmt());//TODO damage
                               ((LivingEntity) victim).playEffect(EntityEffect.HURT);
                            }
                         }
@@ -128,7 +133,7 @@ public class PlayerInteract implements Listener{
                }, 100L /* * rpgmp.getGearLevel()*/);
                
                plugin.getBideMap().put(name, taskID); // Should integer be task id and put damage get in player object?
-               plugin.getMeleePlayerMap().get(name).setBide(0);
+               plugin.getMeleePlayerMap().get(name).setBideAmt(0);
                plugin.giveCooldown(playa, "bide", "melee", 5 /* * rpgmp.getGearLevel()*/);
                removeItem(playa);
                

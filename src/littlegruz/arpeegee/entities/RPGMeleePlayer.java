@@ -4,29 +4,31 @@ import org.bukkit.Material;
 import org.bukkit.inventory.PlayerInventory;
 
 public class RPGMeleePlayer extends RPGPlayer{
-   private int rage, bide, onHit;
-   private boolean flash, silence, imob, slash;
+   private int rage, bideAmt, onHit;
+   private boolean flash, silence, imob, slash, bide;
    
    public RPGMeleePlayer(String name){
       super(name);
       rage = 0;
-      bide = 0;
+      bideAmt = 0;
       onHit = 0;
       flash = true;
       silence = true;
       imob = true;
       slash = true;
+      bide = true;
    }
 
    public RPGMeleePlayer(String name, int level, int gear, int rage, String incomplete, String complete, String party){
       super(name, level, gear, incomplete, complete, party);
       this.rage = rage;
-      bide = 0;
+      bideAmt = 0;
       onHit = 0;
       flash = true;
       silence = true;
       imob = true;
       slash = true;
+      bide = true;
    }
 
    public int getRage(){
@@ -44,21 +46,21 @@ public class RPGMeleePlayer extends RPGPlayer{
          rage += add;
    }
    
-   public int getBide(){
-      return bide;
+   public int getBideAmt(){
+      return bideAmt;
    }
    
-   public boolean addBide(int add){
-      bide += add;
+   public boolean addBideAmt(int add){
+      bideAmt += add;
       
-      if(bide > 2 * super.getGearLevel()) //TODO create suitable limit
+      if(bideAmt > 2 * super.getGearLevel()) //TODO create suitable limit
          return false;
       else
          return true;
    }
    
-   public void setBide(int bide){
-      this.bide = bide;
+   public void setBideAmt(int bideAmt){
+      this.bideAmt = bideAmt;
    }
 
    public boolean isFlashReady(){
@@ -92,6 +94,14 @@ public class RPGMeleePlayer extends RPGPlayer{
    public void setSwordReadiness(boolean slash){
       this.slash = slash;
    }
+
+   public boolean isBideReady(){
+      return bide;
+   }
+
+   public void setBideReadiness(boolean bide){
+      this.bide = bide;
+   }
    
    public int getOnHit(){
       return onHit;
@@ -108,6 +118,16 @@ public class RPGMeleePlayer extends RPGPlayer{
    
    public void unblindPlayer(){
       slash = true;
+   }
+
+   public void silencePlayer(){
+      imob = false;
+      silence = false;
+   }
+   
+   public void unsilencePlayer(){
+      imob = true;
+      silence = true;
    }
    
    public void calcGearLevel(PlayerInventory playerInv){

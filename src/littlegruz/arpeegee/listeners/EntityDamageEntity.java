@@ -9,6 +9,7 @@ import java.util.StringTokenizer;
 import littlegruz.arpeegee.ArpeegeeMain;
 import littlegruz.arpeegee.entities.RPGMagicPlayer;
 import littlegruz.arpeegee.entities.RPGMeleePlayer;
+import littlegruz.arpeegee.entities.RPGRangedPlayer;
 
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
@@ -86,17 +87,19 @@ public class EntityDamageEntity implements Listener {
             else if(playa.getItemInHand().getType().toString().contains("SWORD")
                   && plugin.getMeleePlayerMap().get(playa.getName()) != null){
                int blade, crit;
+               RPGMeleePlayer rpgMeleeP = plugin.getMeleePlayerMap().get(playa.getName());
                
-               // Check if the player can swing yet
-               if(plugin.getMeleePlayerMap().get(playa.getName()).isSwordReady()){
+               // Check if the player can swing yetplugin.getMeleePlayerMap().get(playa.getName())
+               if(rpgMeleeP.isSwordReady()){
                   plugin.giveCooldown(playa, "slash", "melee", 1);
-                  plugin.getMeleePlayerMap().get(playa.getName()).setSwordReadiness(false);
+                  rpgMeleeP.setSwordReadiness(false);
                }
                else
                   return;
                
                // TODO change to be properly based off gear
-               blade = plugin.getMeleePlayerMap().get(playa.getName()).getGearLevel();
+               blade = rpgMeleeP.getGearLevel();
+               blade = 0;
                
                /* Crit chance 5% to 25%. Berserk mode adds 10%
                 * Damage in berserk adds 1 to 3 damage*/
@@ -113,13 +116,62 @@ public class EntityDamageEntity implements Listener {
                   else
                      crit = 1;
                   
-                  plugin.getMeleePlayerMap().get(playa.getName()).addRage(5);
+                  rpgMeleeP.addRage(5);
                }
                
                plugin.ohTheDamage(event, victim, blade * crit);
                
                if(crit == 2)
                   playa.sendMessage("*crit*");
+               
+               //TODO Apply special effects
+               // Silence
+               if(rpgMeleeP.getOnHit() == 1){
+                  if(victim instanceof Player){
+                     if(plugin.getMagicPlayerMap().get(((Player) victim).getName()) != null){
+                        final RPGMagicPlayer rpgMagicVic = plugin.getMagicPlayerMap().get(((Player) victim).getName());
+                        rpgMagicVic.silencePlayer();
+                        ((Player) victim).sendMessage("*silenced*");
+                        
+                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                           public void run(){
+                              rpgMagicVic.unsilencePlayer();
+                              plugin.getServer().getPlayer(rpgMagicVic.getName()).sendMessage("*unsilenced*");
+                           }
+                        }, 60L);
+                     }
+                     else if(plugin.getMeleePlayerMap().get(((Player) victim).getName()) != null){
+                        final RPGMeleePlayer rpgMeleeVic = plugin.getMeleePlayerMap().get(((Player) victim).getName());
+                        rpgMeleeVic.silencePlayer();
+                        ((Player) victim).sendMessage("*silenced*");
+                        
+                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                           public void run(){
+                              rpgMeleeVic.unsilencePlayer();
+                              plugin.getServer().getPlayer(rpgMeleeVic.getName()).sendMessage("*unsilenced*");
+                           }
+                        }, 60L);
+                     }
+                     else if(plugin.getRangedPlayerMap().get(((Player) victim).getName()) != null){
+                        final RPGRangedPlayer rpgRangedVic = plugin.getRangedPlayerMap().get(((Player) victim).getName());
+                        rpgRangedVic.silencePlayer();
+                        ((Player) victim).sendMessage("*silenced*");
+                        
+                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                           public void run(){
+                              rpgRangedVic.unsilencePlayer();
+                              plugin.getServer().getPlayer(rpgRangedVic.getName()).sendMessage("*unsilenced*");
+                           }
+                        }, 60L);
+                     }
+                  }
+                  rpgMeleeP.setOnHit(0);
+               }
+               // Imobilise
+               else if(rpgMeleeP.getOnHit() == 2){
+                  
+                  rpgMeleeP.setOnHit(0);
+               }
                
                //playa.getItemInHand().setDurability((short) 0);
             }
@@ -179,20 +231,6 @@ public class EntityDamageEntity implements Listener {
                // Type 2 is the blind arrow
                if(type == 2){
                   if(event.getEntity() instanceof Player){
-                     if(plugin.getMagicPlayerMap().get(((Player) event.getEntity()).getName()) != null){
-                        final RPGMagicPlayer rpgmp;
-                        rpgmp = plugin.getMagicPlayerMap().get(((Player) event.getEntity()).getName());
-                        
-                        rpgmp.blindPlayer();
-                        
-                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                           public void run(){
-                              rpgmp.unblindPlayer();
-                           }
-                        }, gear * 20L);
-                     }
-                  }
-                  else if(event.getEntity() instanceof Player){
                      if(plugin.getMeleePlayerMap().get(((Player) event.getEntity()).getName()) != null){
                         final RPGMeleePlayer rpgmp;
                         rpgmp = plugin.getMeleePlayerMap().get(((Player) event.getEntity()).getName());

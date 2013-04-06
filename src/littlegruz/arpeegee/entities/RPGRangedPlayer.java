@@ -68,4 +68,16 @@ public class RPGRangedPlayer extends RPGPlayer{
    public void unblindPlayer(){
       arrow = true;
    }
+   
+   public void silencePlayer(){
+      slowBow = false;
+      sheepBow = false;
+      blindBow = false;
+   }
+   
+   public void unsilencePlayer(){
+      slowBow = true;
+      sheepBow = true;
+      blindBow = true;
+   }
 }

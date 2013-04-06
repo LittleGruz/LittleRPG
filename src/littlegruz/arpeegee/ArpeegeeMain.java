@@ -651,7 +651,8 @@ public class ArpeegeeMain extends JavaPlugin {
                   rpgPlaya.setFlashReadiness(true);
                }
                else if(type.compareTo("bide") == 0){
-                  rpgPlaya.setBide(0);
+                  rpgPlaya.setBideAmt(0);
+                  rpgPlaya.setBideReadiness(true);
                   playa.getInventory().setItem(4, new ItemStack(Material.POTATO_ITEM,1));
                }
                else if(type.compareTo("sssh") == 0){
@@ -812,7 +813,7 @@ public class ArpeegeeMain extends JavaPlugin {
       RPGMeleePlayer rpgmp = meleePlayerMap.get(playa.getName());
       
       this.getServer().broadcastMessage("Biding");
-      if(!rpgmp.addBide(damage)){
+      if(!rpgmp.addBideAmt(damage)){
          playa.getWorld().createExplosion(playa.getLocation(), damage);
          this.getServer().getScheduler().cancelTask(bideMap.get(rpgmp.getName()));
          bideMap.remove(rpgmp.getName());
