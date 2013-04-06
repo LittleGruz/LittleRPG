@@ -6,6 +6,7 @@ import org.bukkit.inventory.PlayerInventory;
 public class RPGPlayer {
    private String name, incomplete, complete, party;
    private int level, gear;
+   private boolean move;
 
    // New RPGPlayer
    public RPGPlayer(String name){
@@ -15,6 +16,7 @@ public class RPGPlayer {
       incomplete = "none";
       complete = "none";
       party = "none";
+      move = true;
    }
    
    // Restoring an RPGPlayer from a saved state
@@ -25,6 +27,7 @@ public class RPGPlayer {
       this.incomplete = incomplete;
       this.complete = complete;
       this.party = party;
+      move = true;
    }
 
    public String getName() {
@@ -111,5 +114,13 @@ public class RPGPlayer {
 
    public void setComplete(String complete){
       this.complete = complete;
+   }
+
+   public boolean canMove(){
+      return move;
+   }
+
+   public void setMove(boolean move){
+      this.move = move;
    }
 }

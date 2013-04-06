@@ -36,11 +36,12 @@ public class PlayerProjectile implements Listener{
                      event.setCancelled(true);
                      return;
                   }
-                  
+                  playa.sendMessage("Para");
+                  plugin.getRangedPlayerMap().get(playa.getName()).setMove(false);
                   plugin.getProjMap().put(event.getProjectile(),
                         Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
                   plugin.getRangedPlayerMap().get(playa.getName()).setArrowReadiness(false);
-                  plugin.giveCooldown(playa, "arrow", "ranged", 4);
+                  plugin.giveCooldown(playa, "arrow", "ranged", 3);
                }
                else if(playa.getInventory().getHeldItemSlot() == 1){
                   // Blind arrow

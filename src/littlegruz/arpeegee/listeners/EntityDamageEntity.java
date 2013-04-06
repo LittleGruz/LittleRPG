@@ -169,7 +169,18 @@ public class EntityDamageEntity implements Listener {
                }
                // Imobilise
                else if(rpgMeleeP.getOnHit() == 2){
-                  
+                  if(plugin.getMeleePlayerMap().get(((Player) victim).getName()) != null){
+                     final RPGMeleePlayer rpgMeleeVic = plugin.getMeleePlayerMap().get(((Player) victim).getName());
+                     rpgMeleeVic.silencePlayer();
+                     ((Player) victim).sendMessage("*imobilised*");
+                     
+                     plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                        public void run(){
+                           rpgMeleeVic.unsilencePlayer();
+                           plugin.getServer().getPlayer(rpgMeleeVic.getName()).sendMessage("*unsilenced*");
+                        }
+                     }, 60L);
+                  }
                   rpgMeleeP.setOnHit(0);
                }
                
