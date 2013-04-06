@@ -33,18 +33,21 @@ public class PlayerProjectile implements Listener{
                if(playa.getInventory().getHeldItemSlot() == 0){
                   if(!plugin.getRangedPlayerMap().get(playa.getName()).isArrowReady()){
                      playa.sendMessage("Arrow is still on cooldown");
+                     event.setCancelled(true);
                      return;
                   }
                   
                   plugin.getProjMap().put(event.getProjectile(),
                         Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
-                  plugin.giveCooldown(playa, "arrow", "ranged", 2);
+                  plugin.getRangedPlayerMap().get(playa.getName()).setArrowReadiness(false);
+                  plugin.giveCooldown(playa, "arrow", "ranged", 4);
                }
                else if(playa.getInventory().getHeldItemSlot() == 1){
                   // Blind arrow
                   if(playa.getLevel() >= 7){
                      if(!plugin.getRangedPlayerMap().get(playa.getName()).isBlindBowReady()){
                         playa.sendMessage("Blind arrow is still on cooldown");
+                        event.setCancelled(true);
                         return;
                      }
                      
@@ -58,11 +61,13 @@ public class PlayerProjectile implements Listener{
                   else{
                      if(!plugin.getRangedPlayerMap().get(playa.getName()).isArrowReady()){
                         playa.sendMessage("Arrow is still on cooldown");
+                        event.setCancelled(true);
                         return;
                      }
                      
                      plugin.getProjMap().put(event.getProjectile(),
                            Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
+                     plugin.getRangedPlayerMap().get(playa.getName()).setArrowReadiness(false);
                      plugin.giveCooldown(playa, "arrow", "ranged", 2);
                   }
                }
@@ -70,11 +75,13 @@ public class PlayerProjectile implements Listener{
                else if(playa.getInventory().getHeldItemSlot() > 1){
                   if(!plugin.getRangedPlayerMap().get(playa.getName()).isArrowReady()){
                      playa.sendMessage("Arrow is still on cooldown");
+                     event.setCancelled(true);
                      return;
                   }
                   
                   plugin.getProjMap().put(event.getProjectile(),
                         Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
+                  plugin.getRangedPlayerMap().get(playa.getName()).setArrowReadiness(false);
                   plugin.giveCooldown(playa, "arrow", "ranged", 2);
                }
                if(playa.getInventory().getItem(9).getAmount() < 2)
