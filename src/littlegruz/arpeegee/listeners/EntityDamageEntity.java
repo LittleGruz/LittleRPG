@@ -9,6 +9,7 @@ import java.util.StringTokenizer;
 import littlegruz.arpeegee.ArpeegeeMain;
 import littlegruz.arpeegee.entities.RPGMagicPlayer;
 import littlegruz.arpeegee.entities.RPGMeleePlayer;
+import littlegruz.arpeegee.entities.RPGPlayer;
 import littlegruz.arpeegee.entities.RPGRangedPlayer;
 
 import org.bukkit.Effect;
@@ -169,17 +170,28 @@ public class EntityDamageEntity implements Listener {
                }
                // Imobilise
                else if(rpgMeleeP.getOnHit() == 2){
-                  if(plugin.getMeleePlayerMap().get(((Player) victim).getName()) != null){
-                     final RPGMeleePlayer rpgMeleeVic = plugin.getMeleePlayerMap().get(((Player) victim).getName());
-                     rpgMeleeVic.silencePlayer();
-                     ((Player) victim).sendMessage("*imobilised*");
+                  if(victim instanceof Player){
+                     RPGPlayer rpgPlaya = null;
+
+                     if(plugin.getMeleePlayerMap().get(((Player) victim).getName()) != null)
+                        rpgPlaya = plugin.getMeleePlayerMap().get(((Player) victim).getName());
+                     if(plugin.getMagicPlayerMap().get(((Player) victim).getName()) != null)
+                        rpgPlaya = plugin.getMagicPlayerMap().get(((Player) victim).getName());
+                     if(plugin.getRangedPlayerMap().get(((Player) victim).getName()) != null)
+                        rpgPlaya = plugin.getRangedPlayerMap().get(((Player) victim).getName());
                      
-                     plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                        public void run(){
-                           rpgMeleeVic.unsilencePlayer();
-                           plugin.getServer().getPlayer(rpgMeleeVic.getName()).sendMessage("*unsilenced*");
-                        }
-                     }, 60L);
+                     if(rpgPlaya != null){
+                        final RPGPlayer rpgPlayer = rpgPlaya;
+                        rpgPlayer.setMove(false);
+                        ((Player) victim).sendMessage("*imobilised*");
+                        
+                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                           public void run(){
+                              rpgPlayer.setMove(true);
+                              plugin.getServer().getPlayer(rpgPlayer.getName()).sendMessage("*unimobilised*");
+                           }
+                        }, 60L);
+                     }
                   }
                   rpgMeleeP.setOnHit(0);
                }

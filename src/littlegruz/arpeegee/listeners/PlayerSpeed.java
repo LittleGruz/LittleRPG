@@ -19,6 +19,7 @@ public class PlayerSpeed implements Listener{
    public void onPlayerMovement(PlayerMoveEvent event){
       if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getName())){
          if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null){
+            // Cancel player movement cancel if imobilised
             if(!plugin.getRangedPlayerMap().get(event.getPlayer().getName()).canMove()){
                event.setTo(event.getFrom());
                return;
