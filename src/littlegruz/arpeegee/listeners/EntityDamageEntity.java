@@ -188,10 +188,16 @@ public class EntityDamageEntity implements Listener {
                         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                            public void run(){
                               rpgPlayer.setMove(true);
-                              plugin.getServer().getPlayer(rpgPlayer.getName()).sendMessage("*unimobilised*");
+                              plugin.getServer().getPlayer(rpgPlayer.getName()).sendMessage("*mobilised*");
                            }
                         }, 60L);
                      }
+                  }
+                  /* Since non-players can not be rendered immobile due to no
+                   * non-player move events. So instead, they will just have a
+                   * hugely slowing potion effect*/
+                  else{
+                     victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 5), true);
                   }
                   rpgMeleeP.setOnHit(0);
                }

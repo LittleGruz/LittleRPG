@@ -2,6 +2,7 @@ package littlegruz.arpeegee.listeners;
 
 import littlegruz.arpeegee.ArpeegeeMain;
 
+import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -21,7 +22,7 @@ public class PlayerSpeed implements Listener{
          if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null){
             // Cancel player movement cancel if imobilised
             if(!plugin.getRangedPlayerMap().get(event.getPlayer().getName()).canMove()){
-               event.setTo(event.getFrom());
+               event.setTo(stopMovement(event.getFrom(), event.getTo()));
                return;
             }
             
@@ -34,14 +35,27 @@ public class PlayerSpeed implements Listener{
          }
          else if(plugin.getMagicPlayerMap().get(event.getPlayer().getName()) != null
                && !plugin.getMagicPlayerMap().get(event.getPlayer().getName()).canMove()){
-            event.setTo(event.getFrom());
+            event.setTo(stopMovement(event.getFrom(), event.getTo()));
             return;
          }
          else if(plugin.getMeleePlayerMap().get(event.getPlayer().getName()) != null
                && !plugin.getMeleePlayerMap().get(event.getPlayer().getName()).canMove()){
-            event.setTo(event.getFrom());
+            event.setTo(stopMovement(event.getFrom(), event.getTo()));
             return;
          }
       }
+   }
+   
+   private Location stopMovement(Location from, Location to){
+      Location loc;
+      
+      loc = to.clone();
+
+      loc.setX(from.getX());
+      loc.setY(from.getY());
+      loc.setZ(from.getZ());
+      
+      
+      return loc;
    }
 }
