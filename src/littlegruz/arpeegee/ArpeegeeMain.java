@@ -66,6 +66,7 @@ public class ArpeegeeMain extends JavaPlugin {
    private HashMap<String, RPGRangedPlayer> rangedPlayerMap;
    private HashMap<String, RPGMagicPlayer> magicPlayerMap;
    private HashMap<String, Integer> bideMap;
+   private HashMap<Entity, Integer> blindMap;
    private HashMap<Integer, RPGQuest> questMap;
    private HashMap<Location, Integer> questStartMap;
    private HashMap<String, RPGParty> partyMap;
@@ -348,6 +349,7 @@ public class ArpeegeeMain extends JavaPlugin {
       buildUpMap = new HashMap<String, String>();
       projMap = new HashMap<Entity, String>();
       bideMap = new HashMap<String, Integer>();
+      blindMap = new HashMap<Entity, Integer>();
       
       questNumberToSet = -1;
       questCanSet = false;
@@ -515,6 +517,10 @@ public class ArpeegeeMain extends JavaPlugin {
 
    public HashMap<Location, Integer> getQuestStartMap(){
       return questStartMap;
+   }
+
+   public HashMap<Entity, Integer> getBlindMap(){
+      return blindMap;
    }
 
    public int getQuestNumberToSet(){

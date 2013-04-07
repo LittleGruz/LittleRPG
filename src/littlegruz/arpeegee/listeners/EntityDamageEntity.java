@@ -44,12 +44,21 @@ public class EntityDamageEntity implements Listener {
          // Fist bump!
          if(event.getEntity() instanceof Player
                && event.getDamager() instanceof Player){
-            Player playa = (Player) event.getEntity();
+            Player playa = (Player) event.getDamager();
             if(playa.getItemInHand().getTypeId() == 0){
                ((Player) event.getEntity()).sendMessage("*fist bumped by " + playa.getName() + "*");
                playa.sendMessage("*fist bump*");
             }
          }
+         
+         // Blindness miss
+         if(plugin.getBlindMap().get(event.getDamager()) != null){
+            event.setCancelled(true);
+            if(event.getDamager() instanceof Player)
+               ((Player) event.getDamager()).sendMessage("*missed*");
+            return;
+         }
+         
          if(event.getDamager() instanceof Player
                && event.getEntity() instanceof LivingEntity){
             Player playa = (Player) event.getDamager();
@@ -259,7 +268,14 @@ public class EntityDamageEntity implements Listener {
                
                // Type 2 is the blind arrow
                if(type == 2){
-                  if(event.getEntity() instanceof Player){
+                  final Entity ent = event.getEntity();
+                  plugin.getBlindMap().put(ent, 1);
+                  plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                     public void run(){
+                        plugin.getBlindMap().remove(ent);
+                     }
+                  }, gear * 20L);
+                  /*if(event.getEntity() instanceof Player){
                      if(plugin.getMeleePlayerMap().get(((Player) event.getEntity()).getName()) != null){
                         final RPGMeleePlayer rpgmp;
                         rpgmp = plugin.getMeleePlayerMap().get(((Player) event.getEntity()).getName());
@@ -272,7 +288,7 @@ public class EntityDamageEntity implements Listener {
                            }
                         }, gear * 20L);
                      }
-                  }
+                  }*/
                }
                
                // If crit do double damage. 0% to 30% chance TODO this chance has probably changed

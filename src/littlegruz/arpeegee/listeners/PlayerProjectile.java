@@ -36,6 +36,7 @@ public class PlayerProjectile implements Listener{
                      event.setCancelled(true);
                      return;
                   }
+                  
                   plugin.getProjMap().put(event.getProjectile(),
                         Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
                   plugin.getRangedPlayerMap().get(playa.getName()).setArrowReadiness(false);
