@@ -5,7 +5,8 @@ import org.bukkit.inventory.PlayerInventory;
 
 public class RPGPlayer {
    private String name, incomplete, complete, party;
-   private int level, gear;
+   private int level;
+   private float gear;
    private boolean move;
 
    // New RPGPlayer
@@ -20,7 +21,7 @@ public class RPGPlayer {
    }
    
    // Restoring an RPGPlayer from a saved state
-   public RPGPlayer(String name, int level, int gear, String incomplete, String complete, String party){
+   public RPGPlayer(String name, int level, float gear, String incomplete, String complete, String party){
       this.name = name;
       this.level = level;
       this.gear = gear;
@@ -42,11 +43,11 @@ public class RPGPlayer {
       level = lvl;
    }
    
-   public int getGearLevel(){
+   public float getGearLevel(){
       return gear;
    }
    
-   public void setGearLevel(int gear){
+   public void setGearLevel(float gear){
       this.gear = gear;
    }
    
@@ -59,6 +60,8 @@ public class RPGPlayer {
          gear = 2;
       else if(playerInv.getHelmet().getType().compareTo(Material.GOLD_HELMET) == 0)
          gear = 3;
+      else if(playerInv.getHelmet().getType().compareTo(Material.CHAINMAIL_HELMET) == 0)
+         gear = 3;
       else if(playerInv.getHelmet().getType().compareTo(Material.DIAMOND_HELMET) == 0)
          gear = 4;
       
@@ -67,6 +70,8 @@ public class RPGPlayer {
       else if(playerInv.getChestplate().getType().compareTo(Material.IRON_CHESTPLATE) == 0)
          gear += 2;
       else if(playerInv.getChestplate().getType().compareTo(Material.GOLD_CHESTPLATE) == 0)
+         gear += 3;
+      else if(playerInv.getChestplate().getType().compareTo(Material.CHAINMAIL_CHESTPLATE) == 0)
          gear += 3;
       else if(playerInv.getChestplate().getType().compareTo(Material.DIAMOND_CHESTPLATE) == 0)
          gear += 4;
@@ -77,6 +82,8 @@ public class RPGPlayer {
          gear += 2;
       else if(playerInv.getLeggings().getType().compareTo(Material.GOLD_LEGGINGS) == 0)
          gear += 3;
+      else if(playerInv.getLeggings().getType().compareTo(Material.CHAINMAIL_LEGGINGS) == 0)
+         gear += 3;
       else if(playerInv.getLeggings().getType().compareTo(Material.DIAMOND_LEGGINGS) == 0)
          gear += 4;
       
@@ -86,10 +93,15 @@ public class RPGPlayer {
          gear += 2;
       else if(playerInv.getBoots().getType().compareTo(Material.GOLD_BOOTS) == 0)
          gear += 3;
+      else if(playerInv.getBoots().getType().compareTo(Material.CHAINMAIL_BOOTS) == 0)
+         gear += 3;
       else if(playerInv.getBoots().getType().compareTo(Material.DIAMOND_BOOTS) == 0)
          gear += 4;
       
-      //TODO add a division by 4 for the gear var?
+      // Average out the values
+      gear /= 4;
+      // Give value range to match original Minecraft sword damage
+      gear *= 2;
    }
 
    public String getParty(){

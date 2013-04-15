@@ -38,7 +38,7 @@ public class PlayerProjectile implements Listener{
                   }
                   
                   plugin.getProjMap().put(event.getProjectile(),
-                        Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
+                        Float.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
                   plugin.getRangedPlayerMap().get(playa.getName()).setArrowReadiness(false);
                   plugin.giveCooldown(playa, "arrow", "ranged", 3);
                }
@@ -52,7 +52,7 @@ public class PlayerProjectile implements Listener{
                      }
                      
                      plugin.getProjMap().put(event.getProjectile(),
-                           Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|2");
+                           Float.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|2");
                      playa.getInventory().setItemInHand(null);
                      plugin.getRangedPlayerMap().get(playa.getName()).setBlindBowReadiness(false);
                      plugin.giveCooldown(playa, "ICANTSEE", "ranged", 3);
@@ -66,7 +66,7 @@ public class PlayerProjectile implements Listener{
                      }
                      
                      plugin.getProjMap().put(event.getProjectile(),
-                           Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
+                           Float.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
                      plugin.getRangedPlayerMap().get(playa.getName()).setArrowReadiness(false);
                      plugin.giveCooldown(playa, "arrow", "ranged", 2);
                   }
@@ -80,7 +80,7 @@ public class PlayerProjectile implements Listener{
                   }
                   
                   plugin.getProjMap().put(event.getProjectile(),
-                        Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
+                        Float.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()) + "|1");
                   plugin.getRangedPlayerMap().get(playa.getName()).setArrowReadiness(false);
                   plugin.giveCooldown(playa, "arrow", "ranged", 2);
                }
@@ -111,7 +111,7 @@ public class PlayerProjectile implements Listener{
                   
                   sb.setVelocity(arrow.getVelocity());
                   plugin.getProjMap().put(sb,
-                        Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()));
+                        Float.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()));
                   playa.getInventory().setItemInHand(null);
                   plugin.getRangedPlayerMap().get(playa.getName()).setSlowBowReadiness(false);
                   plugin.giveCooldown(playa, "slow", "ranged", 2);
@@ -129,7 +129,7 @@ public class PlayerProjectile implements Listener{
                   
                   sf.setVelocity(arrow.getVelocity());
                   plugin.getProjMap().put(sf,
-                        Integer.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()));
+                        Float.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()));
                   playa.getInventory().setItemInHand(null);
                   plugin.getRangedPlayerMap().get(playa.getName()).setSheepBowReadiness(false);
                   plugin.giveCooldown(playa, "woof", "ranged", 2);
@@ -146,8 +146,8 @@ public class PlayerProjectile implements Listener{
          // Determining explosion chance by egg skill
          if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null
                && event.getPlayer().getLevel() >= 10){
-            int egg = plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getGearLevel();
-            if(plugin.probabilityRoll(5 * egg)){
+            float egg = plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getGearLevel();
+            if(plugin.probabilityRoll((int)(5 * egg))){
                event.getEgg().getLocation().getWorld().createExplosion(event.getEgg().getLocation(), 1F, false);
             }
          }

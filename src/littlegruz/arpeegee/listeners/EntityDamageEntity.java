@@ -96,7 +96,8 @@ public class EntityDamageEntity implements Listener {
             // Damage by a sword by melee player
             else if(playa.getItemInHand().getType().toString().contains("SWORD")
                   && plugin.getMeleePlayerMap().get(playa.getName()) != null){
-               int blade, crit;
+               int crit;
+               float gear;
                RPGMeleePlayer rpgMeleeP = plugin.getMeleePlayerMap().get(playa.getName());
                
                // Check if the player can swing yetplugin.getMeleePlayerMap().get(playa.getName())
@@ -108,20 +109,20 @@ public class EntityDamageEntity implements Listener {
                   return;
                
                // TODO change to be properly based off gear
-               blade = rpgMeleeP.getGearLevel();
-               blade = 0;
+               gear = rpgMeleeP.getGearLevel();
+               gear = 0;
                
                /* Crit chance 5% to 25%. Berserk mode adds 10%
                 * Damage in berserk adds 1 to 3 damage*/
                if(plugin.getBerserkMap().get(playa.getName()) != null){
-                  if(plugin.probabilityRoll(5 * blade + 10))
+                  if(plugin.probabilityRoll((int)(5 * gear + 10)))
                      crit = 2;
                   else
                      crit = 1;
-                  blade++;
+                  gear++;
                }
                else{
-                  if(plugin.probabilityRoll(5 * blade))
+                  if(plugin.probabilityRoll((int)(5 * gear)))
                      crit = 2;
                   else
                      crit = 1;
@@ -129,7 +130,7 @@ public class EntityDamageEntity implements Listener {
                   rpgMeleeP.addRage(5);
                }
                
-               plugin.ohTheDamage(event, victim, blade * crit);
+               plugin.ohTheDamage(event, victim, gear * crit);
                
                if(crit == 2)
                   playa.sendMessage("*crit*");
@@ -212,6 +213,11 @@ public class EntityDamageEntity implements Listener {
                }
                
                //playa.getItemInHand().setDurability((short) 0);
+            }
+            // Non-default damage for fist by melee player
+            if(playa.getItemInHand().getTypeId() == 0
+                  && plugin.getMeleePlayerMap().get(playa.getName()) != null){
+               plugin.ohTheDamage(event, victim, 2);
             }
             else if((playa.getItemInHand().getType().toString().contains("SWORD")
                   || playa.getItemInHand().getType().compareTo(Material.BOW) == 0
@@ -392,19 +398,19 @@ public class EntityDamageEntity implements Listener {
    
    private void healSpell(Player playa, LivingEntity fortunate, int adv){
       // TODO change to be properly based off gear
-      int spell = plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel();
+      float spell = plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel();
       if(fortunate instanceof Player){
          playa.playEffect(fortunate.getLocation(), Effect.SMOKE, 1);
          if(fortunate.getHealth() + (spell * adv) > fortunate.getMaxHealth())
             fortunate.setHealth(fortunate.getMaxHealth());
          else
-            fortunate.setHealth(fortunate.getHealth() + (spell * adv));
+            fortunate.setHealth((int)(fortunate.getHealth() + (spell * adv)));
          playa.sendMessage("Healed");
       }
       // If player heals a zombie, then deal damage instead
       else if(fortunate instanceof Zombie){
          fortunate.playEffect(EntityEffect.HURT);
-         fortunate.damage(spell * adv);
+         fortunate.damage((int)(spell * adv));
          playa.sendMessage("Undead damage!");
       }
    }

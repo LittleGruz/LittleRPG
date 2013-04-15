@@ -13,7 +13,7 @@ public class RPGMagicPlayer extends RPGPlayer{
       buildUp = 0;
    }
 
-   public RPGMagicPlayer(String name, int level, int gear, int buildUp, String incomplete, String complete, String party){
+   public RPGMagicPlayer(String name, int level, float gear, int buildUp, String incomplete, String complete, String party){
       super(name, level, gear, incomplete, complete, party);
       heal = true;
       lightning = true;

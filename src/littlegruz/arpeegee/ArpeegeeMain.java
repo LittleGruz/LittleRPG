@@ -107,13 +107,14 @@ public class ArpeegeeMain extends JavaPlugin {
          // Load player file data into the player HashMap
          while((input = br.readLine()) != null){
             String name;
-            int level, gear, rage;
+            int level, rage;
+            float gear;
             
             st = new StringTokenizer(input, " ");
             name = st.nextToken();
 
             level = Integer.parseInt(st.nextToken());
-            gear = Integer.parseInt(st.nextToken());
+            gear = Float.parseFloat(st.nextToken());
             rage = Integer.parseInt(st.nextToken());
             meleePlayerMap.put(name, new RPGMeleePlayer(name, level, gear, rage, st.nextToken(), st.nextToken(), st.nextToken()));
          }
@@ -135,13 +136,14 @@ public class ArpeegeeMain extends JavaPlugin {
          // Load ranged player file data into the ranged player HashMap
          while((input = br.readLine()) != null){
             String name;
-            int level, gear;
+            int level;
+            float gear;
             
             st = new StringTokenizer(input, " ");
             name = st.nextToken();
 
             level = Integer.parseInt(st.nextToken());
-            gear = Integer.parseInt(st.nextToken());
+            gear = Float.parseFloat(st.nextToken());
             rangedPlayerMap.put(name, new RPGRangedPlayer(name, level, gear, st.nextToken(), st.nextToken(), st.nextToken()));
          }
          br.close();
@@ -162,13 +164,14 @@ public class ArpeegeeMain extends JavaPlugin {
          // Load magic player file data into the magic player HashMap
          while((input = br.readLine()) != null){
             String name;
-            int level, gear, buildUp;
+            int level, buildUp;
+            float gear;
             
             st = new StringTokenizer(input, " ");
             name = st.nextToken();
             
             level = Integer.parseInt(st.nextToken());
-            gear = Integer.parseInt(st.nextToken());
+            gear = Float.parseFloat(st.nextToken());
             buildUp = Integer.parseInt(st.nextToken());
             magicPlayerMap.put(name, new RPGMagicPlayer(name, level, gear, buildUp, st.nextToken(), st.nextToken(), st.nextToken()));
          }
@@ -376,7 +379,7 @@ public class ArpeegeeMain extends JavaPlugin {
             Entry<String, RPGMeleePlayer> player = it.next();
             bw.write(player.getKey() + " "
                   + Integer.toString(player.getValue().getLevel()) + " "
-                  + Integer.toString(player.getValue().getGearLevel()) + " "
+                  + Float.toString(player.getValue().getGearLevel()) + " "
                   + Integer.toString(player.getValue().getRage()) + " "
                   + player.getValue().getIncomplete() + " "
                   + player.getValue().getComplete() + " "
@@ -396,7 +399,7 @@ public class ArpeegeeMain extends JavaPlugin {
             Entry<String, RPGRangedPlayer> player = it.next();
             bw.write(player.getKey() + " "
                   + Integer.toString(player.getValue().getLevel()) + " "
-                  + Integer.toString(player.getValue().getGearLevel()) + " "
+                  + Float.toString(player.getValue().getGearLevel()) + " "
                   + player.getValue().getIncomplete() + " "
                   + player.getValue().getComplete() + " "
                   + player.getValue().getParty() + "\n");
@@ -415,7 +418,7 @@ public class ArpeegeeMain extends JavaPlugin {
             Entry<String, RPGMagicPlayer> player = it.next();
             bw.write(player.getKey() + " "
                   + Integer.toString(player.getValue().getLevel()) + " "
-                  + Integer.toString(player.getValue().getGearLevel()) + " "
+                  + Float.toString(player.getValue().getGearLevel()) + " "
                   + Integer.toString(player.getValue().getBuildUp()) + " "
                   + player.getValue().getIncomplete() + " "
                   + player.getValue().getComplete() + " "
@@ -767,39 +770,39 @@ public class ArpeegeeMain extends JavaPlugin {
    }
    
    /* Sets how effective damage is against certain creatures and abilities*/
-   public void ohTheDamage(Event event, Entity entity, int dmg){
+   public void ohTheDamage(Event event, Entity entity, float dmg){
       boolean otherMother;
       
       otherMother = true;
       if(event instanceof EntityDamageByEntityEvent){
          if(entity instanceof Animals || entity instanceof Squid)
-            ((EntityDamageByEntityEvent) event).setDamage(dmg * 2);
+            ((EntityDamageByEntityEvent) event).setDamage((int)(dmg * 2));
          else{
             if(entity instanceof Player){
                if(meleePlayerMap.get(((Player) entity).getName()) != null){
-                  meleeBide((Player) entity, dmg);
+                  meleeBide((Player) entity, (int) dmg);
                   otherMother = false;
                }
             }
             
             if(otherMother)
-               ((EntityDamageByEntityEvent) event).setDamage(dmg);
+               ((EntityDamageByEntityEvent) event).setDamage((int)dmg);
          }
       }
       /* If null then it is from the PlayerInteract event */
       else if(event == null){
          if(entity instanceof Animals || entity instanceof Squid)
-            ((LivingEntity)entity).damage(dmg * 2);
+            ((LivingEntity)entity).damage((int)(dmg * 2));
          else{
             if(entity instanceof Player){
                if(meleePlayerMap.get(((Player) entity).getName()) != null){
-                  meleeBide((Player) entity, dmg);
+                  meleeBide((Player) entity, (int)dmg);
                   otherMother = false;
                }
             }
 
             if(otherMother)
-               ((LivingEntity)entity).damage(dmg);
+               ((LivingEntity)entity).damage((int)dmg);
          }
       }
    }

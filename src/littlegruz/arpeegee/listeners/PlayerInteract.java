@@ -55,7 +55,7 @@ public class PlayerInteract implements Listener{
             }
             
             HashSet<Byte> hs = new HashSet<Byte>();
-            int gear;
+            float gear;
             Block block;
             Location loc;
             
@@ -68,7 +68,7 @@ public class PlayerInteract implements Listener{
             hs.add((byte)101); //Iron bar
             hs.add((byte)102); //Glass pane
             
-            block = playa.getTargetBlock(hs, 3 * gear); //TODO change to appropriate block
+            block = playa.getTargetBlock(hs, (int)(3 * gear)); //TODO change to appropriate block
             loc = block.getLocation();
             
             //playa.sendMessage(block.getType().toString());
@@ -219,9 +219,9 @@ public class PlayerInteract implements Listener{
 
             ballOfFire = event.getPlayer().launchProjectile(Fireball.class);
             if(plugin.getBuildUpMap().get(playa.getName()) != null)
-               data = Integer.toString((int)(plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel() * 1.5)) + "|y";
+               data = Float.toString(plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel() * 1.5F) + "|y";
             else
-               data = Integer.toString(plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel()) + "|n";
+               data = Float.toString(plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel()) + "|n";
             
             plugin.getProjMap().put(ballOfFire, data);
             
@@ -452,14 +452,14 @@ public class PlayerInteract implements Listener{
       Location loc;
       Block block;
       int bx, by, bz, range;
-      final int spell;
+      final float spell;
       double ex, ey, ez;
       BlockIterator bItr;
       ArrayList<LivingEntity> enemies = new ArrayList<LivingEntity>();
       
       // Base range is 10 blocks plus the casters spell ability TODO Fix gear damage
       spell = plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel();
-      range = 10 + spell;
+      range = (int)(10 + spell);
       
       for(Entity e : playa.getNearbyEntities(range, range, range)){
          if(plugin.isEnemy(e)){
