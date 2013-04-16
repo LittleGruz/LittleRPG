@@ -134,14 +134,14 @@ public class RPGMeleePlayer extends RPGPlayer{
       super.calcGearLevel(playerInv);
       
       if(playerInv.getChestplate().getType().compareTo(Material.WOOD_SWORD) == 0)
-         super.setGearLevel(super.getGearLevel() + 1);
+         super.setGearLevel(super.getGearLevel() + 0.25F);
       else if(playerInv.getChestplate().getType().compareTo(Material.STONE_SWORD) == 0)
-         super.setGearLevel(super.getGearLevel() + 2);
+         super.setGearLevel(super.getGearLevel() + 0.5F);
       else if(playerInv.getChestplate().getType().compareTo(Material.IRON_SWORD) == 0)
-         super.setGearLevel(super.getGearLevel() + 3);
+         super.setGearLevel(super.getGearLevel() + 0.75F);
       else if(playerInv.getChestplate().getType().compareTo(Material.GOLD_SWORD) == 0)
-         super.setGearLevel(super.getGearLevel() + 4);
+         super.setGearLevel(super.getGearLevel() + 1);
       else if(playerInv.getChestplate().getType().compareTo(Material.DIAMOND_SWORD) == 0)
-         super.setGearLevel(super.getGearLevel() + 5);
+         super.setGearLevel(super.getGearLevel() + 1.25F);
    }
 }
