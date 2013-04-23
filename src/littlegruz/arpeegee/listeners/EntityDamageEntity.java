@@ -108,7 +108,7 @@ public class EntityDamageEntity implements Listener {
                else
                   return;
                
-               // TODO change to be properly based off gear
+               rpgMeleeP.calcGearLevel(playa.getInventory());
                gear = rpgMeleeP.getGearLevel();
                gear = 0;
                
@@ -135,7 +135,6 @@ public class EntityDamageEntity implements Listener {
                if(crit == 2)
                   playa.sendMessage("*crit*");
                
-               //TODO Apply special effects
                // Silence
                if(rpgMeleeP.getOnHit() == 1){
                   if(victim instanceof Player){
@@ -228,7 +227,6 @@ public class EntityDamageEntity implements Listener {
                plugin.ohTheDamage(event, victim, 1);
             }
          }
-         // TODO END OF PLAYER DAMAGE TO LIVINGENTITY
          // Player taking damage
          else if(event.getEntity() instanceof Player){
             double damage;
@@ -317,8 +315,6 @@ public class EntityDamageEntity implements Listener {
                bow = Integer.parseInt(plugin.getProjMap().get(event.getDamager()));
                
                plugin.getProjMap().remove(event.getDamager());
-               // TODO add damage
-               //bow = 4;
                
                event.setCancelled(true);
                
@@ -326,6 +322,8 @@ public class EntityDamageEntity implements Listener {
                   ((LivingEntity) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, bow * 20, 2), true);
                   bow /= 2;
                }
+               
+               plugin.ohTheDamage(event, event.getEntity(), bow);
                
                clearGroundedProjectiles();
             }
@@ -397,7 +395,7 @@ public class EntityDamageEntity implements Listener {
    }
    
    private void healSpell(Player playa, LivingEntity fortunate, int adv){
-      // TODO change to be properly based off gear
+      plugin.getMagicPlayerMap().get(playa.getName()).calcGearLevel(playa.getInventory());
       float spell = plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel();
       if(fortunate instanceof Player){
          playa.playEffect(fortunate.getLocation(), Effect.SMOKE, 1);

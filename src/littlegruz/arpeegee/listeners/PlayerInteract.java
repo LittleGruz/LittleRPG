@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.StringTokenizer;
 
 import littlegruz.arpeegee.ArpeegeeMain;
+import littlegruz.arpeegee.entities.RPGMagicPlayer;
+import littlegruz.arpeegee.entities.RPGMeleePlayer;
 import littlegruz.arpeegee.entities.RPGPlayer;
 import littlegruz.arpeegee.entities.RPGQuest;
 
@@ -46,10 +48,11 @@ public class PlayerInteract implements Listener{
                && event.getAction().toString().contains("RIGHT_CLICK")
                && plugin.getMeleePlayerMap().get(playa.getName()) != null
                && playa.getLevel() >= 0){ //TODO changed level for testing
+            RPGMeleePlayer rpgm = plugin.getMeleePlayerMap().get(playa.getName());
             
             event.setCancelled(true);
             
-            if(!plugin.getMeleePlayerMap().get(playa.getName()).isFlashReady()){
+            if(!rpgm.isFlashReady()){
                playa.sendMessage("Flash is still on cooldown");
                return;
             }
@@ -59,7 +62,8 @@ public class PlayerInteract implements Listener{
             Block block;
             Location loc;
             
-            gear = plugin.getMeleePlayerMap().get(playa.getName()).getGearLevel();
+            rpgm.calcGearLevel(playa.getInventory());
+            gear = rpgm.getGearLevel();
       
             hs.add((byte)0); //Air
             hs.add((byte)8); //Flowing water
@@ -203,25 +207,24 @@ public class PlayerInteract implements Listener{
             event.setCancelled(true);
             String data;
             Fireball ballOfFire;
+            RPGMagicPlayer rpgm = plugin.getMagicPlayerMap().get(playa.getName());
             
-            if(!plugin.getMagicPlayerMap().get(playa.getName()).isFireReady()){
+            if(!rpgm.isFireReady()){
                playa.sendMessage("Fireball is still on cooldown");
                return;
             }
             else{
-               /*ItemStack is = new ItemStack(351,1);
-               is.setDurability((short)1);
-               playa.getInventory().remove(is);*/
                removeItem(playa);
                plugin.giveCooldown(playa, "fire", "magic", 5);
-               plugin.getMagicPlayerMap().get(playa.getName()).setFireReadiness(false);
+               rpgm.setFireReadiness(false);
             }
 
+            rpgm.calcGearLevel(playa.getInventory());
             ballOfFire = event.getPlayer().launchProjectile(Fireball.class);
             if(plugin.getBuildUpMap().get(playa.getName()) != null)
-               data = Float.toString(plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel() * 1.5F) + "|y";
+               data = Float.toString(rpgm.getGearLevel() * 1.5F) + "|y";
             else
-               data = Float.toString(plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel()) + "|n";
+               data = Float.toString(rpgm.getGearLevel()) + "|n";
             
             plugin.getProjMap().put(ballOfFire, data);
             
@@ -267,15 +270,6 @@ public class PlayerInteract implements Listener{
                   playa.sendMessage("You are already set to discharge");
             }
          }
-         else if(playa.getItemInHand().getType().compareTo(Material.IRON_SWORD) == 0
-               && plugin.getMeleePlayerMap().get(playa.getName()) != null)
-            event.getPlayer().getInventory().setItem(playa.getInventory().getHeldItemSlot(), new ItemStack(Material.IRON_SWORD,1));
-         else if(playa.getItemInHand().getType().compareTo(Material.DIAMOND_SWORD) == 0
-               && plugin.getMeleePlayerMap().get(playa.getName()) != null)
-            event.getPlayer().getInventory().setItem(playa.getInventory().getHeldItemSlot(), new ItemStack(Material.DIAMOND_SWORD,1));
-         else if(playa.getItemInHand().getType().compareTo(Material.BOW) == 0
-               && plugin.getRangedPlayerMap().get(playa.getName()) != null)
-            event.getPlayer().getInventory().setItem(playa.getInventory().getHeldItemSlot(), new ItemStack(Material.BOW,1));
          else if(playa.getItemInHand().getType().compareTo(Material.EGG) == 0
                && plugin.getRangedPlayerMap().get(playa.getName()) != null
                && playa.getLevel() >= 7){
@@ -456,9 +450,11 @@ public class PlayerInteract implements Listener{
       double ex, ey, ez;
       BlockIterator bItr;
       ArrayList<LivingEntity> enemies = new ArrayList<LivingEntity>();
+      RPGMagicPlayer rpgm = plugin.getMagicPlayerMap().get(playa.getName());
       
-      // Base range is 10 blocks plus the casters spell ability TODO Fix gear damage
-      spell = plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel();
+      // Base range is 10 blocks plus the casters spell ability
+      rpgm.calcGearLevel(playa.getInventory());
+      spell = rpgm.getGearLevel();
       range = (int)(10 + spell);
       
       for(Entity e : playa.getNearbyEntities(range, range, range)){
@@ -494,18 +490,18 @@ public class PlayerInteract implements Listener{
                
                // Set cooldown
                plugin.giveCooldown(playa, "light", "magic", 1.5);
-               plugin.getMagicPlayerMap().get(playa.getName()).setLightningReadiness(false);
+               rpgm.setLightningReadiness(false);
                
                if(plugin.getBuildUpMap().get(playa.getName()) == null){
                   playa.sendMessage("*Zap*");
-                  plugin.getMagicPlayerMap().get(playa.getName()).addBuildUp(6);
-                  if(plugin.getMagicPlayerMap().get(playa.getName()).getBuildUp() >= 100){
+                  rpgm.addBuildUp(6);
+                  if(rpgm.getBuildUp() >= 100){
                      playa.sendMessage("Magic discharge initiated");
-                     plugin.getMagicPlayerMap().get(playa.getName()).setBuildUp(plugin.getMagicPlayerMap().get(playa.getName()).getBuildUp() - 51);
+                     rpgm.setBuildUp(plugin.getMagicPlayerMap().get(playa.getName()).getBuildUp() - 51);
                      plugin.getBuildUpMap().put(playa.getName(), playa.getName());
                   }
                }
-               // Advanced lightning skill (area lighting)
+               // Advanced lightning skill (area lighting). Activated on discharge
                else{
                   final ArrayList<LivingEntity> nearEnemies = new ArrayList<LivingEntity>();
                   
