@@ -150,6 +150,7 @@ public class PlayerProjectile implements Listener{
             if(plugin.probabilityRoll((int)(5 * egg))){
                event.getEgg().getLocation().getWorld().createExplosion(event.getEgg().getLocation(), 1F, false);
             }
+            //TODO add weakness potion on players next to egg block location
          }
       }
    }

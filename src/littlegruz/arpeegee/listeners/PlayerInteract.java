@@ -178,7 +178,7 @@ public class PlayerInteract implements Listener{
             }
             
             Location loc = event.getPlayer().getLocation();
-            
+            //TODO can the number of remaining sheep determine the amount of armour player has
             loc.setY(loc.getY() + 1.5);
             loc.setX(loc.getX() + 1);
             loc.getWorld().spawnEntity(loc, EntityType.SHEEP);
