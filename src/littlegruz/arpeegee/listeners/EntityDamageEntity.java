@@ -339,13 +339,11 @@ public class EntityDamageEntity implements Listener {
                
                plugin.getProjMap().remove(event.getDamager());
                
-               // TODO add damage
-               //bow = 3;
                if(event.getEntity() instanceof LivingEntity){
                   final LivingEntity le = (LivingEntity) event.getEntity();
                   event.setDamage(0);
                   
-                  // Stop fire ticks later because doing it now wont do anything
+                  // Stop fire ticks one tick later because doing it now wont do anything
                   plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                      public void run(){
                         le.setFireTicks(0);
@@ -359,7 +357,7 @@ public class EntityDamageEntity implements Listener {
                
                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                   public void run(){
-                     primedSheep.getLocation().getWorld().createExplosion(primedSheep.getLocation(), primedSheep.getHealth());
+                     primedSheep.getLocation().getWorld().createExplosion(primedSheep.getLocation(), primedSheep.getHealth(), true);
                      primedSheep.remove();
                   }
                }, 30L);

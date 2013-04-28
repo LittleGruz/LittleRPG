@@ -100,7 +100,7 @@ public class RPGPlayer {
       
       // Average out the values
       gear /= 4;
-      // Give value range to match original Minecraft sword damage
+      // Give value range to all the max to match the original Minecraft sword damage
       gear *= 2;
    }
 

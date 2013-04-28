@@ -3,6 +3,7 @@ package littlegruz.arpeegee.listeners;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.entity.Snowball;
@@ -12,6 +13,8 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import littlegruz.arpeegee.ArpeegeeMain;
 
@@ -147,10 +150,17 @@ public class PlayerProjectile implements Listener{
          if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null
                && event.getPlayer().getLevel() >= 10){
             float egg = plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getGearLevel();
-            if(plugin.probabilityRoll((int)(5 * egg))){
+            
+            // Max will be a 96% chance of exploding
+            if(plugin.probabilityRoll((int)(12 * egg))){
                event.getEgg().getLocation().getWorld().createExplosion(event.getEgg().getLocation(), 1F, false);
+               
+               for(Entity victims : event.getEgg().getNearbyEntities(5, 5, 5)){
+                  if (victims instanceof LivingEntity) {
+                     ((LivingEntity) victims).addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, (int) egg, 2), true);
+                  }
+               }
             }
-            //TODO add weakness potion on players next to egg block location
          }
       }
    }
