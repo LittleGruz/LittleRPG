@@ -155,7 +155,7 @@ public class PlayerProjectile implements Listener{
             if(plugin.probabilityRoll((int)(12 * egg))){
                event.getEgg().getLocation().getWorld().createExplosion(event.getEgg().getLocation(), 1F, false);
                
-               for(Entity victims : event.getEgg().getNearbyEntities(5, 5, 5)){
+               for(Entity victims : event.getEgg().getNearbyEntities(2, 2, 2)){
                   if (victims instanceof LivingEntity) {
                      ((LivingEntity) victims).addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, (int) egg, 2), true);
                   }
