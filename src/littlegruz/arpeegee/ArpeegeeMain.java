@@ -615,6 +615,11 @@ public class ArpeegeeMain extends JavaPlugin {
                   is.setType(Material.WHEAT);
                   playa.getInventory().setItem(4, is);
                }
+               else if(type.compareTo("conf") == 0){
+                  rpgPlaya.setFireReadiness(true);
+                  is.setDurability((short)14);
+                  playa.getInventory().setItem(3, is);
+               }
             }
         }, (long) (delay * 20));
       }

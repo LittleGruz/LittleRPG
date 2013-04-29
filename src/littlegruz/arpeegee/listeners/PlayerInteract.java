@@ -159,6 +159,23 @@ public class PlayerInteract implements Listener{
             callThor(playa);
             
          }
+         // Confusion spell
+         else if(playa.getItemInHand().getData().toString().contains("ORANGE DYE")
+               && plugin.getMagicPlayerMap().get(playa.getName()) != null){
+            event.setCancelled(true);
+            RPGMagicPlayer rpgm = plugin.getMagicPlayerMap().get(playa.getName());
+            
+            if(!rpgm.isConfusionReady()){
+               playa.sendMessage("Confusion is still on cooldown");
+               return;
+            }
+            else{
+               removeItem(playa);
+               plugin.giveCooldown(playa, "conf", "magic", 5);
+               rpgm.setFireReadiness(false);
+            }
+            
+         }
          // Melancholy. Spawns sheep around mage. TODO change to make sheep slow on contact
          else if(playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
                && event.getAction().toString().contains("RIGHT_CLICK")

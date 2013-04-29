@@ -2,7 +2,7 @@ package littlegruz.arpeegee.entities;
 
 public class RPGMagicPlayer extends RPGPlayer{
    private int buildUp;
-   private boolean heal, lightning, fire, sheeeep;
+   private boolean heal, lightning, fire, sheeeep, conf;
 
    public RPGMagicPlayer(String name){
       super(name);
@@ -10,6 +10,7 @@ public class RPGMagicPlayer extends RPGPlayer{
       lightning = true;
       fire = true;
       sheeeep = true;
+      conf = true;
       buildUp = 0;
    }
 
@@ -19,6 +20,7 @@ public class RPGMagicPlayer extends RPGPlayer{
       lightning = true;
       fire = true;
       sheeeep = true;
+      conf = true;
       this.buildUp = buildUp;
    }
 
@@ -69,6 +71,14 @@ public class RPGMagicPlayer extends RPGPlayer{
       this.sheeeep = sheep;
    }
    
+   public boolean isConfusionReady(){
+      return conf;
+   }
+
+   public void setConfusionReadiness(boolean conf){
+      this.conf = conf;
+   }
+
    public void silencePlayer(){
       heal = false;
       lightning = false;
