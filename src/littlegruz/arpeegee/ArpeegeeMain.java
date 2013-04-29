@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import littlegruz.arpeegee.commands.Begin;
 import littlegruz.arpeegee.commands.Join;
@@ -66,6 +67,7 @@ public class ArpeegeeMain extends JavaPlugin {
    private HashMap<String, RPGRangedPlayer> rangedPlayerMap;
    private HashMap<String, RPGMagicPlayer> magicPlayerMap;
    private HashMap<String, Integer> bideMap;
+   private HashMap<UUID, Float> confMap;
    private HashMap<Entity, Integer> blindMap;
    private HashMap<Integer, RPGQuest> questMap;
    private HashMap<Location, Integer> questStartMap;
@@ -493,6 +495,10 @@ public class ArpeegeeMain extends JavaPlugin {
    public HashMap<String, Integer> getBideMap(){
       return bideMap;
    }
+   
+   public HashMap<UUID, Float> getConfMap(){
+      return confMap;
+   }
 
    public HashMap<Integer, RPGQuest> getQuestMap() {
       return questMap;
@@ -616,7 +622,7 @@ public class ArpeegeeMain extends JavaPlugin {
                   playa.getInventory().setItem(4, is);
                }
                else if(type.compareTo("conf") == 0){
-                  rpgPlaya.setFireReadiness(true);
+                  rpgPlaya.setConfusionReadiness(true);
                   is.setDurability((short)14);
                   playa.getInventory().setItem(3, is);
                }

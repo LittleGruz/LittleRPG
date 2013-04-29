@@ -3,6 +3,7 @@ package littlegruz.arpeegee.listeners;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.StringTokenizer;
+import java.util.UUID;
 
 import littlegruz.arpeegee.ArpeegeeMain;
 import littlegruz.arpeegee.entities.RPGMagicPlayer;
@@ -157,24 +158,18 @@ public class PlayerInteract implements Listener{
             }
             
             callThor(playa);
-            
          }
          // Confusion spell
          else if(playa.getItemInHand().getData().toString().contains("ORANGE DYE")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null){
             event.setCancelled(true);
-            RPGMagicPlayer rpgm = plugin.getMagicPlayerMap().get(playa.getName());
             
-            if(!rpgm.isConfusionReady()){
+            if(!plugin.getMagicPlayerMap().get(playa.getName()).isConfusionReady()){
                playa.sendMessage("Confusion is still on cooldown");
                return;
             }
-            else{
-               removeItem(playa);
-               plugin.giveCooldown(playa, "conf", "magic", 5);
-               rpgm.setFireReadiness(false);
-            }
             
+            causeConfusion(playa);
          }
          // Melancholy. Spawns sheep around mage. TODO change to make sheep slow on contact
          else if(playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
@@ -492,6 +487,7 @@ public class PlayerInteract implements Listener{
             ex = loc.getX();
             ey = loc.getY();
             ez = loc.getZ();
+            
             // If entity is within the boundaries then it is the one being looked at
             if((bx - 0.75 <= ex && ex <= bx + 0.75) && (bz - 0.75 <= ez && ez <= bz + 0.75) && (by - 1 <= ey && ey <= by + 1)){
                loc.setY(loc.getY() + 1);
@@ -514,7 +510,7 @@ public class PlayerInteract implements Listener{
                   rpgm.addBuildUp(6);
                   if(rpgm.getBuildUp() >= 100){
                      playa.sendMessage("Magic discharge initiated");
-                     rpgm.setBuildUp(plugin.getMagicPlayerMap().get(playa.getName()).getBuildUp() - 51);
+                     rpgm.setBuildUp(rpgm.getBuildUp() - 51);
                      plugin.getBuildUpMap().put(playa.getName(), playa.getName());
                   }
                }
@@ -544,6 +540,94 @@ public class PlayerInteract implements Listener{
                         }
                      }
                  }, 20L);
+               }
+               return;
+            }
+         }
+      }
+   }
+
+   private void causeConfusion(Player playa){
+      Location loc;
+      Block block;
+      int bx, by, bz, range;
+      float spell;
+      double ex, ey, ez;
+      BlockIterator bItr;
+      ArrayList<LivingEntity> enemies = new ArrayList<LivingEntity>();
+      RPGMagicPlayer rpgm = plugin.getMagicPlayerMap().get(playa.getName());
+      
+      // Base range is 10 blocks plus the casters spell ability
+      rpgm.calcGearLevel(playa.getInventory());
+      spell = rpgm.getGearLevel();
+      range = (int)(10 + spell);
+      
+      for(Entity e : playa.getNearbyEntities(range, range, range)){
+         if(plugin.isEnemy(e)){
+            enemies.add((LivingEntity)e);
+         }
+      }
+      
+      bItr = new BlockIterator(playa.getLocation(), 0, range);
+      
+      while(bItr.hasNext()){
+         block = bItr.next();
+         bx = block.getX();
+         by = block.getY();
+         bz = block.getZ();
+         for(LivingEntity e : enemies){
+            loc = e.getLocation();
+            ex = loc.getX();
+            ey = loc.getY();
+            ez = loc.getZ();
+            
+            // If entity is within the boundaries then it is the one being looked at
+            if((bx - 0.75 <= ex && ex <= bx + 0.75) && (bz - 0.75 <= ez && ez <= bz + 0.75) && (by - 1 <= ey && ey <= by + 1)){
+               final UUID eID;
+               
+               eID = e.getUniqueId();
+               
+               if(e instanceof Player)
+                  ((Player) e).sendMessage("*confused*");
+               
+               plugin.getConfMap().put(eID, spell);
+               
+               // Remove item from inventory
+               /*ItemStack is = new ItemStack(351,1);
+               is.setDurability((short)14);
+               playa.getInventory().remove(is);*/
+               removeItem(playa);
+               
+               // Set cooldown
+               plugin.giveCooldown(playa, "conf", "magic", 1.5);
+               rpgm.setConfusionReadiness(false);
+               
+               if(plugin.getBuildUpMap().get(playa.getName()) == null){
+                  playa.sendMessage("*Confusion*");
+                  
+                  plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                     public void run(){
+                        
+                     }
+                  }, (long) (spell) * 20L);
+                  
+                  rpgm.addBuildUp(6);
+                  if(rpgm.getBuildUp() >= 100){
+                     playa.sendMessage("Magic discharge initiated");
+                     rpgm.setBuildUp(rpgm.getBuildUp() - 51);
+                     plugin.getBuildUpMap().put(playa.getName(), playa.getName());
+                  }
+               }
+               // Advanced confusion skill (longer duration). Activated on discharge
+               else{
+                  playa.sendMessage("*Moar confusion*");
+                  plugin.getBuildUpMap().remove(playa.getName());
+                  
+                  plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                     public void run(){
+                        
+                     }
+                 }, (long) (spell * 1.5) * 20L);
                }
                return;
             }
