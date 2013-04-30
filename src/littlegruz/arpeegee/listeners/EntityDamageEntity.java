@@ -107,7 +107,7 @@ public class EntityDamageEntity implements Listener {
                float gear;
                RPGMeleePlayer rpgMeleeP = plugin.getMeleePlayerMap().get(playa.getName());
                
-               // Check if the player can swing yetplugin.getMeleePlayerMap().get(playa.getName())
+               // Check if the player can swing yet
                if(rpgMeleeP.isSwordReady()){
                   plugin.giveCooldown(playa, "slash", "melee", 1);
                   rpgMeleeP.setSwordReadiness(false);
@@ -119,7 +119,7 @@ public class EntityDamageEntity implements Listener {
                gear = rpgMeleeP.getGearLevel();
                gear = 0;
                
-               /* Crit chance 5% to 25%. Berserk mode adds 10%
+               /* Crit chance 0% to 25%. Berserk mode adds 10%
                 * Damage in berserk adds 1 to 3 damage*/
                if(plugin.getBerserkMap().get(playa.getName()) != null){
                   if(plugin.probabilityRoll((int)(5 * gear + 10)))
