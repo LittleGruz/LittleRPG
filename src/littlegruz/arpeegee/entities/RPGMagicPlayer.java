@@ -98,13 +98,31 @@ public class RPGMagicPlayer extends RPGPlayer{
       return sheepArray;
    }
    
+   /* Adds a sheep to a position in the array*/
    public boolean setSheepArrayID(int pos, UUID id){
-      if(pos < 5 && pos > -1){
+      if(pos < 4 && pos > -1){
          sheepArray[pos] = id;
          return true;
       }
       else
          return false;
+   }
+   
+   /* Searches for a sheep based on its UUID*/
+   public boolean sheepSearch(UUID id, boolean destroy){
+      int i;
+      
+      for(i = 0; i < 4; i++){
+         if(sheepArray[i].compareTo(id) == 0){
+               if(destroy){
+                  sheepArray[i] = UUID.fromString("0");
+                  sheepCount--;
+               }
+            return true;
+         }
+      }
+      
+      return false;
    }
 
    public void silencePlayer(){
