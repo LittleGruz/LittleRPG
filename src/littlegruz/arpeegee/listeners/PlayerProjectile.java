@@ -96,46 +96,52 @@ public class PlayerProjectile implements Listener{
 
    @EventHandler
    public void onProjectileLaunch(ProjectileLaunchEvent event){
-      if(event.getEntity() instanceof Arrow){
-         Arrow arrow = (Arrow) event.getEntity();
-         if(arrow.getShooter() instanceof Player){
-            Player playa = (Player) arrow.getShooter();
-            if(plugin.getRangedPlayerMap().get(playa.getName()) != null){
-               // Slow arrow
-               if(playa.getItemInHand().getType() == Material.BOW
-                     && playa.getInventory().getHeldItemSlot() == 2){
-                  event.setCancelled(true);
-                  if(!plugin.getRangedPlayerMap().get(playa.getName()).isSlowBowReady()){
-                     playa.sendMessage("Slow arrow is still on cooldown");
-                     return;
+      if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getName())){
+         if(plugin.getConfMap().get(event.getEntity().getShooter().getUniqueId()) != null){
+            event.getEntity().getShooter().damage(2);
+         }
+         
+         if(event.getEntity() instanceof Arrow){
+            Arrow arrow = (Arrow) event.getEntity();
+            if(arrow.getShooter() instanceof Player){
+               Player playa = (Player) arrow.getShooter();
+               if(plugin.getRangedPlayerMap().get(playa.getName()) != null){
+                  // Slow arrow
+                  if(playa.getItemInHand().getType() == Material.BOW
+                        && playa.getInventory().getHeldItemSlot() == 2){
+                     event.setCancelled(true);
+                     if(!plugin.getRangedPlayerMap().get(playa.getName()).isSlowBowReady()){
+                        playa.sendMessage("Slow arrow is still on cooldown");
+                        return;
+                     }
+                     
+                     Snowball sb = playa.launchProjectile(Snowball.class);
+                     
+                     sb.setVelocity(arrow.getVelocity());
+                     plugin.getProjMap().put(sb,
+                           Float.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()));
+                     playa.getInventory().setItemInHand(null);
+                     plugin.getRangedPlayerMap().get(playa.getName()).setSlowBowReadiness(false);
+                     plugin.giveCooldown(playa, "slow", "ranged", 2);
                   }
-                  
-                  Snowball sb = playa.launchProjectile(Snowball.class);
-                  
-                  sb.setVelocity(arrow.getVelocity());
-                  plugin.getProjMap().put(sb,
-                        Float.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()));
-                  playa.getInventory().setItemInHand(null);
-                  plugin.getRangedPlayerMap().get(playa.getName()).setSlowBowReadiness(false);
-                  plugin.giveCooldown(playa, "slow", "ranged", 2);
-               }
-               // Sheep arrow
-               else if(playa.getItemInHand().getType() == Material.BOW
-                     && playa.getInventory().getHeldItemSlot() == 3){
-                  event.setCancelled(true);
-                  if(!plugin.getRangedPlayerMap().get(playa.getName()).isSheepBowReady()){
-                     playa.sendMessage("Sheep arrow is still on cooldown");
-                     return;
+                  // Sheep arrow
+                  else if(playa.getItemInHand().getType() == Material.BOW
+                        && playa.getInventory().getHeldItemSlot() == 3){
+                     event.setCancelled(true);
+                     if(!plugin.getRangedPlayerMap().get(playa.getName()).isSheepBowReady()){
+                        playa.sendMessage("Sheep arrow is still on cooldown");
+                        return;
+                     }
+                     
+                     SmallFireball sf = playa.launchProjectile(SmallFireball.class); 
+                     
+                     sf.setVelocity(arrow.getVelocity());
+                     plugin.getProjMap().put(sf,
+                           Float.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()));
+                     playa.getInventory().setItemInHand(null);
+                     plugin.getRangedPlayerMap().get(playa.getName()).setSheepBowReadiness(false);
+                     plugin.giveCooldown(playa, "woof", "ranged", 2);
                   }
-                  
-                  SmallFireball sf = playa.launchProjectile(SmallFireball.class); 
-                  
-                  sf.setVelocity(arrow.getVelocity());
-                  plugin.getProjMap().put(sf,
-                        Float.toString(plugin.getRangedPlayerMap().get(playa.getName()).getGearLevel()));
-                  playa.getInventory().setItemInHand(null);
-                  plugin.getRangedPlayerMap().get(playa.getName()).setSheepBowReadiness(false);
-                  plugin.giveCooldown(playa, "woof", "ranged", 2);
                }
             }
          }

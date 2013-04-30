@@ -598,16 +598,17 @@ public class PlayerInteract implements Listener{
                playa.getInventory().remove(is);*/
                removeItem(playa);
                
-               // Set cooldown
+               // Set cooldown TODO conf could also stop pickups?
                plugin.giveCooldown(playa, "conf", "magic", 1.5);
                rpgm.setConfusionReadiness(false);
                
                if(plugin.getBuildUpMap().get(playa.getName()) == null){
                   playa.sendMessage("*Confusion*");
                   
+                  // Add victim to confusion map
                   plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                      public void run(){
-                        
+                        plugin.getConfMap().remove(eID);
                      }
                   }, (long) (spell) * 20L);
                   
@@ -622,10 +623,11 @@ public class PlayerInteract implements Listener{
                else{
                   playa.sendMessage("*Moar confusion*");
                   plugin.getBuildUpMap().remove(playa.getName());
-                  
+
+                  // Add victim to confusion map
                   plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                      public void run(){
-                        
+                        plugin.getConfMap().remove(eID);
                      }
                  }, (long) (spell * 1.5) * 20L);
                }
