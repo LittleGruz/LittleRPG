@@ -601,7 +601,7 @@ public class PlayerInteract implements Listener{
                playa.getInventory().remove(is);*/
                removeItem(playa);
                
-               // Set cooldown TODO conf could also stop pickups?
+               // Set cooldown
                plugin.giveCooldown(playa, "conf", "magic", 1.5);
                rpgm.setConfusionReadiness(false);
                
