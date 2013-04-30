@@ -1,8 +1,11 @@
 package littlegruz.arpeegee.entities;
 
+import java.util.UUID;
+
 public class RPGMagicPlayer extends RPGPlayer{
-   private int buildUp;
+   private int buildUp, sheepCount;
    private boolean heal, lightning, fire, sheeeep, conf;
+   private UUID[] sheepArray;
 
    public RPGMagicPlayer(String name){
       super(name);
@@ -12,6 +15,8 @@ public class RPGMagicPlayer extends RPGPlayer{
       sheeeep = true;
       conf = true;
       buildUp = 0;
+      sheepCount = 0;
+      sheepArray = new UUID[4];
    }
 
    public RPGMagicPlayer(String name, int level, float gear, int buildUp, String incomplete, String complete, String party){
@@ -22,6 +27,8 @@ public class RPGMagicPlayer extends RPGPlayer{
       sheeeep = true;
       conf = true;
       this.buildUp = buildUp;
+      sheepCount = 0;
+      sheepArray = new UUID[4];
    }
 
    public int getBuildUp(){
@@ -77,6 +84,27 @@ public class RPGMagicPlayer extends RPGPlayer{
 
    public void setConfusionReadiness(boolean conf){
       this.conf = conf;
+   }
+
+   public int getSheepCount(){
+      return sheepCount;
+   }
+
+   public void setSheepCount(int sheepCount){
+      this.sheepCount = sheepCount;
+   }
+
+   public UUID[] getSheepArray(){
+      return sheepArray;
+   }
+   
+   public boolean setSheepArrayID(int pos, UUID id){
+      if(pos < 5 && pos > -1){
+         sheepArray[pos] = id;
+         return true;
+      }
+      else
+         return false;
    }
 
    public void silencePlayer(){

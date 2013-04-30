@@ -78,8 +78,6 @@ public class ArpeegeeMain extends JavaPlugin {
    private HashMap<String, String> worldsMap;
    private HashMap<String, String> textsMap;
    private HashMap<Integer, Integer> expLevelMap;
-   private UUID[] sheepArray;
-   private int sheepCount;
    private int questNumberToSet;
    private boolean questCanSet;
    private boolean questCanUnset;
@@ -358,9 +356,6 @@ public class ArpeegeeMain extends JavaPlugin {
       bideMap = new HashMap<String, Integer>();
       blindMap = new HashMap<Entity, Integer>();
       
-      sheepArray = new UUID[4];
-      sheepCount = 0;
-      
       questNumberToSet = -1;
       questCanSet = false;
       questCanUnset = false;
@@ -535,18 +530,6 @@ public class ArpeegeeMain extends JavaPlugin {
 
    public HashMap<Entity, Integer> getBlindMap(){
       return blindMap;
-   }
-
-   public UUID[] getSheepArray(){
-      return sheepArray;
-   }
-
-   public int getSheepCount(){
-      return sheepCount;
-   }
-
-   public void setSheepCount(int sheepCount){
-      this.sheepCount = sheepCount;
    }
 
    public int getQuestNumberToSet(){

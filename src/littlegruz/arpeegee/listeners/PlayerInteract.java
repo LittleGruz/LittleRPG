@@ -177,8 +177,9 @@ public class PlayerInteract implements Listener{
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
                && playa.getLevel() >= 13){
             event.setCancelled(true);
+            RPGMagicPlayer rpgm = plugin.getMagicPlayerMap().get(playa.getName());
             
-            if(!plugin.getMagicPlayerMap().get(playa.getName()).isSheepReady()){
+            if(!rpgm.isSheepReady()){
                playa.sendMessage("Sheep summon is still on cooldown");
                return;
             }
@@ -186,30 +187,29 @@ public class PlayerInteract implements Listener{
                //playa.getInventory().remove(Material.WHEAT);
                removeItem(playa);
                plugin.giveCooldown(playa, "baaa", "magic", 15);
-               plugin.getMagicPlayerMap().get(playa.getName()).setSheepReadiness(false);
+               rpgm.setSheepReadiness(false);
             }
             
             Location loc = event.getPlayer().getLocation();
-            UUID[] sheepArray = plugin.getSheepArray();
             
             loc.setY(loc.getY() + 1.5);
             loc.setX(loc.getX() + 1);
-            sheepArray[0] = loc.getWorld().spawnEntity(loc, EntityType.SHEEP).getUniqueId();
+            rpgm.setSheepArrayID(0, loc.getWorld().spawnEntity(loc, EntityType.SHEEP).getUniqueId());
             loc.setX(loc.getX() - 2);
-            sheepArray[1] = loc.getWorld().spawnEntity(loc, EntityType.SHEEP).getUniqueId();
+            rpgm.setSheepArrayID(1, loc.getWorld().spawnEntity(loc, EntityType.SHEEP).getUniqueId());
             loc.setX(loc.getX() + 1);
             loc.setZ(loc.getZ() + 1);
-            sheepArray[2] = loc.getWorld().spawnEntity(loc, EntityType.SHEEP).getUniqueId();
+            rpgm.setSheepArrayID(2, loc.getWorld().spawnEntity(loc, EntityType.SHEEP).getUniqueId());
             loc.setZ(loc.getZ() - 2);
-            sheepArray[3] = loc.getWorld().spawnEntity(loc, EntityType.SHEEP).getUniqueId();
+            rpgm.setSheepArrayID(3, loc.getWorld().spawnEntity(loc, EntityType.SHEEP).getUniqueId());
             
-            plugin.setSheepCount(4);
+            rpgm.setSheepCount(4);
             
             if(plugin.getBuildUpMap().get(playa.getName()) == null){
-               plugin.getMagicPlayerMap().get(playa.getName()).addBuildUp(6);
-               if(plugin.getMagicPlayerMap().get(playa.getName()).getBuildUp() >= 100){
+               rpgm.addBuildUp(6);
+               if(rpgm.getBuildUp() >= 100){
                   playa.sendMessage("Magic discharge initiated");
-                  plugin.getMagicPlayerMap().get(playa.getName()).setBuildUp(plugin.getMagicPlayerMap().get(playa.getName()).getBuildUp() - 51);
+                  rpgm.setBuildUp(rpgm.getBuildUp() - 51);
                   plugin.getBuildUpMap().put(playa.getName(), playa.getName());
                }
             }
