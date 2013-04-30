@@ -51,6 +51,13 @@ public class EntityDamageEntity implements Listener {
             }
          }
          
+         // Should still deal damage if blinded
+         if(plugin.getConfMap().get(event.getDamager().getUniqueId()) != null){
+            /* Apply damage and set the damage cause to the mage who cast confusion
+             * Can assume LivingEntity because confMap would have return false otherwise*/
+            ((LivingEntity)event.getDamager()).damage(1, plugin.getServer().getPlayer(plugin.getConfMap().get(event.getEntity().getUniqueId())));
+         }
+         
          // Blindness miss
          if(plugin.getBlindMap().get(event.getDamager()) != null){
             event.setCancelled(true);

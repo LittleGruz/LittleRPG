@@ -67,7 +67,7 @@ public class ArpeegeeMain extends JavaPlugin {
    private HashMap<String, RPGRangedPlayer> rangedPlayerMap;
    private HashMap<String, RPGMagicPlayer> magicPlayerMap;
    private HashMap<String, Integer> bideMap;
-   private HashMap<UUID, Float> confMap;
+   private HashMap<UUID, String> confMap;
    private HashMap<Entity, Integer> blindMap;
    private HashMap<Integer, RPGQuest> questMap;
    private HashMap<Location, Integer> questStartMap;
@@ -496,7 +496,7 @@ public class ArpeegeeMain extends JavaPlugin {
       return bideMap;
    }
    
-   public HashMap<UUID, Float> getConfMap(){
+   public HashMap<UUID, String> getConfMap(){
       return confMap;
    }
 

@@ -98,7 +98,8 @@ public class PlayerProjectile implements Listener{
    public void onProjectileLaunch(ProjectileLaunchEvent event){
       if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getName())){
          if(plugin.getConfMap().get(event.getEntity().getShooter().getUniqueId()) != null){
-            event.getEntity().getShooter().damage(2);
+            // Apply damage and set the damage cause to the mage who cast confusion
+            event.getEntity().getShooter().damage(2, plugin.getServer().getPlayer(plugin.getConfMap().get(event.getEntity().getShooter().getUniqueId())));
          }
          
          if(event.getEntity() instanceof Arrow){

@@ -590,7 +590,7 @@ public class PlayerInteract implements Listener{
                if(e instanceof Player)
                   ((Player) e).sendMessage("*confused*");
                
-               plugin.getConfMap().put(eID, spell);
+               plugin.getConfMap().put(eID, rpgm.getName());
                
                // Remove item from inventory
                /*ItemStack is = new ItemStack(351,1);
