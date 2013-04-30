@@ -171,7 +171,7 @@ public class PlayerInteract implements Listener{
             
             causeConfusion(playa);
          }
-         // Melancholy. Spawns sheep around mage. TODO change to make sheep provide armour
+         // Melancholy. Spawns sheep around mage.
          else if(playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
                && event.getAction().toString().contains("RIGHT_CLICK")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
@@ -197,13 +197,18 @@ public class PlayerInteract implements Listener{
             rpgm.setSheepArrayID(0, loc.getWorld().spawnEntity(loc, EntityType.SHEEP).getUniqueId());
             loc.setX(loc.getX() - 2);
             rpgm.setSheepArrayID(1, loc.getWorld().spawnEntity(loc, EntityType.SHEEP).getUniqueId());
-            loc.setX(loc.getX() + 1);
-            loc.setZ(loc.getZ() + 1);
-            rpgm.setSheepArrayID(2, loc.getWorld().spawnEntity(loc, EntityType.SHEEP).getUniqueId());
-            loc.setZ(loc.getZ() - 2);
-            rpgm.setSheepArrayID(3, loc.getWorld().spawnEntity(loc, EntityType.SHEEP).getUniqueId());
             
-            rpgm.setSheepCount(4);
+            if(plugin.getBuildUpMap().get(playa.getName()) != null){
+               loc.setX(loc.getX() + 1);
+               loc.setZ(loc.getZ() + 1);
+               rpgm.setSheepArrayID(2, loc.getWorld().spawnEntity(loc, EntityType.SHEEP).getUniqueId());
+               loc.setZ(loc.getZ() - 2);
+               rpgm.setSheepArrayID(3, loc.getWorld().spawnEntity(loc, EntityType.SHEEP).getUniqueId());
+               
+               rpgm.setSheepCount(4);
+            }
+            else
+               rpgm.setSheepCount(2);
             
             if(plugin.getBuildUpMap().get(playa.getName()) == null){
                rpgm.addBuildUp(6);
