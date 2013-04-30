@@ -78,6 +78,8 @@ public class ArpeegeeMain extends JavaPlugin {
    private HashMap<String, String> worldsMap;
    private HashMap<String, String> textsMap;
    private HashMap<Integer, Integer> expLevelMap;
+   private UUID[] sheepArray;
+   private int sheepCount;
    private int questNumberToSet;
    private boolean questCanSet;
    private boolean questCanUnset;
@@ -356,6 +358,9 @@ public class ArpeegeeMain extends JavaPlugin {
       bideMap = new HashMap<String, Integer>();
       blindMap = new HashMap<Entity, Integer>();
       
+      sheepArray = new UUID[4];
+      sheepCount = 0;
+      
       questNumberToSet = -1;
       questCanSet = false;
       questCanUnset = false;
@@ -480,15 +485,15 @@ public class ArpeegeeMain extends JavaPlugin {
       getLogger().info(this.toString() + " disabled");
    }
 
-   public HashMap<String, RPGMeleePlayer> getMeleePlayerMap() {
+   public HashMap<String, RPGMeleePlayer> getMeleePlayerMap(){
       return meleePlayerMap;
    }
 
-   public HashMap<String, RPGRangedPlayer> getRangedPlayerMap() {
+   public HashMap<String, RPGRangedPlayer> getRangedPlayerMap(){
       return rangedPlayerMap;
    }
 
-   public HashMap<String, RPGMagicPlayer> getMagicPlayerMap() {
+   public HashMap<String, RPGMagicPlayer> getMagicPlayerMap(){
       return magicPlayerMap;
    }
    
@@ -500,7 +505,7 @@ public class ArpeegeeMain extends JavaPlugin {
       return confMap;
    }
 
-   public HashMap<Integer, RPGQuest> getQuestMap() {
+   public HashMap<Integer, RPGQuest> getQuestMap(){
       return questMap;
    }
 
@@ -508,15 +513,15 @@ public class ArpeegeeMain extends JavaPlugin {
       return partyMap;
    }
 
-   public HashMap<String, String> getBerserkMap() {
+   public HashMap<String, String> getBerserkMap(){
       return berserkMap;
    }
 
-   public HashMap<String, String> getBuildUpMap() {
+   public HashMap<String, String> getBuildUpMap(){
       return buildUpMap;
    }
    
-   public HashMap<Entity, String> getProjMap() {
+   public HashMap<Entity, String> getProjMap(){
       return projMap;
    }
 
@@ -530,6 +535,18 @@ public class ArpeegeeMain extends JavaPlugin {
 
    public HashMap<Entity, Integer> getBlindMap(){
       return blindMap;
+   }
+
+   public UUID[] getSheepArray(){
+      return sheepArray;
+   }
+
+   public int getSheepCount(){
+      return sheepCount;
+   }
+
+   public void setSheepCount(int sheepCount){
+      this.sheepCount = sheepCount;
    }
 
    public int getQuestNumberToSet(){
