@@ -286,24 +286,10 @@ public class EntityDamageEntity implements Listener {
                         plugin.getBlindMap().remove(ent);
                      }
                   }, gear * 20L);
-                  /*if(event.getEntity() instanceof Player){
-                     if(plugin.getMeleePlayerMap().get(((Player) event.getEntity()).getName()) != null){
-                        final RPGMeleePlayer rpgmp;
-                        rpgmp = plugin.getMeleePlayerMap().get(((Player) event.getEntity()).getName());
-                        
-                        rpgmp.blindPlayer();
-                        
-                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                           public void run(){
-                              rpgmp.unblindPlayer();
-                           }
-                        }, gear * 20L);
-                     }
-                  }*/
                }
                
-               // If crit do double damage. 0% to 30% chance TODO this chance has probably changed
-               if(plugin.probabilityRoll(5 * (gear - 1))){
+               // If crit do double damage. 0% to 20% chance
+               if(plugin.probabilityRoll(5 * (gear / 2))){
                   event.getEntity().getWorld().strikeLightningEffect(event.getEntity().getLocation());
                   plugin.ohTheDamage(event, event.getEntity(), gear * 2);
                }
@@ -391,7 +377,8 @@ public class EntityDamageEntity implements Listener {
                   magic = (int)(magic * 1.5);
                
                plugin.getProjMap().remove(event.getDamager());
-               // TODO add damage
+               // TODO check if fire ticks are right in-game
+               event.getEntity().setFireTicks(magic);
                
                clearGroundedProjectiles();
             }
