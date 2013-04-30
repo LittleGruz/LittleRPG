@@ -53,7 +53,7 @@ public class EnemyDeaths implements Listener{
             if(event.getEntity() instanceof Sheep){
                Iterator<Map.Entry<String, RPGMagicPlayer>> it = plugin.getMagicPlayerMap().entrySet().iterator();
                while(it.hasNext()){
-                  it.next().getValue().sheepSearch(event.getEntity().getUniqueId(), true);
+                  it.next().getValue().sheepSearchAndDestroy(event.getEntity().getUniqueId(), true);
                }
             }
             

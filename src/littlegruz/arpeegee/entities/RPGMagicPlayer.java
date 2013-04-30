@@ -115,12 +115,19 @@ public class RPGMagicPlayer extends RPGPlayer{
    }
    
    /* Searches for a sheep based on its UUID*/
-   public boolean sheepSearch(UUID id, boolean destroy){
+   public boolean sheepSearchAndDestroy(UUID id, boolean destroy){
       int i;
       
-      for(i = 0; i < 4; i++){
+      for(i = 0; i < sheepCount - 1; i++){
          if(sheepArray[i].compareTo(id) == 0){
                if(destroy){
+                  /* Move down IDs to keep the array contiguous*/
+                  while(i < 3){
+                     sheepArray[i] = sheepArray[i + 1];
+                     i++;
+                  }
+                  /* If array was bigger would probably bother to check in each loop
+                   * iteration for a UUID of 0 and stop the loop*/
                   sheepArray[i] = UUID.fromString("0");
                   sheepCount--;
                }
