@@ -17,6 +17,9 @@ public class RPGMagicPlayer extends RPGPlayer{
       buildUp = 0;
       sheepCount = 0;
       sheepArray = new UUID[4];
+      
+      for(int i = 0; i < 4; i++)
+         sheepArray[i] = UUID.fromString("0");
    }
 
    public RPGMagicPlayer(String name, int level, float gear, int buildUp, String incomplete, String complete, String party){
@@ -29,6 +32,9 @@ public class RPGMagicPlayer extends RPGPlayer{
       this.buildUp = buildUp;
       sheepCount = 0;
       sheepArray = new UUID[4];
+      
+      for(int i = 0; i < 4; i++)
+         sheepArray[i] = UUID.fromString("0");
    }
 
    public int getBuildUp(){

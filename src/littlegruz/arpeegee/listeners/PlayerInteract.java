@@ -177,7 +177,7 @@ public class PlayerInteract implements Listener{
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
                && playa.getLevel() >= 13){
             event.setCancelled(true);
-            RPGMagicPlayer rpgm = plugin.getMagicPlayerMap().get(playa.getName());
+            final RPGMagicPlayer rpgm = plugin.getMagicPlayerMap().get(playa.getName());
             
             if(!rpgm.isSheepReady()){
                playa.sendMessage("Sheep summon is still on cooldown");
@@ -213,6 +213,19 @@ public class PlayerInteract implements Listener{
                   plugin.getBuildUpMap().put(playa.getName(), playa.getName());
                }
             }
+            
+            /* Remove all sheep when summon time ends*/
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+               public void run(){
+                  for(Entity e: plugin.getServer().getWorld("world").getEntities()){
+                     rpgm.sheepSearch(e.getUniqueId(), true);
+                     
+                     if(rpgm.getSheepCount() == 0)
+                        break;
+                  }
+                  
+               }
+            }, 100L);
          }
          // Casting fireball
          else if(playa.getItemInHand().getData().toString().contains("RED DYE")

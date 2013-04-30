@@ -1,9 +1,12 @@
 package littlegruz.arpeegee.listeners;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import littlegruz.arpeegee.ArpeegeeMain;
+import littlegruz.arpeegee.entities.RPGMagicPlayer;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Animals;
@@ -18,6 +21,7 @@ import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Silverfish;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Slime;
@@ -44,6 +48,14 @@ public class EnemyDeaths implements Listener{
             int exp;
             
             event.setDroppedExp(0);
+
+            /* Remove the summoned mage sheep from list*/
+            if(event.getEntity() instanceof Sheep){
+               Iterator<Map.Entry<String, RPGMagicPlayer>> it = plugin.getMagicPlayerMap().entrySet().iterator();
+               while(it.hasNext()){
+                  it.next().getValue().sheepSearch(event.getEntity().getUniqueId(), true);
+               }
+            }
             
             //Base exp values for creatures here
             exp = 15;
