@@ -48,7 +48,7 @@ public class PlayerInteract implements Listener{
          if(playa.getItemInHand().getType().compareTo(Material.RAW_FISH) == 0
                && event.getAction().toString().contains("RIGHT_CLICK")
                && plugin.getMeleePlayerMap().get(playa.getName()) != null
-               && playa.getLevel() >= 6){ //TODO changed level for testing
+               && playa.getLevel() >= 6){
             RPGMeleePlayer rpgm = plugin.getMeleePlayerMap().get(playa.getName());
             
             event.setCancelled(true);
@@ -73,10 +73,8 @@ public class PlayerInteract implements Listener{
             hs.add((byte)101); //Iron bar
             hs.add((byte)102); //Glass pane
             
-            block = playa.getTargetBlock(hs, (int)(3 * gear)); //TODO change to appropriate block
+            block = playa.getTargetBlock(hs, (int)(3 * (gear / 2) + 1));
             loc = block.getLocation();
-            
-            //playa.sendMessage(block.getType().toString());
             
             if(block.getType().compareTo(Material.AIR) != 0
                   && block.getType().compareTo(Material.WATER) != 0
@@ -140,7 +138,7 @@ public class PlayerInteract implements Listener{
                
                plugin.getBideMap().put(name, taskID); // Should integer be task id and put damage get in player object?
                plugin.getMeleePlayerMap().get(name).setBideAmt(0);
-               plugin.giveCooldown(playa, "bide", "melee", 5 /* * rpgmp.getGearLevel()*/);
+               plugin.giveCooldown(playa, "bide", "melee", 15);
                removeItem(playa);
                
                playa.sendMessage("*bide*");
@@ -627,7 +625,7 @@ public class PlayerInteract implements Listener{
                removeItem(playa);
                
                // Set cooldown
-               plugin.giveCooldown(playa, "conf", "magic", 1.5);
+               plugin.giveCooldown(playa, "conf", "magic", 10);
                rpgm.setConfusionReadiness(false);
                
                if(plugin.getBuildUpMap().get(playa.getName()) == null){
@@ -638,7 +636,7 @@ public class PlayerInteract implements Listener{
                      public void run(){
                         plugin.getConfMap().remove(eID);
                      }
-                  }, (long) (spell) * 20L);
+                  }, (long) ((spell + 1) * 0.5) * 20L);
                   
                   rpgm.addBuildUp(6);
                   if(rpgm.getBuildUp() >= 100){
@@ -657,7 +655,7 @@ public class PlayerInteract implements Listener{
                      public void run(){
                         plugin.getConfMap().remove(eID);
                      }
-                 }, (long) (spell * 1.5) * 20L);
+                 }, (long) ((spell + 1) * 0.75) * 20L);
                }
                return;
             }
