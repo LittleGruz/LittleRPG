@@ -28,6 +28,11 @@ public class PlayerProjectile implements Listener{
    @EventHandler
    public void onPlayerBowShoot(EntityShootBowEvent event){
       if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getName())){
+         if(plugin.getConfMap().get(event.getEntity().getUniqueId()) != null){
+            // Apply damage and set the damage cause to the mage who cast this confusion
+            event.getEntity().damage(2, plugin.getServer().getPlayer(plugin.getConfMap().get(event.getEntity().getUniqueId())));
+         }
+         
          if(event.getEntity() instanceof Player){
             Player playa = (Player) event.getEntity();
    
@@ -47,7 +52,7 @@ public class PlayerProjectile implements Listener{
                }
                else if(playa.getInventory().getHeldItemSlot() == 1){
                   // Blind arrow
-                  if(playa.getLevel() >= 7){
+                  if(playa.getLevel() >= 11){
                      if(!plugin.getRangedPlayerMap().get(playa.getName()).isBlindBowReady()){
                         playa.sendMessage("Blind arrow is still on cooldown");
                         event.setCancelled(true);
@@ -98,7 +103,7 @@ public class PlayerProjectile implements Listener{
    public void onProjectileLaunch(ProjectileLaunchEvent event){
       if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getName())){
          if(plugin.getConfMap().get(event.getEntity().getShooter().getUniqueId()) != null){
-            // Apply damage and set the damage cause to the mage who cast confusion
+            // Apply damage and set the damage cause to the mage who cast this confusion
             event.getEntity().getShooter().damage(2, plugin.getServer().getPlayer(plugin.getConfMap().get(event.getEntity().getShooter().getUniqueId())));
          }
          
@@ -109,7 +114,8 @@ public class PlayerProjectile implements Listener{
                if(plugin.getRangedPlayerMap().get(playa.getName()) != null){
                   // Slow arrow
                   if(playa.getItemInHand().getType() == Material.BOW
-                        && playa.getInventory().getHeldItemSlot() == 2){
+                        && playa.getInventory().getHeldItemSlot() == 2
+                        && playa.getLevel() >= 6){
                      event.setCancelled(true);
                      if(!plugin.getRangedPlayerMap().get(playa.getName()).isSlowBowReady()){
                         playa.sendMessage("Slow arrow is still on cooldown");
@@ -127,7 +133,8 @@ public class PlayerProjectile implements Listener{
                   }
                   // Sheep arrow
                   else if(playa.getItemInHand().getType() == Material.BOW
-                        && playa.getInventory().getHeldItemSlot() == 3){
+                        && playa.getInventory().getHeldItemSlot() == 3
+                        && playa.getLevel() >= 20){
                      event.setCancelled(true);
                      if(!plugin.getRangedPlayerMap().get(playa.getName()).isSheepBowReady()){
                         playa.sendMessage("Sheep arrow is still on cooldown");
@@ -152,10 +159,15 @@ public class PlayerProjectile implements Listener{
    @EventHandler
    public void onEggThrow(PlayerEggThrowEvent event){
       if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getName())){
+         if(plugin.getConfMap().get(event.getPlayer().getUniqueId()) != null){
+            // Apply damage and set the damage cause to the mage who cast this confusion
+            event.getPlayer().damage(2, plugin.getServer().getPlayer(plugin.getConfMap().get(event.getPlayer().getUniqueId())));
+         }
+         
          event.setHatching(false);
          // Determining explosion chance by egg skill
          if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null
-               && event.getPlayer().getLevel() >= 10){
+               && event.getPlayer().getLevel() >= 16){
             float egg = plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getGearLevel();
             
             // Max will be a 96% chance of exploding

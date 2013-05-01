@@ -48,7 +48,7 @@ public class PlayerInteract implements Listener{
          if(playa.getItemInHand().getType().compareTo(Material.RAW_FISH) == 0
                && event.getAction().toString().contains("RIGHT_CLICK")
                && plugin.getMeleePlayerMap().get(playa.getName()) != null
-               && playa.getLevel() >= 0){ //TODO changed level for testing
+               && playa.getLevel() >= 6){ //TODO changed level for testing
             RPGMeleePlayer rpgm = plugin.getMeleePlayerMap().get(playa.getName());
             
             event.setCancelled(true);
@@ -108,10 +108,11 @@ public class PlayerInteract implements Listener{
             else
                playa.sendMessage("You can not flash that far!");
          }
+         // Casting weapon for bide
          else if(playa.getItemInHand().getType().compareTo(Material.POTATO_ITEM) == 0
                && event.getAction().toString().contains("RIGHT_CLICK")
                && plugin.getMeleePlayerMap().get(playa.getName()) != null
-               && playa.getLevel() >= 0){ //TODO give skill level cap
+               && playa.getLevel() >= 20){
             final String name = playa.getName();
             int taskID;
             
@@ -161,7 +162,8 @@ public class PlayerInteract implements Listener{
          }
          // Confusion spell
          else if(playa.getItemInHand().getData().toString().contains("ORANGE DYE")
-               && plugin.getMagicPlayerMap().get(playa.getName()) != null){
+               && plugin.getMagicPlayerMap().get(playa.getName()) != null
+               && playa.getLevel() >= 11){
             event.setCancelled(true);
             
             if(!plugin.getMagicPlayerMap().get(playa.getName()).isConfusionReady()){
@@ -175,7 +177,7 @@ public class PlayerInteract implements Listener{
          else if(playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
                && event.getAction().toString().contains("RIGHT_CLICK")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
-               && playa.getLevel() >= 13){
+               && playa.getLevel() >= 20){
             event.setCancelled(true);
             final RPGMagicPlayer rpgm = plugin.getMagicPlayerMap().get(playa.getName());
             
@@ -236,7 +238,7 @@ public class PlayerInteract implements Listener{
          else if(playa.getItemInHand().getData().toString().contains("RED DYE")
                && event.getAction().toString().contains("RIGHT_CLICK")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
-               && playa.getLevel() >= 0){ //TODO changed level for testing
+               && playa.getLevel() >= 6){
             event.setCancelled(true);
             String data;
             Fireball ballOfFire;
@@ -262,7 +264,7 @@ public class PlayerInteract implements Listener{
             plugin.getProjMap().put(ballOfFire, data);
             
          }
-         // Active berserk mode if player has gained enough rage TODO add 'discharge' mode for mages
+         // Active berserk or discharge mode if player has gained enough rage
          else if(event.getAction().toString().contains("RIGHT_CLICK")
                && (plugin.getMeleePlayerMap().get(playa.getName()) != null
                || plugin.getMagicPlayerMap().get(playa.getName()) != null)){
@@ -305,9 +307,11 @@ public class PlayerInteract implements Listener{
          }
          else if(playa.getItemInHand().getType().compareTo(Material.EGG) == 0
                && plugin.getRangedPlayerMap().get(playa.getName()) != null
-               && playa.getLevel() >= 7){
-            if(!plugin.getRangedPlayerMap().get(playa.getName()).isEggReady())
+               && playa.getLevel() >= 16){
+            if(!plugin.getRangedPlayerMap().get(playa.getName()).isEggReady()){
                playa.sendMessage("Egg is still on cooldown");
+               event.setCancelled(true);
+            }
             else{
                plugin.giveCooldown(playa, "egg", "ranged", 5);
                plugin.getRangedPlayerMap().get(playa.getName()).setEggReadiness(false);

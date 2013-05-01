@@ -26,13 +26,15 @@ public class PlayerItemHeld implements Listener{
             RPGMeleePlayer rpgmp = plugin.getMeleePlayerMap().get(playa.getName());
             if(event.getPreviousSlot() == 2
                   && event.getNewSlot() == 0
-                  && playa.getItemInHand().getType().compareTo(Material.CARROT_ITEM) == 0){
+                  && playa.getItemInHand().getType().compareTo(Material.CARROT_ITEM) == 0
+                  && playa.getLevel() >= 11){
                rpgmp.setOnHit(1);
                playa.sendMessage("Next physical attack will silence");
             }
             else if(event.getPreviousSlot() == 3
                   && event.getNewSlot() == 0
-                  && playa.getItemInHand().getType().compareTo(Material.PUMPKIN_PIE) == 0){
+                  && playa.getItemInHand().getType().compareTo(Material.PUMPKIN_PIE) == 0
+                  && playa.getLevel() >= 16){
                rpgmp.setOnHit(2);
                playa.sendMessage("Next physical attack will imobilise");
             }

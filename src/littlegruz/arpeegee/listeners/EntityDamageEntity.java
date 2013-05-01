@@ -53,7 +53,7 @@ public class EntityDamageEntity implements Listener {
          
          // Should still deal damage if blinded
          if(plugin.getConfMap().get(event.getDamager().getUniqueId()) != null){
-            /* Apply damage and set the damage cause to the mage who cast confusion
+            /* Apply damage and set the damage cause to the mage who cast this confusion
              * Can assume LivingEntity because confMap would have return false otherwise*/
             ((LivingEntity)event.getDamager()).damage(1, plugin.getServer().getPlayer(plugin.getConfMap().get(event.getEntity().getUniqueId())));
          }
@@ -76,7 +76,7 @@ public class EntityDamageEntity implements Listener {
             // Heal spell
             if(playa.getItemInHand().getData().toString().contains("WHITE DYE")
                   && plugin.getMagicPlayerMap().get(playa.getName()) != null
-                  && playa.getLevel() >= 3){
+                  && playa.getLevel() >= 16){
                if(!plugin.getMagicPlayerMap().get(playa.getName()).isHealReady()){
                   playa.sendMessage("Heal is still on cooldown");
                   return;
