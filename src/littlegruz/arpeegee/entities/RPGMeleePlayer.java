@@ -53,7 +53,7 @@ public class RPGMeleePlayer extends RPGPlayer{
    public boolean addBideAmt(int add){
       bideAmt += add;
       
-      if(bideAmt > 2 * super.getGearLevel()) //TODO create suitable limit
+      if(bideAmt > super.getGearLevel())
          return false;
       else
          return true;

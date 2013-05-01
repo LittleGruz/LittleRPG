@@ -124,10 +124,10 @@ public class PlayerInteract implements Listener{
             if(plugin.getBideMap().get(name) == null){
                taskID = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                   public void run(){
-                     for(Entity victim : plugin.getServer().getPlayer(name).getNearbyEntities(5, 5, 5)){
+                     for(Entity victim : plugin.getServer().getPlayer(name).getNearbyEntities(4, 4, 4)){
                         if(plugin.isEnemy(victim)){
                            if(victim instanceof LivingEntity){
-                              ((LivingEntity) victim).damage(plugin.getMeleePlayerMap().get(name).getBideAmt());//TODO damage
+                              ((LivingEntity) victim).damage(plugin.getMeleePlayerMap().get(name).getBideAmt());
                               ((LivingEntity) victim).playEffect(EntityEffect.HURT);
                            }
                         }
@@ -136,7 +136,7 @@ public class PlayerInteract implements Listener{
                      plugin.getBideMap().remove(name);
                      plugin.getServer().getPlayer(name).sendMessage("Bide unleased!");
                   }
-               }, 100L /* * rpgmp.getGearLevel()*/);
+               }, 100L);
                
                plugin.getBideMap().put(name, taskID); // Should integer be task id and put damage get in player object?
                plugin.getMeleePlayerMap().get(name).setBideAmt(0);
