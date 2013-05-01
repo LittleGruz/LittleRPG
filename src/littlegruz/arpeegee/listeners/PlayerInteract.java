@@ -443,37 +443,40 @@ public class PlayerInteract implements Listener{
    }
    
    /* Return the dye or wheat to the player if they are within range of
-    * interacting with a sheep. Note: This does not work the way I want since
-    * giving one item causes the player to still not get the item back, and 
-    * giving them two items causes the player to get two. I choose two because
-    * it will reset when the player uses the ability again.*/
+    * interacting with a sheep. TODO test if it works for 1 tick later*/
    @EventHandler
    public void onPlayerDyeWool(PlayerInteractEntityEvent event){
       if(event.getRightClicked() instanceof Sheep
             && plugin.getMagicPlayerMap().get(event.getPlayer().getName()) != null){
          event.setCancelled(true);
-         ItemStack is = new ItemStack(351,2);
+         final Player playa = event.getPlayer();
          
-         if(event.getPlayer().getItemInHand().getData().toString().contains("YELLOW DYE")){
-            is.setDurability((short)11);
-            event.getPlayer().getInventory().setItem(0, is);
-         }
-         else if(event.getPlayer().getItemInHand().getData().toString().contains("RED DYE")){
-            is.setDurability((short)1);
-            event.getPlayer().getInventory().setItem(2, is);
-         }
-         else if(event.getPlayer().getItemInHand().getData().toString().contains("WHITE DYE")){
-            is.setDurability((short)15);
-            event.getPlayer().getInventory().setItem(1, is);
-         }
-         else if(event.getPlayer().getItemInHand().getData().toString().contains("MAGENTA DYE")){
-            is.setDurability((short)13);
-            event.getPlayer().getInventory().setItem(3, is);
-         }
-         else if(event.getPlayer().getItemInHand().getType().compareTo(Material.WHEAT) == 0){
-            is.setType(Material.WHEAT);
-            event.getPlayer().getInventory().setItem(4, is);
-         }
+         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+            public void run(){
+               ItemStack is = new ItemStack(351,2);
+               
+               if(playa.getItemInHand().getData().toString().contains("YELLOW DYE")){
+                  is.setDurability((short)11);
+                  playa.getInventory().setItem(0, is);
+               }
+               else if(playa.getItemInHand().getData().toString().contains("RED DYE")){
+                  is.setDurability((short)1);
+                  playa.getInventory().setItem(2, is);
+               }
+               else if(playa.getItemInHand().getData().toString().contains("WHITE DYE")){
+                  is.setDurability((short)15);
+                  playa.getInventory().setItem(1, is);
+               }
+               else if(playa.getItemInHand().getData().toString().contains("ORANGE DYE")){
+                  is.setDurability((short)14);
+                  playa.getInventory().setItem(3, is);
+               }
+               else if(playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0){
+                  is.setType(Material.WHEAT);
+                  playa.getInventory().setItem(4, is);
+               }
+            }
+         }, 1L);
       }
    }
    
