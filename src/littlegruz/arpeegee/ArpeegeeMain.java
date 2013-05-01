@@ -593,10 +593,22 @@ public class ArpeegeeMain extends JavaPlugin {
       return false;
    }
 
-   /* Sets a task to turn off a magical ability's cooldown*/
    public void giveCooldown(final Player playa, final String type, String classType, double delay){
-      if(classType.compareTo("magic") == 0){
-         getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+      if(classType.compareTo("default") == 0){
+         getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+            public void run() {
+               if(meleePlayerMap.get(playa.getName()) != null)
+                  meleePlayerMap.get(playa.getName()).setBaseAttackReadiness(true);
+               else if(magicPlayerMap.get(playa.getName()) != null)
+                  magicPlayerMap.get(playa.getName()).setBaseAttackReadiness(true);
+               else if(rangedPlayerMap.get(playa.getName()) != null)
+                  rangedPlayerMap.get(playa.getName()).setBaseAttackReadiness(true);
+            }
+        }, (long) (delay * 20));
+      }
+      /* Sets a task to turn off a magical ability's cooldown*/
+      else if(classType.compareTo("magic") == 0){
+         getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
             public void run() {
                RPGMagicPlayer rpgPlaya = magicPlayerMap.get(playa.getName());
                ItemStack is = new ItemStack(351,1);
@@ -631,7 +643,7 @@ public class ArpeegeeMain extends JavaPlugin {
       }
       /* Sets a task to turn off a ranged ability's cooldown*/
       else if(classType.compareTo("ranged") == 0){
-         getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+         getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
             public void run() {
                RPGRangedPlayer rpgPlaya = rangedPlayerMap.get(playa.getName());
                
@@ -660,7 +672,7 @@ public class ArpeegeeMain extends JavaPlugin {
       }
       /* Sets a task to turn off a ranged ability's cooldown*/
       else if(classType.compareTo("melee") == 0){
-         getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+         getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
             public void run() {
                RPGMeleePlayer rpgPlaya = meleePlayerMap.get(playa.getName());
                

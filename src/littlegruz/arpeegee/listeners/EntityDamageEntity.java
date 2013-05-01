@@ -221,9 +221,14 @@ public class EntityDamageEntity implements Listener {
                //playa.getItemInHand().setDurability((short) 0);
             }
             // Non-default damage for fist by melee player
-            if(playa.getItemInHand().getTypeId() == 0
+            else if(playa.getItemInHand().getTypeId() == 0
                   && plugin.getMeleePlayerMap().get(playa.getName()) != null){
-               plugin.ohTheDamage(event, victim, 2);
+               if(plugin.getMeleePlayerMap().get(playa.getName()).isBaseAttackReady()){
+                  plugin.ohTheDamage(event, victim, 2);
+                  plugin.giveCooldown(playa, "default", "default", 1);
+               }
+               else
+                  plugin.getMeleePlayerMap().get(playa.getName()).setBaseAttackReadiness(false);
             }
             else if((playa.getItemInHand().getType().toString().contains("SWORD")
                   || playa.getItemInHand().getType().compareTo(Material.BOW) == 0
@@ -231,7 +236,21 @@ public class EntityDamageEntity implements Listener {
                   && (plugin.getMeleePlayerMap().get(playa.getName()) != null
                   || plugin.getMagicPlayerMap().get(playa.getName()) != null
                   || plugin.getRangedPlayerMap().get(playa.getName()) != null)){
-               plugin.ohTheDamage(event, victim, 1);
+               RPGPlayer rpgPlaya;
+               
+               if(plugin.getMeleePlayerMap().get(playa.getName()) != null)
+                  rpgPlaya = plugin.getMeleePlayerMap().get(playa.getName());
+               else if(plugin.getMagicPlayerMap().get(playa.getName()) != null)
+                  rpgPlaya = plugin.getMagicPlayerMap().get(playa.getName());
+               else
+                  rpgPlaya = plugin.getRangedPlayerMap().get(playa.getName());
+               
+               if(rpgPlaya.isBaseAttackReady()){
+                  plugin.ohTheDamage(event, victim, 1);
+                  plugin.giveCooldown(playa, "default", "default", 1);
+               }
+               else
+                  rpgPlaya.setBaseAttackReadiness(false);
             }
          }
          // Player taking damage

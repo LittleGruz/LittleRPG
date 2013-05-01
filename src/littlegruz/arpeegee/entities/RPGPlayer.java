@@ -7,7 +7,7 @@ public class RPGPlayer {
    private String name, incomplete, complete, party;
    private int level;
    private float gear;
-   private boolean move;
+   private boolean move, baseAttack;
 
    // New RPGPlayer
    public RPGPlayer(String name){
@@ -134,5 +134,13 @@ public class RPGPlayer {
 
    public void setMove(boolean move){
       this.move = move;
+   }
+
+   public boolean isBaseAttackReady(){
+      return baseAttack;
+   }
+
+   public void setBaseAttackReadiness(boolean baseAttack){
+      this.baseAttack = baseAttack;
    }
 }
