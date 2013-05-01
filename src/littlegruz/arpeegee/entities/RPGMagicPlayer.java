@@ -22,8 +22,8 @@ public class RPGMagicPlayer extends RPGPlayer{
          sheepArray[i] = UUID.fromString("0");
    }
 
-   public RPGMagicPlayer(String name, int level, float gear, int buildUp, String incomplete, String complete, String party){
-      super(name, level, gear, incomplete, complete, party);
+   public RPGMagicPlayer(String name, int level, float gear, int buildUp, String incompleteQuests, String completeQuests, String party){
+      super(name, level, gear, incompleteQuests, completeQuests, party);
       heal = true;
       lightning = true;
       fire = true;

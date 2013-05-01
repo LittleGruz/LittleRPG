@@ -19,8 +19,8 @@ public class RPGMeleePlayer extends RPGPlayer{
       bide = true;
    }
 
-   public RPGMeleePlayer(String name, int level, float gear, int rage, String incomplete, String complete, String party){
-      super(name, level, gear, incomplete, complete, party);
+   public RPGMeleePlayer(String name, int level, float gear, int rage, String incompleteQuests, String completeQuests, String party){
+      super(name, level, gear, incompleteQuests, completeQuests, party);
       this.rage = rage;
       bideAmt = 0;
       onHit = 0;
