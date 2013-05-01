@@ -271,6 +271,9 @@ public class EntityDamageEntity implements Listener {
                
                return;
             }
+            else if(plugin.getMagicPlayerMap().get(playa.getName()) != null){
+               event.setDamage(event.getDamage() - (plugin.getMagicPlayerMap().get(playa.getName()).getSheepCount() / 2));
+            }
             
             if(playa.isBlocking()){
                
@@ -286,7 +289,7 @@ public class EntityDamageEntity implements Listener {
          else if(event.getDamager() instanceof Arrow){
             // Check that it came from the right player
             if(plugin.getProjMap().get(event.getDamager()) != null){
-               int gear, type;
+               int gear, type, dmg;
                String arrowData;
                StringTokenizer st;
                
@@ -295,6 +298,8 @@ public class EntityDamageEntity implements Listener {
                
                gear = (int) Double.parseDouble(st.nextToken());
                type = Integer.parseInt(st.nextToken());
+               
+               dmg = gear;
                
                // Type 2 is the blind arrow
                if(type == 2){
@@ -305,15 +310,25 @@ public class EntityDamageEntity implements Listener {
                         plugin.getBlindMap().remove(ent);
                      }
                   }, gear * 20L);
+                  
+                  /* Blinding arrow only deals half the normal damage*/
+                  dmg = gear / 2;
+               }
+
+               /* Reduced damage to mages with summoned sheep*/
+               if(event.getEntity() instanceof Player){
+                  if(plugin.getMagicPlayerMap().get(((Player) event.getEntity()).getName()) != null){
+                     dmg = gear - (plugin.getMagicPlayerMap().get(((Player) event.getEntity()).getName()).getSheepCount() / 2);
+                  }
                }
                
                // If crit do double damage. 0% to 20% chance
                if(plugin.probabilityRoll(5 * (gear / 2))){
                   event.getEntity().getWorld().strikeLightningEffect(event.getEntity().getLocation());
-                  plugin.ohTheDamage(event, event.getEntity(), gear * 2);
+                  plugin.ohTheDamage(event, event.getEntity(), dmg * 2);
                }
                else
-                  plugin.ohTheDamage(event, event.getEntity(), gear);
+                  plugin.ohTheDamage(event, event.getEntity(), dmg);
                
                clearGroundedProjectiles();
             }
@@ -332,7 +347,15 @@ public class EntityDamageEntity implements Listener {
                
                if(event.getEntity() instanceof LivingEntity){
                   ((LivingEntity) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, bow * 20, 2), true);
+                  /* Slowing arrow only deals half the normal damage*/
                   bow /= 2;
+               }
+               
+               /* Reduced damage to mages with summoned sheep*/
+               if(event.getEntity() instanceof Player){
+                  if(plugin.getMagicPlayerMap().get(((Player) event.getEntity()).getName()) != null){
+                     bow -= plugin.getMagicPlayerMap().get(((Player) event.getEntity()).getName()).getSheepCount() / 2;
+                  }
                }
                
                plugin.ohTheDamage(event, event.getEntity(), bow);
