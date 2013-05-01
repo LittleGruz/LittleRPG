@@ -253,38 +253,6 @@ public class EntityDamageEntity implements Listener {
                   rpgPlaya.setBaseAttackReadiness(false);
             }
          }
-         // Player taking damage
-         else if(event.getEntity() instanceof Player){
-            double damage;
-            Player playa = (Player) event.getEntity();
-            
-            // Melee player potentially adds to its bide
-            if(plugin.getMeleePlayerMap().get(playa.getName()) != null){
-               if(plugin.getBideMap().get(playa.getName()) != null){
-                  plugin.meleeBide(playa, event.getDamage());
-                  event.setDamage(0);
-               }
-               else if(plugin.getBerserkMap().get(playa.getName()) != null){
-                  damage = event.getDamage() * 0.6;
-                  event.setDamage((int)damage);
-               }
-               
-               return;
-            }
-            else if(plugin.getMagicPlayerMap().get(playa.getName()) != null){
-               event.setDamage(event.getDamage() - (plugin.getMagicPlayerMap().get(playa.getName()).getSheepCount() / 2));
-            }
-            
-            if(playa.isBlocking()){
-               
-               damage = event.getDamage() * 0.9;
-               
-               // Stops smaller damages from being mostly ignored
-               if(damage < event.getDamage() - 0.6){
-                  event.setDamage((int)damage);
-               }
-            }
-         }
          // Player arrow hit
          else if(event.getDamager() instanceof Arrow){
             // Check that it came from the right player
@@ -314,12 +282,10 @@ public class EntityDamageEntity implements Listener {
                   /* Blinding arrow only deals half the normal damage*/
                   dmg = gear / 2;
                }
-
-               /* Reduced damage to mages with summoned sheep*/
+               
+               /* Set player damage*/
                if(event.getEntity() instanceof Player){
-                  if(plugin.getMagicPlayerMap().get(((Player) event.getEntity()).getName()) != null){
-                     dmg = gear - (plugin.getMagicPlayerMap().get(((Player) event.getEntity()).getName()).getSheepCount() / 2);
-                  }
+                  dmg = damageToPlayer((Player) event.getEntity(), gear);
                }
                
                // If crit do double damage. 0% to 20% chance
@@ -347,14 +313,12 @@ public class EntityDamageEntity implements Listener {
                
                if(event.getEntity() instanceof LivingEntity){
                   ((LivingEntity) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, bow * 20, 2), true);
-                  /* Slowing arrow only deals half the normal damage*/
+                  /* Slowing arrow only deals half the normal damage TODO*/
                   bow /= 2;
-               }
-               
-               /* Reduced damage to mages with summoned sheep*/
-               if(event.getEntity() instanceof Player){
-                  if(plugin.getMagicPlayerMap().get(((Player) event.getEntity()).getName()) != null){
-                     bow -= plugin.getMagicPlayerMap().get(((Player) event.getEntity()).getName()).getSheepCount() / 2;
+                  
+                  /* Set player damage*/
+                  if(event.getEntity() instanceof Player){
+                     bow = damageToPlayer((Player) event.getEntity(), bow);
                   }
                }
                
@@ -425,6 +389,10 @@ public class EntityDamageEntity implements Listener {
                clearGroundedProjectiles();
             }
          }
+         // Player taking generic damage
+         else if(event.getEntity() instanceof Player){
+            damageToPlayer((Player) event.getEntity(), event.getDamage());
+         }
       }
    }
    
@@ -463,5 +431,38 @@ public class EntityDamageEntity implements Listener {
          plugin.getProjMap().remove(entList.get(i));
          entList.remove(i);
       }
+   }
+   
+   /* Calculates the damage taken by a player. Accounts for blocking, bide,
+    * sheep and berserk*/
+   private int damageToPlayer(Player playa, int dmg){
+      // Melee player potentially adds to its bide
+      if(plugin.getMeleePlayerMap().get(playa.getName()) != null){
+         if(plugin.getBideMap().get(playa.getName()) != null){
+            plugin.meleeBide(playa, dmg);
+            return 0;
+         }
+         else if(plugin.getBerserkMap().get(playa.getName()) != null){
+            return (int)(dmg * 0.6);
+         }
+      }
+      else if(plugin.getMagicPlayerMap().get(playa.getName()) != null){
+         return dmg - (plugin.getMagicPlayerMap().get(playa.getName()).getSheepCount() / 2);
+      }
+      
+      if(playa.isBlocking()){
+         double damage;
+         
+         damage = dmg * 0.9;
+         
+         // Stops smaller damages from being mostly ignored
+         if(damage < dmg - 0.6){
+            damage = dmg;
+         }
+         
+         return (int) damage;
+      }
+      
+      return dmg;
    }
 }
