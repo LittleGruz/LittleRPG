@@ -275,7 +275,8 @@ public class PlayerInteract implements Listener{
             final String pName = playa.getName();
             
             // Activate berserk mode and effects
-            if(plugin.getMeleePlayerMap().get(pName) != null){
+            if(plugin.getMeleePlayerMap().get(pName) != null
+                  && playa.isSneaking()){
                if(plugin.getMeleePlayerMap().get(pName).getRage() >= 100){
                   playa.sendMessage("RAAAAGE (Berserker mode activated)");
                   plugin.getMeleePlayerMap().get(pName).setRage(0);
@@ -295,7 +296,12 @@ public class PlayerInteract implements Listener{
                   playa.sendMessage("Not enough rage. Current rage: " + Integer.toString(plugin.getMeleePlayerMap().get(pName).getRage()));
             }
             // Activate discharge and effects
-            else if(plugin.getMagicPlayerMap().get(pName) != null){
+            else if(plugin.getMagicPlayerMap().get(pName) != null
+                  && (playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
+                  || playa.getItemInHand().getData().toString().contains("ORANGE DYE")
+                  || playa.getItemInHand().getData().toString().contains("YELLOW DYE")
+                  || playa.getItemInHand().getData().toString().contains("RED DYE")
+                  || playa.getItemInHand().getData().toString().contains("WHITE DYE"))){
                if(plugin.getBuildUpMap().get(pName) != null){
                   if(plugin.getMagicPlayerMap().get(pName).getBuildUp() >= 25){
                      playa.sendMessage("Magic discharge initiated");
