@@ -32,6 +32,19 @@ public class PlayerLevel implements Listener{
    
             // Increase player stats
             levelUp(rpgPlaya, event);
+
+            // Blink
+            if(rpgPlaya.getLevel() == 6)
+               event.getPlayer().getInventory().setItem(1, new ItemStack(Material.RAW_FISH,1));
+            // Silence
+            else if(rpgPlaya.getLevel() == 11)
+               event.getPlayer().getInventory().setItem(2, new ItemStack(Material.CARROT_ITEM,1));
+            // Imobilise
+            else if(rpgPlaya.getLevel() == 16)
+               event.getPlayer().getInventory().setItem(3, new ItemStack(Material.PUMPKIN_PIE,1));
+            // Bide
+            else if(rpgPlaya.getLevel() == 20)
+               event.getPlayer().getInventory().setItem(4, new ItemStack(Material.POTATO_ITEM,1));
          }
          // New weapon for the ranged class
          else if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null){
@@ -39,9 +52,6 @@ public class PlayerLevel implements Listener{
             
             // Increase player stats
             levelUp(rpgPlaya, event);
-   
-            if(rpgPlaya.getLevel() >= 7)
-               event.getPlayer().getInventory().setItem(1, new ItemStack(Material.BOW,1));
          }
          // New weapons for the magic class
          else if(plugin.getMagicPlayerMap().get(event.getPlayer().getName()) != null){
@@ -52,18 +62,23 @@ public class PlayerLevel implements Listener{
             
             // Create the base dye type first
             ItemStack is = new ItemStack(351,1);
-            // Heal
-            if(rpgPlaya.getLevel() >= 3){
-               is.setDurability((short)15);
+            // Fire
+            if(rpgPlaya.getLevel() == 6){
+               is.setDurability((short)1);
                event.getPlayer().getInventory().setItem(1, is);
             }
-            // Fire
-            if(rpgPlaya.getLevel() >= 8){
-               is.setDurability((short)1);
+            // Confusion
+            else if(rpgPlaya.getLevel() == 11){
+               is.setDurability((short)14);
                event.getPlayer().getInventory().setItem(2, is);
             }
+            // Heal
+            else if(rpgPlaya.getLevel() == 16){
+               is.setDurability((short)15);
+               event.getPlayer().getInventory().setItem(3, is);
+            }
             // Sheep summon
-            if(rpgPlaya.getLevel() >= 13){
+            else if(rpgPlaya.getLevel() == 20){
                is.setType(Material.WHEAT);
                event.getPlayer().getInventory().setItem(4, is);
             }

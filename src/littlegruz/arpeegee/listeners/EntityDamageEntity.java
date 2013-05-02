@@ -313,7 +313,7 @@ public class EntityDamageEntity implements Listener {
                
                if(event.getEntity() instanceof LivingEntity){
                   ((LivingEntity) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, bow * 20, 2), true);
-                  /* Slowing arrow only deals half the normal damage TODO*/
+                  /* Slowing arrow only deals half the normal damage*/
                   bow /= 2;
                   
                   /* Set player damage*/
