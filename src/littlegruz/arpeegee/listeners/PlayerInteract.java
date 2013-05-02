@@ -79,7 +79,7 @@ public class PlayerInteract implements Listener{
             hs.add((byte)101); //Iron bar
             hs.add((byte)102); //Glass pane
             
-            block = playa.getTargetBlock(hs, (int)(3 * (gear / 2) + 1));
+            block = playa.getTargetBlock(hs, (int)gear + 5);
             loc = block.getLocation();
             
             if(block.getType().compareTo(Material.AIR) != 0
@@ -99,9 +99,6 @@ public class PlayerInteract implements Listener{
                   playa.sendMessage("*Zoom*");
                   
                   // Give cooldown and remove item from inventory
-                  /*playa.getInventory().remove(is);
-                  ItemStack is = new ItemStack(351,1);
-                  is.setDurability((short)13);*/
                   removeItem(playa);
                   plugin.giveCooldown(playa, "flash", "melee", 10);
                   plugin.getMeleePlayerMap().get(playa.getName()).setFlashReadiness(false);
@@ -142,7 +139,7 @@ public class PlayerInteract implements Listener{
                   }
                }, 100L);
                
-               plugin.getBideMap().put(name, taskID); // Should integer be task id and put damage get in player object?
+               plugin.getBideMap().put(name, taskID);
                plugin.getMeleePlayerMap().get(name).setBideAmt(0);
                plugin.giveCooldown(playa, "bide", "melee", 15);
                removeItem(playa);
@@ -463,7 +460,7 @@ public class PlayerInteract implements Listener{
          
          plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             public void run(){
-               ItemStack is = new ItemStack(351,2);
+               ItemStack is = new ItemStack(351,1);
                
                if(playa.getItemInHand().getData().toString().contains("YELLOW DYE")){
                   is.setDurability((short)11);
@@ -505,7 +502,7 @@ public class PlayerInteract implements Listener{
       // Base range is 10 blocks plus the casters spell ability
       rpgm.calcGearLevel(playa.getInventory());
       spell = rpgm.getGearLevel();
-      range = (int)(10 + spell);
+      range = (int)(8 + spell);
       
       for(Entity e : playa.getNearbyEntities(range, range, range)){
          if(plugin.isEnemy(e)){
@@ -534,9 +531,6 @@ public class PlayerInteract implements Listener{
                plugin.ohTheDamage(null, e, spell);
                
                // Remove item from inventory
-               /*ItemStack is = new ItemStack(351,1);
-               is.setDurability((short)11);
-               playa.getInventory().remove(is);*/
                removeItem(playa);
                
                // Set cooldown
@@ -631,9 +625,6 @@ public class PlayerInteract implements Listener{
                plugin.getConfMap().put(eID, rpgm.getName());
                
                // Remove item from inventory
-               /*ItemStack is = new ItemStack(351,1);
-               is.setDurability((short)14);
-               playa.getInventory().remove(is);*/
                removeItem(playa);
                
                // Set cooldown

@@ -145,6 +145,8 @@ public class EntityDamageEntity implements Listener {
                // Silence
                if(rpgMeleeP.getOnHit() == 1){
                   if(victim instanceof Player){
+                     
+                     /* Cause existing player to be unable to cast magic*/
                      if(plugin.getMagicPlayerMap().get(((Player) victim).getName()) != null){
                         final RPGMagicPlayer rpgMagicVic = plugin.getMagicPlayerMap().get(((Player) victim).getName());
                         rpgMagicVic.silencePlayer();
@@ -189,6 +191,7 @@ public class EntityDamageEntity implements Listener {
                   if(victim instanceof Player){
                      RPGPlayer rpgPlaya = null;
 
+                     /* Find the right type of player*/
                      if(plugin.getMeleePlayerMap().get(((Player) victim).getName()) != null)
                         rpgPlaya = plugin.getMeleePlayerMap().get(((Player) victim).getName());
                      if(plugin.getMagicPlayerMap().get(((Player) victim).getName()) != null)
@@ -196,6 +199,7 @@ public class EntityDamageEntity implements Listener {
                      if(plugin.getRangedPlayerMap().get(((Player) victim).getName()) != null)
                         rpgPlaya = plugin.getRangedPlayerMap().get(((Player) victim).getName());
                      
+                     /* Cause existing player to be unable to move*/
                      if(rpgPlaya != null){
                         final RPGPlayer rpgPlayer = rpgPlaya;
                         rpgPlayer.setMove(false);
@@ -217,8 +221,6 @@ public class EntityDamageEntity implements Listener {
                   }
                   rpgMeleeP.setOnHit(0);
                }
-               
-               //playa.getItemInHand().setDurability((short) 0);
             }
             // Non-default damage for fist by melee player
             else if(playa.getItemInHand().getTypeId() == 0
@@ -237,7 +239,8 @@ public class EntityDamageEntity implements Listener {
                   || plugin.getMagicPlayerMap().get(playa.getName()) != null
                   || plugin.getRangedPlayerMap().get(playa.getName()) != null)){
                RPGPlayer rpgPlaya;
-               
+
+               /* Find the right type of player*/
                if(plugin.getMeleePlayerMap().get(playa.getName()) != null)
                   rpgPlaya = plugin.getMeleePlayerMap().get(playa.getName());
                else if(plugin.getMagicPlayerMap().get(playa.getName()) != null)
