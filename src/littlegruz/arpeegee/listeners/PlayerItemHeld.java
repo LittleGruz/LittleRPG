@@ -20,7 +20,6 @@ public class PlayerItemHeld implements Listener{
    public void onPlayerItemHeld(PlayerItemHeldEvent event){
       if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getName())){
          Player playa = event.getPlayer();
-         playa.sendMessage("o hai");
 
          if(plugin.getMeleePlayerMap().get(playa.getName()) != null){
             RPGMeleePlayer rpgmp = plugin.getMeleePlayerMap().get(playa.getName());

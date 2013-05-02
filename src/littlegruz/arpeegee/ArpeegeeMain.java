@@ -616,7 +616,7 @@ public class ArpeegeeMain extends JavaPlugin {
                if(type.compareTo("heal") == 0){
                   rpgPlaya.setHealReadiness(true);
                   is.setDurability((short)15);
-                  playa.getInventory().setItem(1, is);
+                  playa.getInventory().setItem(3, is);
                }
                else if(type.compareTo("light") == 0){
                   rpgPlaya.setLightningReadiness(true);
@@ -626,7 +626,7 @@ public class ArpeegeeMain extends JavaPlugin {
                else if(type.compareTo("fire") == 0){
                   rpgPlaya.setFireReadiness(true);
                   is.setDurability((short)1);
-                  playa.getInventory().setItem(2, is);
+                  playa.getInventory().setItem(1, is);
                }
                else if(type.compareTo("baaa") == 0){
                   rpgPlaya.setSheepReadiness(true);
@@ -636,7 +636,7 @@ public class ArpeegeeMain extends JavaPlugin {
                else if(type.compareTo("conf") == 0){
                   rpgPlaya.setConfusionReadiness(true);
                   is.setDurability((short)14);
-                  playa.getInventory().setItem(3, is);
+                  playa.getInventory().setItem(2, is);
                }
             }
         }, (long) (delay * 20));

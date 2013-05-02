@@ -18,8 +18,8 @@ public class RPGMagicPlayer extends RPGPlayer{
       sheepCount = 0;
       sheepArray = new UUID[4];
       
-      for(int i = 0; i < 4; i++)
-         sheepArray[i] = UUID.fromString("0");
+      /*for(int i = 0; i < 4; i++)
+         sheepArray[i] = null;*/
    }
 
    public RPGMagicPlayer(String name, int level, float gear, int buildUp, String incompleteQuests, String completeQuests, String party){
@@ -33,8 +33,8 @@ public class RPGMagicPlayer extends RPGPlayer{
       sheepCount = 0;
       sheepArray = new UUID[4];
       
-      for(int i = 0; i < 4; i++)
-         sheepArray[i] = UUID.fromString("0");
+      /*for(int i = 0; i < 4; i++)
+         sheepArray[i] = null;*/
    }
 
    public int getBuildUp(){
@@ -128,7 +128,7 @@ public class RPGMagicPlayer extends RPGPlayer{
                   }
                   /* If array was bigger would probably bother to check in each loop
                    * iteration for a UUID of 0 and stop the loop*/
-                  sheepArray[i] = UUID.fromString("0");
+                  sheepArray[i] = null;
                   sheepCount--;
                }
             return true;
