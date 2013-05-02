@@ -355,6 +355,7 @@ public class ArpeegeeMain extends JavaPlugin {
       projMap = new HashMap<Entity, String>();
       bideMap = new HashMap<String, Integer>();
       blindMap = new HashMap<Entity, Integer>();
+      confMap = new HashMap<UUID, String>();
       
       questNumberToSet = -1;
       questCanSet = false;
