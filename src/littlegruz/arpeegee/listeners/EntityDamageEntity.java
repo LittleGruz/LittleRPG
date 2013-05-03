@@ -316,16 +316,16 @@ public class EntityDamageEntity implements Listener {
          else if(event.getDamager() instanceof Snowball){
             // Check that it came from the right player
             if(plugin.getProjMap().get(event.getDamager()) != null){
-               int bow;
+               float bow;
                
-               bow = Integer.parseInt(plugin.getProjMap().get(event.getDamager()));
+               bow = Float.parseFloat(plugin.getProjMap().get(event.getDamager()));
                
                plugin.getProjMap().remove(event.getDamager());
                
                event.setCancelled(true);
                
                if(event.getEntity() instanceof LivingEntity){
-                  ((LivingEntity) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, bow * 20, 2), true);
+                  ((LivingEntity) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int)(bow * 20), 2), true);
                   /* Slowing arrow only deals half the normal damage*/
                   bow /= 2;
                   
@@ -347,7 +347,7 @@ public class EntityDamageEntity implements Listener {
                int bow;
                final Sheep primedSheep;
                
-               bow = Integer.parseInt(plugin.getProjMap().get(event.getDamager()));
+               bow = (int) Float.parseFloat(plugin.getProjMap().get(event.getDamager()));
                
                plugin.getProjMap().remove(event.getDamager());
                
@@ -448,11 +448,11 @@ public class EntityDamageEntity implements Listener {
    
    /* Calculates the damage taken by a player. Accounts for blocking, bide,
     * sheep and berserk*/
-   private int damageToPlayer(Player playa, int dmg){
+   private int damageToPlayer(Player playa, float dmg){
       // Melee player potentially adds to its bide
       if(plugin.getMeleePlayerMap().get(playa.getName()) != null){
          if(plugin.getBideMap().get(playa.getName()) != null){
-            plugin.meleeBide(playa, dmg);
+            plugin.meleeBide(playa, (int) dmg);
             return 0;
          }
          else if(plugin.getBerserkMap().get(playa.getName()) != null){
@@ -460,7 +460,7 @@ public class EntityDamageEntity implements Listener {
          }
       }
       else if(plugin.getMagicPlayerMap().get(playa.getName()) != null){
-         return dmg - (plugin.getMagicPlayerMap().get(playa.getName()).getSheepCount() / 2);
+         return (int) (dmg - (plugin.getMagicPlayerMap().get(playa.getName()).getSheepCount() / 2));
       }
       
       if(playa.isBlocking()){
@@ -476,6 +476,6 @@ public class EntityDamageEntity implements Listener {
          return (int) damage;
       }
       
-      return dmg;
+      return (int) dmg;
    }
 }
