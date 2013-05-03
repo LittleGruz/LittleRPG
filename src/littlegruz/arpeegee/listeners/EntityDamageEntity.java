@@ -77,6 +77,8 @@ public class EntityDamageEntity implements Listener {
             if(playa.getItemInHand().getData().toString().contains("WHITE DYE")
                   && plugin.getMagicPlayerMap().get(playa.getName()) != null
                   && playa.getLevel() >= 16){
+               event.setCancelled(true);
+               
                if(!plugin.getMagicPlayerMap().get(playa.getName()).isHealReady()){
                   playa.sendMessage("Heal is still on cooldown");
                   return;
@@ -99,6 +101,14 @@ public class EntityDamageEntity implements Listener {
                   healSpell(playa, victim, 2);
                   plugin.getBuildUpMap().remove(playa.getName());
                }
+            }
+            // Cancel mage item attack
+            else if(plugin.getMagicPlayerMap().get(playa.getName()) != null
+                  && (playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
+                  || playa.getItemInHand().getData().toString().contains("ORANGE DYE")
+                  || playa.getItemInHand().getData().toString().contains("YELLOW DYE")
+                  || playa.getItemInHand().getData().toString().contains("RED DYE"))){
+               event.setCancelled(true);
             }
             // Damage by a sword by melee player
             else if(playa.getItemInHand().getType().toString().contains("SWORD")
