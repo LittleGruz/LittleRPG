@@ -25,7 +25,7 @@ public class PlayerRespawn implements Listener{
          // Restore weapons and levels for the melee class
          if(plugin.getMeleePlayerMap().get(event.getPlayer().getName()) != null){
             // Give player back their base weapon
-            event.getPlayer().getInventory().setItem(0, new ItemStack(Material.IRON_SWORD,1));
+            event.getPlayer().getInventory().setItem(0, new ItemStack(Material.WOOD_SWORD,1));
          }
          // Restore weapons and levels for the ranged class
          else if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null){
@@ -35,7 +35,7 @@ public class PlayerRespawn implements Listener{
          }
          // Restore weapons and levels for the magic class
          else if(plugin.getMagicPlayerMap().get(event.getPlayer().getName()) != null){
-            // Give player back their base weapon
+            // Give player back their base skill
             // Lightning
             ItemStack is = new ItemStack(351,1);
             is.setDurability((short)11);
@@ -48,18 +48,17 @@ public class PlayerRespawn implements Listener{
    public void onPlayerDeath(PlayerDeathEvent event){
       if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getName())){
          int i;
-         boolean bowTaken, swordTaken, nonHairySackTaken;
+         boolean bowTaken, swordTaken, nonHairySackTaken, arrowTaken;
          ArrayList<ItemStack> removeList = new ArrayList<ItemStack>();
          
          event.setDroppedExp(0);
          event.setKeepLevel(true);
          
-         /* Set up to only take one since player gets one back on respawn*/
+         /* Set up to only take one stack since player gets one back on respawn*/
          bowTaken = false;
          swordTaken = false;
          nonHairySackTaken = false;
-         
-         //event.getDrops().removeAll(event.getDrops());
+         arrowTaken = false;
          
          for(ItemStack is : event.getDrops()){
             if(is.getType().compareTo(Material.INK_SACK) == 0
@@ -67,7 +66,7 @@ public class PlayerRespawn implements Listener{
                removeList.add(is);
                nonHairySackTaken = true;
             }
-            else if(is.getType().compareTo(Material.IRON_SWORD) == 0
+            else if(is.getType().compareTo(Material.WOOD_SWORD) == 0
                   && !swordTaken){
                removeList.add(is);
                swordTaken = true;
@@ -77,8 +76,11 @@ public class PlayerRespawn implements Listener{
                removeList.add(is);
                bowTaken = true;
             }
-            else if(is.getType().compareTo(Material.ARROW) == 0)
+            else if(is.getType().compareTo(Material.ARROW) == 0
+                  && !arrowTaken){
                removeList.add(is);
+               arrowTaken = true;
+            }
          }
          for(i = 0; i < removeList.size(); i++)
             event.getDrops().remove(removeList.get(i));
