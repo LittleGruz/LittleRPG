@@ -211,6 +211,7 @@ public class PlayerInteract implements Listener{
                rpgm.setSheepArrayID(3, loc.getWorld().spawnEntity(loc, EntityType.SHEEP).getUniqueId());
                
                rpgm.setSheepCount(4);
+               plugin.getBuildUpMap().remove(playa.getName());
             }
             else
                rpgm.setSheepCount(2);
@@ -259,8 +260,10 @@ public class PlayerInteract implements Listener{
 
             rpgm.calcGearLevel(playa.getInventory());
             ballOfFire = event.getPlayer().launchProjectile(Fireball.class);
-            if(plugin.getBuildUpMap().get(playa.getName()) != null)
+            if(plugin.getBuildUpMap().get(playa.getName()) != null){
                data = Float.toString(rpgm.getGearLevel() * 1.5F) + "|y";
+               plugin.getBuildUpMap().remove(playa.getName());
+            }
             else
                data = Float.toString(rpgm.getGearLevel()) + "|n";
             
@@ -304,7 +307,7 @@ public class PlayerInteract implements Listener{
                   || playa.getItemInHand().getData().toString().contains("WHITE DYE")){
                String pName = playa.getName();
                
-               if(plugin.getBuildUpMap().get(pName) != null){
+               if(plugin.getBuildUpMap().get(pName) == null){
                   if(plugin.getMagicPlayerMap().get(pName).getBuildUp() >= 25){
                      playa.sendMessage("Magic discharge initiated");
                      plugin.getMagicPlayerMap().get(pName).setBuildUp(plugin.getMagicPlayerMap().get(pName).getBuildUp() - 25);
