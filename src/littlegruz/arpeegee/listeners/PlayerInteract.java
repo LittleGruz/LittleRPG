@@ -151,6 +151,7 @@ public class PlayerInteract implements Listener{
          }
          // Lightning spell
          else if(playa.getItemInHand().getData().toString().contains("YELLOW DYE")
+               && event.getAction().toString().contains("LEFT_CLICK")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null){
             event.setCancelled(true);
             
@@ -163,6 +164,7 @@ public class PlayerInteract implements Listener{
          }
          // Confusion spell
          else if(playa.getItemInHand().getData().toString().contains("ORANGE DYE")
+               && event.getAction().toString().contains("LEFT_CLICK")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
                && playa.getLevel() >= 11){
             event.setCancelled(true);
@@ -176,7 +178,7 @@ public class PlayerInteract implements Listener{
          }
          // Melancholy. Spawns sheep around mage.
          else if(playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
-               && event.getAction().toString().contains("RIGHT_CLICK")
+               && event.getAction().toString().contains("LEFT_CLICK")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
                && playa.getLevel() >= 20){
             event.setCancelled(true);
@@ -237,7 +239,7 @@ public class PlayerInteract implements Listener{
          }
          // Casting fireball
          else if(playa.getItemInHand().getData().toString().contains("RED DYE")
-               && event.getAction().toString().contains("RIGHT_CLICK")
+               && event.getAction().toString().contains("LEFT_CLICK")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
                && playa.getLevel() >= 6){
             event.setCancelled(true);
@@ -265,15 +267,14 @@ public class PlayerInteract implements Listener{
             plugin.getProjMap().put(ballOfFire, data);
             
          }
-         // Active berserk or discharge mode if player has gained enough rage
-         else if(event.getAction().toString().contains("RIGHT_CLICK")
+         // Activate berserk mode if player has gained enough rage
+         else if(event.getAction().toString().contains("LEFT_CLICK")
                && (plugin.getMeleePlayerMap().get(playa.getName()) != null
                || plugin.getMagicPlayerMap().get(playa.getName()) != null)){
             final String pName = playa.getName();
             
             // Activate berserk mode and effects
-            if(plugin.getMeleePlayerMap().get(pName) != null
-                  && playa.isSneaking()){
+            if(playa.isBlocking()){
                if(plugin.getMeleePlayerMap().get(pName).getRage() >= 100){
                   playa.sendMessage("RAAAAGE (Berserker mode activated)");
                   plugin.getMeleePlayerMap().get(pName).setRage(0);
@@ -292,13 +293,17 @@ public class PlayerInteract implements Listener{
                else
                   playa.sendMessage("Not enough rage. Current rage: " + Integer.toString(plugin.getMeleePlayerMap().get(pName).getRage()));
             }
-            // Activate discharge and effects
-            else if(plugin.getMagicPlayerMap().get(pName) != null
-                  && (playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
+         }
+         // Activate discharge mode if player has gained enough buildup
+         else if(event.getAction().toString().contains("RIGHT_CLICK")
+               || plugin.getMagicPlayerMap().get(playa.getName()) != null){
+            if(playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
                   || playa.getItemInHand().getData().toString().contains("ORANGE DYE")
                   || playa.getItemInHand().getData().toString().contains("YELLOW DYE")
                   || playa.getItemInHand().getData().toString().contains("RED DYE")
-                  || playa.getItemInHand().getData().toString().contains("WHITE DYE"))){
+                  || playa.getItemInHand().getData().toString().contains("WHITE DYE")){
+               String pName = playa.getName();
+               
                if(plugin.getBuildUpMap().get(pName) != null){
                   if(plugin.getMagicPlayerMap().get(pName).getBuildUp() >= 25){
                      playa.sendMessage("Magic discharge initiated");

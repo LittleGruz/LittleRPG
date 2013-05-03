@@ -682,6 +682,7 @@ public class ArpeegeeMain extends JavaPlugin {
                }
                else if(type.compareTo("flash") == 0){
                   rpgPlaya.setFlashReadiness(true);
+                  playa.getInventory().setItem(1, new ItemStack(Material.RAW_FISH,1));
                }
                else if(type.compareTo("bide") == 0){
                   rpgPlaya.setBideAmt(0);
