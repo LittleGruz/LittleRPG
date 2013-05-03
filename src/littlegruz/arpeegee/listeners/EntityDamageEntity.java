@@ -322,8 +322,6 @@ public class EntityDamageEntity implements Listener {
                
                plugin.getProjMap().remove(event.getDamager());
                
-               event.setCancelled(true);
-               
                if(event.getEntity() instanceof LivingEntity){
                   ((LivingEntity) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int)(bow * 20), 2), true);
                   /* Slowing arrow only deals half the normal damage*/
@@ -369,7 +367,7 @@ public class EntityDamageEntity implements Listener {
                
                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                   public void run(){
-                     primedSheep.getLocation().getWorld().createExplosion(primedSheep.getLocation(), primedSheep.getHealth(), true);
+                     primedSheep.getLocation().getWorld().createExplosion(primedSheep.getLocation(), (float) primedSheep.getHealth(), true);
                      primedSheep.remove();
                   }
                }, 30L);
