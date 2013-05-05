@@ -54,9 +54,26 @@ public class PlayerLevel implements Listener{
             // Increase player stats
             levelUp(rpgPlaya, event.getPlayer(), event.getNewLevel());
             
+            // Create the base dye type first
+            ItemStack is = new ItemStack(351,1);
+            // Slow arrow
+            if(rpgPlaya.getLevel() == 6){
+               is.setDurability((short)12);
+               event.getPlayer().getInventory().setItem(1, is);
+            }
+            // Blind arrow
+            else if(rpgPlaya.getLevel() == 11){
+               is.setDurability((short)0);
+               event.getPlayer().getInventory().setItem(2, is);
+            }
             // Eggsplode
-            if(rpgPlaya.getLevel() == 16)
+            else if(rpgPlaya.getLevel() == 16)
                event.getPlayer().getInventory().setItem(3, new ItemStack(Material.EGG,1));
+            // Sheep arrow
+            else if(rpgPlaya.getLevel() == 20){
+               is.setDurability((short)15);
+               event.getPlayer().getInventory().setItem(4, is);
+            }
          }
          // New weapons for the magic class
          else if(plugin.getMagicPlayerMap().get(event.getPlayer().getName()) != null){
