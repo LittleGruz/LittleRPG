@@ -9,7 +9,6 @@ import org.bukkit.entity.SmallFireball;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
@@ -25,85 +24,6 @@ public class PlayerProjectile implements Listener{
    public PlayerProjectile(ArpeegeeMain instance){
       plugin = instance;
    }
-   
-   @EventHandler
-   public void onPlayerBowShoot(EntityShootBowEvent event){
-      if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getName())){
-         if(plugin.getConfMap().get(event.getEntity().getUniqueId()) != null){
-            // Apply damage and set the damage cause to the mage who cast this confusion
-            event.getEntity().damage(2, plugin.getServer().getPlayer(plugin.getConfMap().get(event.getEntity().getUniqueId())));
-         }
-         
-         if(event.getEntity() instanceof Player){
-            Player playa = (Player) event.getEntity();
-   
-            if(plugin.getRangedPlayerMap().get(playa.getName()) != null){
-               RPGRangedPlayer rpgr = plugin.getRangedPlayerMap().get(playa.getName());
-               
-               rpgr.calcGearLevel(playa.getInventory());
-               
-               // Normal arrow
-               if(playa.getInventory().getHeldItemSlot() == 0){
-                  if(!rpgr.isArrowReady()){
-                     playa.sendMessage("Arrow is still on cooldown");
-                     event.setCancelled(true);
-                     return;
-                  }
-                  
-                  plugin.getProjMap().put(event.getProjectile(),
-                        Float.toString(rpgr.getGearLevel()) + "|1");
-                  rpgr.setArrowReadiness(false);
-                  plugin.giveCooldown(playa, "arrow", "ranged", 3);
-               }
-               else if(playa.getInventory().getHeldItemSlot() == 1){
-                  // Blind arrow
-                  if(playa.getLevel() >= 11){
-                     if(!rpgr.isBlindBowReady()){
-                        playa.sendMessage("Blind arrow is still on cooldown");
-                        event.setCancelled(true);
-                        return;
-                     }
-                     
-                     plugin.getProjMap().put(event.getProjectile(),
-                           Float.toString(rpgr.getGearLevel()) + "|2");
-                     playa.getInventory().setItemInHand(null);
-                     rpgr.setBlindBowReadiness(false);
-                     rpgr.setOnHit(0);
-                     plugin.giveCooldown(playa, "ICANTSEE", "ranged", 3);
-                  }
-                  // Normal arrow
-                  else{
-                     if(!rpgr.isArrowReady()){
-                        playa.sendMessage("Arrow is still on cooldown");
-                        event.setCancelled(true);
-                        return;
-                     }
-                     
-                     plugin.getProjMap().put(event.getProjectile(),
-                           Float.toString(rpgr.getGearLevel()) + "|1");
-                     rpgr.setArrowReadiness(false);
-                     plugin.giveCooldown(playa, "arrow", "ranged", 2);
-                  }
-               }
-               // Normal arrow
-               else if(playa.getInventory().getHeldItemSlot() > 1){
-                  if(!rpgr.isArrowReady()){
-                     playa.sendMessage("Arrow is still on cooldown");
-                     event.setCancelled(true);
-                     return;
-                  }
-                  
-                  plugin.getProjMap().put(event.getProjectile(),
-                        Float.toString(rpgr.getGearLevel()) + "|1");
-                  rpgr.setArrowReadiness(false);
-                  plugin.giveCooldown(playa, "arrow", "ranged", 2);
-               }
-               if(playa.getInventory().getItem(9).getAmount() < 2)
-                  playa.getInventory().getItem(9).setAmount(10);
-            }
-         }
-      }
-   }
 
    @EventHandler
    public void onProjectileLaunch(ProjectileLaunchEvent event){
@@ -117,14 +37,13 @@ public class PlayerProjectile implements Listener{
             Arrow arrow = (Arrow) event.getEntity();
             if(arrow.getShooter() instanceof Player){
                Player playa = (Player) arrow.getShooter();
-               if(plugin.getRangedPlayerMap().get(playa.getName()) != null){
+               if(plugin.getRangedPlayerMap().get(playa.getName()) != null
+                     && playa.getItemInHand().getType() == Material.BOW){
                   RPGRangedPlayer rpgr = plugin.getRangedPlayerMap().get(playa.getName());
                   
                   rpgr.calcGearLevel(playa.getInventory());
                   // Slow arrow
-                  if(playa.getItemInHand().getType() == Material.BOW
-                        && playa.getInventory().getHeldItemSlot() == 2
-                        && playa.getLevel() >= 6){
+                  if(rpgr.getOnHit() == 1){
                      event.setCancelled(true);
                      if(!rpgr.isSlowBowReady()){
                         playa.sendMessage("Slow arrow is still on cooldown");
@@ -141,10 +60,23 @@ public class PlayerProjectile implements Listener{
                      rpgr.setOnHit(0);
                      plugin.giveCooldown(playa, "slow", "ranged", 2);
                   }
+                  // Blind arrow
+                  else if(rpgr.getOnHit() == 2){
+                     if(!rpgr.isBlindBowReady()){
+                        playa.sendMessage("Blind arrow is still on cooldown");
+                        event.setCancelled(true);
+                        return;
+                     }
+                     
+                     plugin.getProjMap().put(arrow,
+                           Float.toString(rpgr.getGearLevel()) + "|2");
+                     playa.getInventory().setItemInHand(null);
+                     rpgr.setBlindBowReadiness(false);
+                     rpgr.setOnHit(0);
+                     plugin.giveCooldown(playa, "ICANTSEE", "ranged", 3);
+                  }
                   // Sheep arrow
-                  else if(playa.getItemInHand().getType() == Material.BOW
-                        && playa.getInventory().getHeldItemSlot() == 3
-                        && playa.getLevel() >= 20){
+                  else if(rpgr.getOnHit() == 3){
                      event.setCancelled(true);
                      if(!rpgr.isSheepBowReady()){
                         playa.sendMessage("Sheep arrow is still on cooldown");
@@ -161,6 +93,23 @@ public class PlayerProjectile implements Listener{
                      rpgr.setOnHit(0);
                      plugin.giveCooldown(playa, "woof", "ranged", 2);
                   }
+                  // Normal arrow
+                  else{
+                     if(!rpgr.isArrowReady()){
+                        playa.sendMessage("Arrow is still on cooldown");
+                        event.setCancelled(true);
+                        return;
+                     }
+                     
+                     plugin.getProjMap().put(arrow,
+                           Float.toString(rpgr.getGearLevel()) + "|1");
+                     rpgr.setArrowReadiness(false);
+                     plugin.giveCooldown(playa, "arrow", "ranged", 2);
+                  }
+
+                  /* Give player some arrows if running low*/
+                  if(playa.getInventory().getItem(9).getAmount() < 2)
+                     playa.getInventory().getItem(9).setAmount(10);
                }
             }
          }

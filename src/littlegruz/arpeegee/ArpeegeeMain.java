@@ -589,8 +589,10 @@ public class ArpeegeeMain extends JavaPlugin {
          return true;
       else if(ent instanceof EnderDragon)
          return true;
-      else if(ent instanceof Player)
+      else if(ent instanceof Player){
+         // TODO In here check if player part of party or not
          return true;
+      }
       return false;
    }
 
