@@ -1,10 +1,12 @@
 package littlegruz.arpeegee.entities;
 
 public class RPGRangedPlayer extends RPGPlayer{
-   private boolean egg, slowBow, sheepBow, blindBow, arrow; 
+   private boolean egg, slowBow, sheepBow, blindBow, arrow;
+   private int onHit;
 
    public RPGRangedPlayer(String name){
       super(name);
+      onHit = 0;
       egg = true;
       slowBow = true;
       sheepBow = true;
@@ -14,6 +16,7 @@ public class RPGRangedPlayer extends RPGPlayer{
 
    public RPGRangedPlayer(String name, int level, float gear, String incompleteQuests, String completeQuests, String party){
       super(name, level, gear, incompleteQuests, completeQuests, party);
+      onHit = 0;
       egg = true;
       slowBow = true;
       sheepBow = true;
@@ -79,5 +82,14 @@ public class RPGRangedPlayer extends RPGPlayer{
       slowBow = true;
       sheepBow = true;
       blindBow = true;
+   }
+   
+   public int getOnHit(){
+      return onHit;
+   }
+   
+   /* 0 normal; 1 slow; 2 blind; 3 sheep*/
+   public void setOnHit(int hit){
+      onHit = hit;
    }
 }

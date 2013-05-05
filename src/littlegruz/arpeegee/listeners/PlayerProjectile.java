@@ -68,6 +68,7 @@ public class PlayerProjectile implements Listener{
                            Float.toString(rpgr.getGearLevel()) + "|2");
                      playa.getInventory().setItemInHand(null);
                      rpgr.setBlindBowReadiness(false);
+                     rpgr.setOnHit(0);
                      plugin.giveCooldown(playa, "ICANTSEE", "ranged", 3);
                   }
                   // Normal arrow
@@ -137,6 +138,7 @@ public class PlayerProjectile implements Listener{
                            Float.toString(rpgr.getGearLevel()));
                      playa.getInventory().setItemInHand(null);
                      rpgr.setSlowBowReadiness(false);
+                     rpgr.setOnHit(0);
                      plugin.giveCooldown(playa, "slow", "ranged", 2);
                   }
                   // Sheep arrow
@@ -156,6 +158,7 @@ public class PlayerProjectile implements Listener{
                            Float.toString(rpgr.getGearLevel()));
                      playa.getInventory().setItemInHand(null);
                      rpgr.setSheepBowReadiness(false);
+                     rpgr.setOnHit(0);
                      plugin.giveCooldown(playa, "woof", "ranged", 2);
                   }
                }
