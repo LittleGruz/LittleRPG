@@ -7,6 +7,7 @@ import littlegruz.arpeegee.entities.RPGPlayer;
 import littlegruz.arpeegee.entities.RPGRangedPlayer;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
@@ -31,7 +32,7 @@ public class PlayerLevel implements Listener{
             RPGMeleePlayer rpgPlaya = plugin.getMeleePlayerMap().get(event.getPlayer().getName());
    
             // Increase player stats
-            levelUp(rpgPlaya, event);
+            levelUp(rpgPlaya, event.getPlayer(), event.getNewLevel());
 
             // Blink
             if(rpgPlaya.getLevel() == 6)
@@ -51,14 +52,18 @@ public class PlayerLevel implements Listener{
             RPGRangedPlayer rpgPlaya = plugin.getRangedPlayerMap().get(event.getPlayer().getName());
             
             // Increase player stats
-            levelUp(rpgPlaya, event);
+            levelUp(rpgPlaya, event.getPlayer(), event.getNewLevel());
+            
+            // Eggsplode
+            if(rpgPlaya.getLevel() == 16)
+               event.getPlayer().getInventory().setItem(3, new ItemStack(Material.EGG,1));
          }
          // New weapons for the magic class
          else if(plugin.getMagicPlayerMap().get(event.getPlayer().getName()) != null){
             RPGMagicPlayer rpgPlaya = plugin.getMagicPlayerMap().get(event.getPlayer().getName());
             
             // Increase player stats
-            levelUp(rpgPlaya, event);
+            levelUp(rpgPlaya, event.getPlayer(), event.getNewLevel());
             
             // Create the base dye type first
             ItemStack is = new ItemStack(351,1);
@@ -86,13 +91,13 @@ public class PlayerLevel implements Listener{
       }
    }
    
-   private void levelUp(RPGPlayer rpgPlaya, PlayerLevelChangeEvent event){
+   private void levelUp(RPGPlayer rpgPlaya, Player playa, int newLevel){
 
-      if(event.getNewLevel() > plugin.MAX_LEVEL){
+      if(newLevel > plugin.MAX_LEVEL){
          rpgPlaya.setLevel(plugin.MAX_LEVEL);
-         event.getPlayer().setLevel(plugin.MAX_LEVEL);
+         playa.setLevel(plugin.MAX_LEVEL);
       }
       else
-         rpgPlaya.setLevel(event.getNewLevel());
+         rpgPlaya.setLevel(newLevel);
    }
 }

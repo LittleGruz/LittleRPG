@@ -654,7 +654,7 @@ public class ArpeegeeMain extends JavaPlugin {
                }
                else if(type.compareTo("egg") == 0){
                   rpgPlaya.setEggReadiness(true);
-                  playa.getInventory().setItem(4, new ItemStack(Material.EGG,1));
+                  playa.getInventory().setItem(3, new ItemStack(Material.EGG,1));
                }
                else if(type.compareTo("slow") == 0){
                   rpgPlaya.setSlowBowReadiness(true);
@@ -666,7 +666,7 @@ public class ArpeegeeMain extends JavaPlugin {
                }
                else if(type.compareTo("woof") == 0){
                   rpgPlaya.setSheepBowReadiness(true);
-                  playa.getInventory().setItem(3, new ItemStack(Material.BOW,1));
+                  playa.getInventory().setItem(4, new ItemStack(Material.BOW,1));
                }
             }
         }, (long) (delay * 20)); // Multiplied by 20 to turn the delay time into seconds
