@@ -200,15 +200,9 @@ public class EntityDamageEntity implements Listener {
                // Imobilise
                else if(rpgMeleeP.getOnHit() == 2){
                   if(victim instanceof Player){
-                     RPGPlayer rpgPlaya = null;
+                     RPGPlayer rpgPlaya;
 
-                     /* Find the right type of player*/
-                     if(plugin.getMeleePlayerMap().get(((Player) victim).getName()) != null)
-                        rpgPlaya = plugin.getMeleePlayerMap().get(((Player) victim).getName());
-                     else if(plugin.getMagicPlayerMap().get(((Player) victim).getName()) != null)
-                        rpgPlaya = plugin.getMagicPlayerMap().get(((Player) victim).getName());
-                     else if(plugin.getRangedPlayerMap().get(((Player) victim).getName()) != null)
-                        rpgPlaya = plugin.getRangedPlayerMap().get(((Player) victim).getName());
+                     rpgPlaya = plugin.findRPGPlayer(((Player) victim).getName());
                      
                      /* Cause existing player to be unable to move*/
                      if(rpgPlaya != null){

@@ -592,14 +592,8 @@ public class ArpeegeeMain extends JavaPlugin {
       else if(ent instanceof Player){
          RPGPlayer rpgPlaya;
 
-         /* Find the right type of player*/
-         if(meleePlayerMap.get(((Player) ent).getName()) != null)
-            rpgPlaya = meleePlayerMap.get(((Player) ent).getName());
-         else if(magicPlayerMap.get(((Player) ent).getName()) != null)
-            rpgPlaya = magicPlayerMap.get(((Player) ent).getName());
-         else if(rangedPlayerMap.get(((Player) ent).getName()) != null)
-            rpgPlaya = rangedPlayerMap.get(((Player) ent).getName());
-         else
+         /* Find the RPG player*/
+         if((rpgPlaya = findRPGPlayer(((Player) ent).getName())) == null)
             return true;
          
          if(rpgPlaya.getParty().compareToIgnoreCase(party) == 0)
@@ -608,6 +602,17 @@ public class ArpeegeeMain extends JavaPlugin {
          return true;
       }
       return false;
+   }
+   
+   public RPGPlayer findRPGPlayer(String name){
+      if(meleePlayerMap.get(name) != null)
+         return meleePlayerMap.get(name);
+      else if(magicPlayerMap.get(name) != null)
+         return magicPlayerMap.get(name);
+      else if(rangedPlayerMap.get(name) != null)
+         return rangedPlayerMap.get(name);
+      else
+         return null;
    }
 
    public void giveCooldown(final Player playa, final String type, String classType, double delay){
