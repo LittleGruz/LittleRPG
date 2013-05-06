@@ -5,7 +5,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 public class RPGPlayer {
    private String name, incomplete, complete, party;
-   private int level;
+   private int level, chat;
    private float gear;
    private boolean move, baseAttack;
 
@@ -14,6 +14,7 @@ public class RPGPlayer {
       this.name = name;
       level = 1;
       gear = 0;
+      chat = 0;
       incomplete = "none";
       complete = "none";
       party = "none";
@@ -29,6 +30,7 @@ public class RPGPlayer {
       this.complete = complete;
       this.party = party;
       move = true;
+      chat = 0;
    }
 
    public String getName() {
@@ -150,5 +152,14 @@ public class RPGPlayer {
 
    public void setBaseAttackReadiness(boolean baseAttack){
       this.baseAttack = baseAttack;
+   }
+
+   /* 0 is normal global chat; 1 is party chat*/
+   public int getChat(){
+      return chat;
+   }
+
+   public void setChat(int chat){
+      this.chat = chat;
    }
 }

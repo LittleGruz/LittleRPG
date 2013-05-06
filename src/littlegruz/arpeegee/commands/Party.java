@@ -1,9 +1,5 @@
 package littlegruz.arpeegee.commands;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import littlegruz.arpeegee.ArpeegeeMain;
 import littlegruz.arpeegee.entities.RPGParty;
 import littlegruz.arpeegee.entities.RPGPlayer;
@@ -151,31 +147,18 @@ public class Party implements CommandExecutor{
          else if(cmd.getName().compareToIgnoreCase("party") == 0){
             if(sender instanceof Player){
                RPGPlayer rpgp;
-               String party;
                
                rpgp = plugin.findRPGPlayer(((Player) sender).getName());
                
                if(rpgp != null){
-                  party = rpgp.getParty();
-                  
-                  if(party.compareTo("none") != 0){
-                     String msg = "";
-                     Iterator<Map.Entry<String, String>> it = plugin.getPartyMap().get(party).getMembers().entrySet().iterator();
-                     
-                     // Collect message
-                     for(int i = 1; i < args.length; i++)
-                        msg += " " + args[i];
-                     
-                     /* Send the message to everyone but the sender in the party*/
-                     while(it.hasNext()){
-                        Entry<String, String> playa = it.next();
-                        if(playa.getValue().compareToIgnoreCase(rpgp.getName()) != 0){
-                           plugin.getServer().getPlayer(playa.getKey()).sendMessage(msg);
-                        }
-                     }
+                  if(rpgp.getChat() == 0){
+                     rpgp.setChat(1);
+                     sender.sendMessage("Party chat set");
                   }
-                  else
-                     sender.sendMessage("You must join a party first");
+                  else{
+                     rpgp.setChat(0);
+                     sender.sendMessage("Party chat unset");
+                  }
                }
             }
          }

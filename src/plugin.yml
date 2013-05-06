@@ -49,8 +49,8 @@ commands:
       description: Remove party invite for a player
       usage: /removepartyinvite <player_name> [player_name] ...
    party:
-      description: Sends a message to all party members
-      usage: /party <message>
+      description: Toggle party chat
+      usage: /party
 
 permissions:
    rpg.world:

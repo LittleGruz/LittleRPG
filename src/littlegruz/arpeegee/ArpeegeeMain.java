@@ -32,10 +32,12 @@ import littlegruz.arpeegee.gui.LittleGUI;
 import littlegruz.arpeegee.listeners.ButtonListener;
 import littlegruz.arpeegee.listeners.EnemyDeaths;
 import littlegruz.arpeegee.listeners.EntityDamageEntity;
+import littlegruz.arpeegee.listeners.PlayerChat;
 import littlegruz.arpeegee.listeners.PlayerInteract;
 import littlegruz.arpeegee.listeners.PlayerItemHeld;
 import littlegruz.arpeegee.listeners.PlayerJoin;
 import littlegruz.arpeegee.listeners.PlayerLevel;
+import littlegruz.arpeegee.listeners.PlayerPickupItem;
 import littlegruz.arpeegee.listeners.PlayerProjectile;
 import littlegruz.arpeegee.listeners.PlayerRespawn;
 import littlegruz.arpeegee.listeners.PlayerSpeed;
@@ -320,10 +322,12 @@ public class ArpeegeeMain extends JavaPlugin {
       //Set up listeners
       getServer().getPluginManager().registerEvents(new EnemyDeaths(this), this);
       getServer().getPluginManager().registerEvents(new EntityDamageEntity(this), this);
+      getServer().getPluginManager().registerEvents(new PlayerChat(this), this);
       getServer().getPluginManager().registerEvents(new PlayerInteract(this), this);
       getServer().getPluginManager().registerEvents(new PlayerItemHeld(this), this);
       getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
       getServer().getPluginManager().registerEvents(new PlayerLevel(this), this);
+      getServer().getPluginManager().registerEvents(new PlayerPickupItem(this), this);
       getServer().getPluginManager().registerEvents(new PlayerProjectile(this), this);
       getServer().getPluginManager().registerEvents(new PlayerRespawn(this), this);
       getServer().getPluginManager().registerEvents(new PlayerSpeed(this), this);
