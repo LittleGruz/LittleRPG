@@ -48,6 +48,9 @@ commands:
    removepartyinvite:
       description: Remove party invite for a player
       usage: /removepartyinvite <player_name> [player_name] ...
+   party:
+      description: Sends a message to all party members
+      usage: /party <message>
 
 permissions:
    rpg.world:
@@ -61,6 +64,9 @@ permissions:
       default: op
    rpg.begin:
       description: Choosing starting classes
+      default: true
+   rpg.party:
+      description: Party creation/leaving/chatting
       default: true
 
 softdepend: [Spout]

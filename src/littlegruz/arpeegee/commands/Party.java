@@ -1,11 +1,17 @@
 package littlegruz.arpeegee.commands;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import littlegruz.arpeegee.ArpeegeeMain;
 import littlegruz.arpeegee.entities.RPGParty;
+import littlegruz.arpeegee.entities.RPGPlayer;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class Party implements CommandExecutor{
    private ArpeegeeMain plugin;
@@ -141,6 +147,37 @@ public class Party implements CommandExecutor{
             }
             else
                sender.sendMessage("Not enough arguments");
+         }
+         else if(cmd.getName().compareToIgnoreCase("party") == 0){
+            if(sender instanceof Player){
+               RPGPlayer rpgp;
+               String party;
+               
+               rpgp = plugin.findRPGPlayer(((Player) sender).getName());
+               
+               if(rpgp != null){
+                  party = rpgp.getParty();
+                  
+                  if(party.compareTo("none") != 0){
+                     String msg = "";
+                     Iterator<Map.Entry<String, String>> it = plugin.getPartyMap().get(party).getMembers().entrySet().iterator();
+                     
+                     // Collect message
+                     for(int i = 1; i < args.length; i++)
+                        msg += " " + args[i];
+                     
+                     /* Send the message to everyone but the sender in the party*/
+                     while(it.hasNext()){
+                        Entry<String, String> playa = it.next();
+                        if(playa.getValue().compareToIgnoreCase(rpgp.getName()) != 0){
+                           plugin.getServer().getPlayer(playa.getKey()).sendMessage(msg);
+                        }
+                     }
+                  }
+                  else
+                     sender.sendMessage("You must join a party first");
+               }
+            }
          }
       }
       return true;
