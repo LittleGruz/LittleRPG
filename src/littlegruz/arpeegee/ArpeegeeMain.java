@@ -349,6 +349,7 @@ public class ArpeegeeMain extends JavaPlugin {
       getCommand("leaveparty").setExecutor(new Party(this));
       getCommand("sendpartyinvite").setExecutor(new Party(this));
       getCommand("removepartyinvite").setExecutor(new Party(this));
+      getCommand("party").setExecutor(new Party(this));
 
       berserkMap = new HashMap<String, String>();
       buildUpMap = new HashMap<String, String>();
