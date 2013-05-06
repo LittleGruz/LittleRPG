@@ -51,7 +51,7 @@ public class EntityDamageEntity implements Listener {
             }
          }
          
-         // Should still deal damage if blinded
+         // Should still take damage if blinded
          if(plugin.getConfMap().get(event.getDamager().getUniqueId()) != null){
             /* Apply damage and set the damage cause to the mage who cast this confusion
              * Can assume LivingEntity because confMap would have return false otherwise*/
@@ -102,13 +102,13 @@ public class EntityDamageEntity implements Listener {
                   plugin.getBuildUpMap().remove(playa.getName());
                }
             }
-            // Cancel mage item attack
+            // Cancel mage item attack damage
             else if(plugin.getMagicPlayerMap().get(playa.getName()) != null
                   && (playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
                   || playa.getItemInHand().getData().toString().contains("ORANGE DYE")
                   || playa.getItemInHand().getData().toString().contains("YELLOW DYE")
                   || playa.getItemInHand().getData().toString().contains("RED DYE"))){
-               event.setCancelled(true);
+               event.setDamage(0);
             }
             // Damage by a sword by melee player
             else if(playa.getItemInHand().getType().toString().contains("SWORD")
@@ -117,17 +117,18 @@ public class EntityDamageEntity implements Listener {
                float gear;
                RPGMeleePlayer rpgMeleeP = plugin.getMeleePlayerMap().get(playa.getName());
                
-               // Check if the player can swing yet
-               if(rpgMeleeP.isSwordReady()){
+               /* Check if the player can swing yet and if the entity is an enemy*/
+               if(rpgMeleeP.isSwordReady() && plugin.isEnemy(event.getEntity(), rpgMeleeP.getParty())){
                   plugin.giveCooldown(playa, "slash", "melee", 1);
                   rpgMeleeP.setSwordReadiness(false);
                }
-               else
+               else{
+                  event.setCancelled(true);
                   return;
+               }
                
                rpgMeleeP.calcGearLevel(playa.getInventory());
                gear = rpgMeleeP.getGearLevel();
-               gear = 0;
                
                /* Crit chance 0% to 25%. Berserk mode adds 10%
                 * Damage in berserk adds 1 to 3 damage*/
@@ -204,9 +205,9 @@ public class EntityDamageEntity implements Listener {
                      /* Find the right type of player*/
                      if(plugin.getMeleePlayerMap().get(((Player) victim).getName()) != null)
                         rpgPlaya = plugin.getMeleePlayerMap().get(((Player) victim).getName());
-                     if(plugin.getMagicPlayerMap().get(((Player) victim).getName()) != null)
+                     else if(plugin.getMagicPlayerMap().get(((Player) victim).getName()) != null)
                         rpgPlaya = plugin.getMagicPlayerMap().get(((Player) victim).getName());
-                     if(plugin.getRangedPlayerMap().get(((Player) victim).getName()) != null)
+                     else if(plugin.getRangedPlayerMap().get(((Player) victim).getName()) != null)
                         rpgPlaya = plugin.getRangedPlayerMap().get(((Player) victim).getName());
                      
                      /* Cause existing player to be unable to move*/
@@ -235,12 +236,15 @@ public class EntityDamageEntity implements Listener {
             // Non-default damage for fist by melee player
             else if(playa.getItemInHand().getTypeId() == 0
                   && plugin.getMeleePlayerMap().get(playa.getName()) != null){
-               if(plugin.getMeleePlayerMap().get(playa.getName()).isBaseAttackReady()){
+               if(plugin.getMeleePlayerMap().get(playa.getName()).isBaseAttackReady()
+                     && plugin.isEnemy(victim, plugin.getMeleePlayerMap().get(playa.getName()).getParty())){
                   plugin.ohTheDamage(event, victim, 2);
                   plugin.giveCooldown(playa, "default", "default", 1);
-               }
-               else
                   plugin.getMeleePlayerMap().get(playa.getName()).setBaseAttackReadiness(false);
+               }
+               else{
+                  event.setCancelled(true);
+               }
             }
             else if((playa.getItemInHand().getType().toString().contains("SWORD")
                   || playa.getItemInHand().getType().compareTo(Material.BOW) == 0
@@ -258,27 +262,35 @@ public class EntityDamageEntity implements Listener {
                else
                   rpgPlaya = plugin.getRangedPlayerMap().get(playa.getName());
                
-               if(rpgPlaya.isBaseAttackReady()){
+               if(rpgPlaya.isBaseAttackReady() && plugin.isEnemy(victim, rpgPlaya.getParty())){
                   plugin.ohTheDamage(event, victim, 1);
                   plugin.giveCooldown(playa, "default", "default", 1);
+                  rpgPlaya.setBaseAttackReadiness(false);
                }
                else
-                  rpgPlaya.setBaseAttackReadiness(false);
+                  event.setCancelled(true);
             }
          }
          // Player arrow hit
          else if(event.getDamager() instanceof Arrow){
             // Check that it came from the right player
             if(plugin.getProjMap().get(event.getDamager()) != null){
-               int gear, type, dmg;
-               String arrowData;
+               float gear, dmg;
+               int type;
+               String arrowData, party;
                StringTokenizer st;
                
                arrowData = plugin.getProjMap().get(event.getDamager()).replace("grounded", "");
                st = new StringTokenizer(arrowData, "|");
                
-               gear = (int) Double.parseDouble(st.nextToken());
+               gear = Float.parseFloat(st.nextToken());
                type = Integer.parseInt(st.nextToken());
+               party = st.nextToken();
+               
+               if(!plugin.isEnemy(event.getEntity(), party)){
+                  event.setCancelled(true);
+                  return;
+               }
                
                dmg = gear;
                
@@ -290,7 +302,7 @@ public class EntityDamageEntity implements Listener {
                      public void run(){
                         plugin.getBlindMap().remove(ent);
                      }
-                  }, gear * 20L);
+                  }, (long)(gear * 20));
                   
                   /* Blinding arrow only deals half the normal damage*/
                   dmg = gear / 2;
@@ -302,7 +314,7 @@ public class EntityDamageEntity implements Listener {
                }
                
                // If crit do double damage. 0% to 20% chance
-               if(plugin.probabilityRoll(5 * (gear / 2))){
+               if(plugin.probabilityRoll((int)(5 * (gear / 2)))){
                   event.getEntity().getWorld().strikeLightningEffect(event.getEntity().getLocation());
                   plugin.ohTheDamage(event, event.getEntity(), dmg * 2);
                }
@@ -317,8 +329,19 @@ public class EntityDamageEntity implements Listener {
             // Check that it came from the right player
             if(plugin.getProjMap().get(event.getDamager()) != null){
                float bow;
+               String arrowData, party;
+               StringTokenizer st;
                
-               bow = Float.parseFloat(plugin.getProjMap().get(event.getDamager()));
+               arrowData = plugin.getProjMap().get(event.getDamager()).replace("grounded", "");
+               st = new StringTokenizer(arrowData, "|");
+               
+               bow = Float.parseFloat(st.nextToken());
+               party = st.nextToken();
+               
+               if(!plugin.isEnemy(event.getEntity(), party)){
+                  event.setCancelled(true);
+                  return;
+               }
                
                plugin.getProjMap().remove(event.getDamager());
                
@@ -344,8 +367,19 @@ public class EntityDamageEntity implements Listener {
             if(plugin.getProjMap().get(event.getDamager()) != null){
                int bow;
                final Sheep primedSheep;
+               String arrowData, party;
+               StringTokenizer st;
                
-               bow = (int) Float.parseFloat(plugin.getProjMap().get(event.getDamager()));
+               arrowData = plugin.getProjMap().get(event.getDamager()).replace("grounded", "");
+               st = new StringTokenizer(arrowData, "|");
+               
+               bow = (int) Float.parseFloat(st.nextToken());
+               party = st.nextToken();
+               
+               if(!plugin.isEnemy(event.getEntity(), party)){
+                  event.setCancelled(true);
+                  return;
+               }
                
                plugin.getProjMap().remove(event.getDamager());
                
@@ -381,7 +415,7 @@ public class EntityDamageEntity implements Listener {
             if(plugin.getProjMap().get(event.getDamager()) != null){
                int magic;
                char discharge;
-               String ballData;
+               String ballData, party;
                StringTokenizer st;
                
                ballData = plugin.getProjMap().get(event.getDamager());
@@ -389,6 +423,12 @@ public class EntityDamageEntity implements Listener {
                
                magic = (int) Double.parseDouble(st.nextToken());
                discharge = st.nextToken().charAt(0);
+               party = st.nextToken();
+               
+               if(!plugin.isEnemy(event.getEntity(), party)){
+                  event.setCancelled(true);
+                  return;
+               }
                
                if(discharge == 'y')
                   magic = (int)(magic * 1.5);

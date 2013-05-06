@@ -54,7 +54,7 @@ public class PlayerProjectile implements Listener{
                      
                      sb.setVelocity(arrow.getVelocity());
                      plugin.getProjMap().put(sb,
-                           Float.toString(rpgr.getGearLevel()));
+                           Float.toString(rpgr.getGearLevel()) + "|" + rpgr.getParty());
                      playa.getInventory().setItemInHand(null);
                      rpgr.setSlowBowReadiness(false);
                      rpgr.setOnHit(0);
@@ -69,7 +69,7 @@ public class PlayerProjectile implements Listener{
                      }
                      
                      plugin.getProjMap().put(arrow,
-                           Float.toString(rpgr.getGearLevel()) + "|2");
+                           Float.toString(rpgr.getGearLevel()) + "|2|" + rpgr.getParty());
                      playa.getInventory().setItemInHand(null);
                      rpgr.setBlindBowReadiness(false);
                      rpgr.setOnHit(0);
@@ -87,7 +87,7 @@ public class PlayerProjectile implements Listener{
                      
                      sf.setVelocity(arrow.getVelocity());
                      plugin.getProjMap().put(sf,
-                           Float.toString(rpgr.getGearLevel()));
+                           Float.toString(rpgr.getGearLevel()) + "|" + rpgr.getParty());
                      playa.getInventory().setItemInHand(null);
                      rpgr.setSheepBowReadiness(false);
                      rpgr.setOnHit(0);
@@ -102,7 +102,7 @@ public class PlayerProjectile implements Listener{
                      }
                      
                      plugin.getProjMap().put(arrow,
-                           Float.toString(rpgr.getGearLevel()) + "|1");
+                           Float.toString(rpgr.getGearLevel()) + "|1|" + rpgr.getParty());
                      rpgr.setArrowReadiness(false);
                      plugin.giveCooldown(playa, "arrow", "ranged", 2);
                   }
@@ -135,7 +135,8 @@ public class PlayerProjectile implements Listener{
                event.getEgg().getLocation().getWorld().createExplosion(event.getEgg().getLocation(), 1F, false);
                
                for(Entity victims : event.getEgg().getNearbyEntities(2, 2, 2)){
-                  if (victims instanceof LivingEntity) {
+                  if (victims instanceof LivingEntity
+                        && plugin.isEnemy(victims, plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getParty())) {
                      ((LivingEntity) victims).addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, (int) egg, 2), true);
                   }
                }

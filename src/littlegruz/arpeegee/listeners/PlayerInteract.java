@@ -126,7 +126,7 @@ public class PlayerInteract implements Listener{
                taskID = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                   public void run(){
                      for(Entity victim : plugin.getServer().getPlayer(name).getNearbyEntities(4, 4, 4)){
-                        if(plugin.isEnemy(victim)){
+                        if(plugin.isEnemy(victim, plugin.getMeleePlayerMap().get(name).getParty())){
                            if(victim instanceof LivingEntity){
                               ((LivingEntity) victim).damage(plugin.getMeleePlayerMap().get(name).getBideAmt());
                               ((LivingEntity) victim).playEffect(EntityEffect.HURT);
@@ -261,11 +261,11 @@ public class PlayerInteract implements Listener{
             rpgm.calcGearLevel(playa.getInventory());
             ballOfFire = event.getPlayer().launchProjectile(Fireball.class);
             if(plugin.getBuildUpMap().get(playa.getName()) != null){
-               data = Float.toString(rpgm.getGearLevel() * 1.5F) + "|y";
+               data = Float.toString(rpgm.getGearLevel() * 1.5F) + "|y|" + rpgm.getParty();
                plugin.getBuildUpMap().remove(playa.getName());
             }
             else
-               data = Float.toString(rpgm.getGearLevel()) + "|n";
+               data = Float.toString(rpgm.getGearLevel()) + "|n|" + rpgm.getParty();
             
             plugin.getProjMap().put(ballOfFire, data);
             
@@ -458,7 +458,7 @@ public class PlayerInteract implements Listener{
    }
    
    /* Return the dye or wheat to the player if they are within range of
-    * interacting with a sheep. TODO test if it works for 1 tick later*/
+    * interacting with a sheep.*/
    @EventHandler
    public void onPlayerDyeWool(PlayerInteractEntityEvent event){
       if(event.getRightClicked() instanceof Sheep
@@ -513,7 +513,7 @@ public class PlayerInteract implements Listener{
       range = (int)(8 + spell);
       
       for(Entity e : playa.getNearbyEntities(range, range, range)){
-         if(plugin.isEnemy(e)){
+         if(plugin.isEnemy(e, rpgm.getParty())){
             enemies.add((LivingEntity)e);
          }
       }
@@ -560,7 +560,7 @@ public class PlayerInteract implements Listener{
                   
                   nearEnemies.add(e);
                   for(Entity victims : e.getNearbyEntities(5, 5, 5)){
-                     if (plugin.isEnemy(victims)) {
+                     if (plugin.isEnemy(victims, rpgm.getParty())) {
                         nearEnemies.add((LivingEntity) victims);
                      }
                   }
@@ -603,7 +603,7 @@ public class PlayerInteract implements Listener{
       range = (int)(10 + spell);
       
       for(Entity e : playa.getNearbyEntities(range, range, range)){
-         if(plugin.isEnemy(e)){
+         if(plugin.isEnemy(e, rpgm.getParty())){
             enemies.add((LivingEntity)e);
          }
       }

@@ -580,7 +580,7 @@ public class ArpeegeeMain extends JavaPlugin {
    }
    
    /* Checks if the given entity is an enemy*/
-   public boolean isEnemy(Entity ent){
+   public boolean isEnemy(Entity ent, String party){
       if(ent instanceof Animals)
          return true;
       else if(ent instanceof Squid)
@@ -590,7 +590,21 @@ public class ArpeegeeMain extends JavaPlugin {
       else if(ent instanceof EnderDragon)
          return true;
       else if(ent instanceof Player){
-         // TODO In here check if player part of party or not
+         RPGPlayer rpgPlaya;
+
+         /* Find the right type of player*/
+         if(meleePlayerMap.get(((Player) ent).getName()) != null)
+            rpgPlaya = meleePlayerMap.get(((Player) ent).getName());
+         else if(magicPlayerMap.get(((Player) ent).getName()) != null)
+            rpgPlaya = magicPlayerMap.get(((Player) ent).getName());
+         else if(rangedPlayerMap.get(((Player) ent).getName()) != null)
+            rpgPlaya = rangedPlayerMap.get(((Player) ent).getName());
+         else
+            return true;
+         
+         if(rpgPlaya.getParty().compareToIgnoreCase(party) == 0)
+            return false;
+         
          return true;
       }
       return false;
