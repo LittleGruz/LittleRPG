@@ -29,21 +29,21 @@ public class PlayerItemHeld implements Listener{
                   && playa.getItemInHand().getType().compareTo(Material.CARROT_ITEM) == 0
                   && playa.getLevel() >= 11){
                rpgmp.setOnHit(1);
-               playa.sendMessage("Next physical attack will silence");
+               playa.sendMessage("Silence attack set");
             }
             else if(event.getPreviousSlot() == 3
                   && event.getNewSlot() == 0
                   && playa.getItemInHand().getType().compareTo(Material.PUMPKIN_PIE) == 0
                   && playa.getLevel() >= 16){
                rpgmp.setOnHit(2);
-               playa.sendMessage("Next physical attack will imobilise");
+               playa.sendMessage("Imobilise attack set");
             }
             else if(event.getPreviousSlot() == 0
                   && event.getNewSlot() != 2
                   && event.getNewSlot() != 3
                   && rpgmp.getOnHit() != 0){
                rpgmp.setOnHit(0);
-               playa.sendMessage("Special attack canceled");
+               playa.sendMessage("Normal attack set");
             }
          }
          else if(plugin.getRangedPlayerMap().get(playa.getName()) != null){
@@ -59,14 +59,14 @@ public class PlayerItemHeld implements Listener{
                }
                else if(event.getPreviousSlot() == 2
                      && event.getNewSlot() == 0
-                           && playa.getItemInHand().getDurability() == 0
+                     && playa.getItemInHand().getDurability() == 0
                      && playa.getLevel() >= 11){
                   rpgr.setOnHit(2);
                   playa.sendMessage("Blinding arrow set");
                }
                else if(event.getPreviousSlot() == 4
                      && event.getNewSlot() == 0
-                           && playa.getItemInHand().getDurability() == 15
+                     && playa.getItemInHand().getDurability() == 15
                      && playa.getLevel() >= 20){
                   rpgr.setOnHit(3);
                   playa.sendMessage("Sheep arrow set");
@@ -77,12 +77,12 @@ public class PlayerItemHeld implements Listener{
                      && event.getNewSlot() != 4
                      && rpgr.getOnHit() != 0){
                   rpgr.setOnHit(0);
-                  playa.sendMessage("Normal arrow");
+                  playa.sendMessage("Normal arrow set");
                }
             }else if(event.getPreviousSlot() == 0
                   && rpgr.getOnHit() != 0){
                rpgr.setOnHit(0);
-               playa.sendMessage("Normal arrow");
+               playa.sendMessage("Normal arrow set");
             }
          }
       }
