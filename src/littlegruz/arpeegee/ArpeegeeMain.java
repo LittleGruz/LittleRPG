@@ -527,10 +527,12 @@ public class ArpeegeeMain extends JavaPlugin {
             }
 
             partyConfig.set(party.getKey() + ".members", partyMembers);
-            partyConfig.set(party.getKey() + ".invites", partyMembers);
+            partyConfig.set(party.getKey() + ".invites", partyInvites);
          }
          
          partyConfig.set("names", partyNameList);
+         partyFile.delete();
+         partyConfig.save(partyFile);
          
       }catch(Exception e){
          getLogger().info("Error saving LittleRPG parties");
@@ -651,7 +653,7 @@ public class ArpeegeeMain extends JavaPlugin {
          RPGPlayer rpgPlaya;
 
          /* Find the RPG player*/
-         if((rpgPlaya = findRPGPlayer(((Player) ent).getName())) == null)
+         if((rpgPlaya = getRPGPlayer(((Player) ent).getName())) == null)
             return true;
          
          if(rpgPlaya.getParty().compareToIgnoreCase(party) == 0)
@@ -660,17 +662,6 @@ public class ArpeegeeMain extends JavaPlugin {
          return true;
       }
       return false;
-   }
-   
-   public RPGPlayer findRPGPlayer(String name){
-      if(meleePlayerMap.get(name) != null)
-         return meleePlayerMap.get(name);
-      else if(magicPlayerMap.get(name) != null)
-         return magicPlayerMap.get(name);
-      else if(rangedPlayerMap.get(name) != null)
-         return rangedPlayerMap.get(name);
-      else
-         return null;
    }
 
    public void giveCooldown(final Player playa, final String type, String classType, double delay){

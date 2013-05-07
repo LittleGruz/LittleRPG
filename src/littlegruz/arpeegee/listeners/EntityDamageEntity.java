@@ -202,7 +202,7 @@ public class EntityDamageEntity implements Listener {
                   if(victim instanceof Player){
                      RPGPlayer rpgPlaya;
 
-                     rpgPlaya = plugin.findRPGPlayer(((Player) victim).getName());
+                     rpgPlaya = plugin.getRPGPlayer(((Player) victim).getName());
                      
                      /* Cause existing player to be unable to move*/
                      if(rpgPlaya != null){

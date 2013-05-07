@@ -100,7 +100,7 @@ public class Party implements CommandExecutor{
                   }
                }
                else
-                  sender.sendMessage("Y U NO HAVE PARTY?");
+                  sender.sendMessage("Your party seems to have already disbanded");
             }
             else
                sender.sendMessage("You need to choose a class first");
@@ -110,11 +110,13 @@ public class Party implements CommandExecutor{
             if(args.length > 0){
                String party;
                
-               party = plugin.getRPGPlayer(sender.getName()).getParty();
-               if(plugin.getPartyMap().get(party) != null)
-                  sendInvite(args, plugin.getPartyMap().get(party), 0);
-               else
-                  sender.sendMessage("You must be in a party to invite someone");
+               if(plugin.getRPGPlayer(sender.getName()) != null){
+                  party = plugin.getRPGPlayer(sender.getName()).getParty();
+                  if(plugin.getPartyMap().get(party) != null)
+                     sendInvite(args, plugin.getPartyMap().get(party), 0);
+                  else
+                     sender.sendMessage("You must be in a party to invite someone");
+               }
             }
             else
                sender.sendMessage("Not enough arguments");
@@ -126,16 +128,18 @@ public class Party implements CommandExecutor{
                String party;
                int i;
                
-               party = plugin.getRPGPlayer(sender.getName()).getParty();
-               if(plugin.getPartyMap().get(party) != null){
-                  rpgp = plugin.getPartyMap().get(party);
-                  
-                  for(i = 0; i < args.length; i++){
-                     rpgp.removeInvitation(args[i]);
+               if(plugin.getRPGPlayer(sender.getName()) != null){
+                  party = plugin.getRPGPlayer(sender.getName()).getParty();
+                  if(plugin.getPartyMap().get(party) != null){
+                     rpgp = plugin.getPartyMap().get(party);
                      
-                     /* Send invitation cancellation message to player if they are online */
-                     if(plugin.getServer().getPlayer(args[i]) != null)
-                        plugin.getServer().getPlayer(args[i]).sendMessage("Your invitation to join " + party + " has been revoked");
+                     for(i = 0; i < args.length; i++){
+                        rpgp.removeInvitation(args[i]);
+                        
+                        /* Send invitation cancellation message to player if they are online */
+                        if(plugin.getServer().getPlayer(args[i]) != null)
+                           plugin.getServer().getPlayer(args[i]).sendMessage("Your invitation to join " + party + " has been revoked");
+                     }
                   }
                }
                else
@@ -148,7 +152,7 @@ public class Party implements CommandExecutor{
             if(sender instanceof Player){
                RPGPlayer rpgp;
                
-               rpgp = plugin.findRPGPlayer(((Player) sender).getName());
+               rpgp = plugin.getRPGPlayer(((Player) sender).getName());
                
                if(rpgp != null){
                   if(rpgp.getChat() == 0){
@@ -169,7 +173,6 @@ public class Party implements CommandExecutor{
    private void sendInvite(String[] args, RPGParty rpgp, int i){
       while(i < args.length){
          rpgp.addInvitation(args[i]);
-         plugin.getServer().broadcastMessage(args[i]);
          /* Send invitation message to player if they are online */
          if(plugin.getServer().getPlayer(args[i]) != null)
             plugin.getServer().getPlayer(args[i]).sendMessage("You have been invited to join " + rpgp.getName());

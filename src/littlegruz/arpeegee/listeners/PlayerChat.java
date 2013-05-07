@@ -24,7 +24,7 @@ public class PlayerChat implements Listener{
          RPGPlayer rpgp;
          String party;
          
-         rpgp = plugin.findRPGPlayer(event.getPlayer().getName());
+         rpgp = plugin.getRPGPlayer(event.getPlayer().getName());
          
          if(rpgp != null && rpgp.getChat() == 1){
             party = rpgp.getParty();
