@@ -166,7 +166,7 @@ public class PlayerInteract implements Listener{
          else if(playa.getItemInHand().getData().toString().contains("ORANGE DYE")
                && event.getAction().toString().contains("LEFT_CLICK")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
-               && playa.getLevel() >= 11){
+               && playa.getLevel() >= 6){
             event.setCancelled(true);
             
             if(!plugin.getMagicPlayerMap().get(playa.getName()).isConfusionReady()){
@@ -242,7 +242,7 @@ public class PlayerInteract implements Listener{
          else if(playa.getItemInHand().getData().toString().contains("RED DYE")
                && event.getAction().toString().contains("LEFT_CLICK")
                && plugin.getMagicPlayerMap().get(playa.getName()) != null
-               && playa.getLevel() >= 6){
+               && playa.getLevel() >= 11){
             event.setCancelled(true);
             String data;
             Fireball ballOfFire;
@@ -272,8 +272,7 @@ public class PlayerInteract implements Listener{
          }
          // Activate berserk mode if player has gained enough rage
          else if(event.getAction().toString().contains("LEFT_CLICK")
-               && (plugin.getMeleePlayerMap().get(playa.getName()) != null
-               || plugin.getMagicPlayerMap().get(playa.getName()) != null)){
+               && plugin.getMeleePlayerMap().get(playa.getName()) != null){
             final String pName = playa.getName();
             
             // Activate berserk mode and effects

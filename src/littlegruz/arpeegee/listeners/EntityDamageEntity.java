@@ -429,6 +429,7 @@ public class EntityDamageEntity implements Listener {
                   magic = (int)(magic * 1.5);
                
                plugin.getProjMap().remove(event.getDamager());
+               // 20 server ticks per second
                event.getEntity().setFireTicks(magic * 20);
                
                clearGroundedProjectiles();

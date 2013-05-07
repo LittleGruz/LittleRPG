@@ -84,15 +84,15 @@ public class PlayerLevel implements Listener{
             
             // Create the base dye type first
             ItemStack is = new ItemStack(351,1);
-            // Fire
-            if(rpgPlaya.getLevel() == 6){
-               is.setDurability((short)1);
-               event.getPlayer().getInventory().setItem(1, is);
-            }
             // Confusion
-            else if(rpgPlaya.getLevel() == 11){
+            if(rpgPlaya.getLevel() == 6){
                is.setDurability((short)14);
                event.getPlayer().getInventory().setItem(2, is);
+            }
+            // Fire
+            else if(rpgPlaya.getLevel() == 11){
+               is.setDurability((short)1);
+               event.getPlayer().getInventory().setItem(1, is);
             }
             // Heal
             else if(rpgPlaya.getLevel() == 16){
