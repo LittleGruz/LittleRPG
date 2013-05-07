@@ -412,6 +412,8 @@ public class EntityDamageEntity implements Listener {
                String ballData, party;
                StringTokenizer st;
                
+               event.setCancelled(true);
+               
                ballData = plugin.getProjMap().get(event.getDamager());
                st = new StringTokenizer(ballData, "|");
                
@@ -420,7 +422,6 @@ public class EntityDamageEntity implements Listener {
                party = st.nextToken();
                
                if(!plugin.isEnemy(event.getEntity(), party)){
-                  event.setCancelled(true);
                   return;
                }
                
@@ -428,8 +429,7 @@ public class EntityDamageEntity implements Listener {
                   magic = (int)(magic * 1.5);
                
                plugin.getProjMap().remove(event.getDamager());
-               // TODO check if fire ticks are right in-game
-               event.getEntity().setFireTicks(magic);
+               event.getEntity().setFireTicks(magic * 20);
                
                clearGroundedProjectiles();
             }

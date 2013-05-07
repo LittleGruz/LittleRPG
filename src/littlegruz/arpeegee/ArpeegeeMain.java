@@ -391,7 +391,7 @@ public class ArpeegeeMain extends JavaPlugin {
       else
          getLogger().info("Spout not found. Some effects will be disabled");
 
-      getLogger().info(this.toString() + " enabled");
+      getLogger().info("Enabled " + this.toString());
    }
    
    public void onDisable(){
@@ -536,7 +536,7 @@ public class ArpeegeeMain extends JavaPlugin {
          getLogger().info("Error saving LittleRPG parties");
       }
       
-      getLogger().info(this.toString() + " disabled");
+      getLogger().info("Disabled " + this.toString());
    }
 
    public HashMap<String, RPGMeleePlayer> getMeleePlayerMap(){
@@ -727,6 +727,7 @@ public class ArpeegeeMain extends JavaPlugin {
             public void run() {
                RPGRangedPlayer rpgPlaya = rangedPlayerMap.get(playa.getName());
                ItemStack is = new ItemStack(351,1);
+               playa.getInventory().setItem(0, new ItemStack(Material.BOW,1));
                
                if(type.compareTo("arrow") == 0){
                   rpgPlaya.setArrowReadiness(true);
@@ -739,12 +740,12 @@ public class ArpeegeeMain extends JavaPlugin {
                else if(type.compareTo("slow") == 0){
                   rpgPlaya.setSlowBowReadiness(true);
                   is.setDurability((short)12);
-                  playa.getInventory().setItem(2, is);
+                  playa.getInventory().setItem(1, is);
                }
                else if(type.compareTo("ICANTSEE") == 0){
                   rpgPlaya.setBlindBowReadiness(true);
                   is.setDurability((short)0);
-                  playa.getInventory().setItem(1, is);
+                  playa.getInventory().setItem(2, is);
                }
                else if(type.compareTo("woof") == 0){
                   rpgPlaya.setSheepBowReadiness(true);
