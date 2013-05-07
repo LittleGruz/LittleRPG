@@ -45,6 +45,8 @@ import littlegruz.arpeegee.listeners.PlayerSpeed;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
@@ -63,8 +65,10 @@ public class ArpeegeeMain extends JavaPlugin {
    private File rangedPlayerFile;
    private File magicPlayerFile;
    private File questStartFile;
+   private File partyFile;
    private File worldsFile;
    private File textsFile;
+   private FileConfiguration partyConfig;
    private HashMap<String, RPGMeleePlayer> meleePlayerMap;
    private HashMap<String, RPGRangedPlayer> rangedPlayerMap;
    private HashMap<String, RPGMagicPlayer> magicPlayerMap;
@@ -98,6 +102,7 @@ public class ArpeegeeMain extends JavaPlugin {
       rangedPlayerFile = new File(getDataFolder().toString() + "/rangedPlayer.txt");
       magicPlayerFile = new File(getDataFolder().toString() + "/magicPlayer.txt");
       questStartFile = new File(getDataFolder().toString() + "/questStarters.txt");
+      partyFile = new File(getDataFolder().toString() + "/texts.yml");
       worldsFile = new File(getDataFolder().toString() + "/worlds.txt");
       textsFile = new File(getDataFolder().toString() + "/texts.txt");
       
@@ -270,27 +275,36 @@ public class ArpeegeeMain extends JavaPlugin {
       }
       
       partyMap = new HashMap<String, RPGParty>();
-      // Load up the quest starting points from file
-      /*try{
-         Location loc;
-         br = new BufferedReader(new FileReader(questStartFile));
+      // Load all the parties from file
+      try{
+         int i, j;
+         List<String> partyNameList, partyMembers, partyInvites;
+         RPGParty partay;
          
-         // Load quest start file data into the world HashMap
-         while((input = br.readLine()) != null){
-            st = new StringTokenizer(input, " ");
-            loc = new Location(getServer().getWorld(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+         partyConfig = YamlConfiguration.loadConfiguration(partyFile);
+         
+         partyNameList = partyConfig.getStringList("names");
+         for(i = 0; i < partyNameList.size(); i++){
+            partay = new RPGParty(partyNameList.get(i));
             
-            partyMap.put(loc, Integer.parseInt(st.nextToken()));
+            partyMembers = partyConfig.getStringList(partyNameList.get(i) + ".members");
+            for(j = 0; j < partyMembers.size(); j++){
+               partay.addMember(partyMembers.get(j));
+            }
+            
+            partyInvites = partyConfig.getStringList(partyNameList.get(i) + ".invites");
+            for(j = 0; j < partyInvites.size(); j++){
+               partay.addInvitation(partyInvites.get(j));
+            }
+            
+            partyMap.put(partay.getName(), partay);
          }
-         br.close();
          
-      }catch(FileNotFoundException e){
-         getLogger().info("No original LittleRPG quest start file found. One will be created for you");
-      }catch(IOException e){
-         getLogger().info("Error reading LittleRPG quest start file");
+      }catch(IllegalArgumentException e){
+         getLogger().info("No original LittleRPG party file found. One will be created for you");
       }catch(Exception e){
-         getLogger().info("Incorrectly formatted LittleRPG quest start file");
-      }*/
+         getLogger().info("Incorrectly formatted LittleRPG party file");
+      }
 
       // Load up the exp limits
       expLevelMap = new HashMap<Integer, Integer>();

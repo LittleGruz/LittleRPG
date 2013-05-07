@@ -353,14 +353,7 @@ public class PlayerInteract implements Listener{
          else if(event.getAction().compareTo(Action.RIGHT_CLICK_BLOCK) == 0
                && plugin.getQuestStartMap().get(event.getClickedBlock().getLocation()) != null){
             RPGQuest rpgq = plugin.getQuestMap().get(plugin.getQuestStartMap().get(event.getClickedBlock().getLocation()));
-            RPGPlayer rpgp = null;
-            
-            if(plugin.getMagicPlayerMap().get(playa.getName()) != null)
-               rpgp = plugin.getMagicPlayerMap().get(playa.getName());
-            else if(plugin.getMeleePlayerMap().get(playa.getName()) != null)
-               rpgp = plugin.getMeleePlayerMap().get(playa.getName());
-            else if(plugin.getRangedPlayerMap().get(playa.getName()) != null)
-               rpgp = plugin.getRangedPlayerMap().get(playa.getName());
+            RPGPlayer rpgp = plugin.findRPGPlayer(playa.getName());
 
             // Just making sure they exist with a class
             if(rpgp != null){
