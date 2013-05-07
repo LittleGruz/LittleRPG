@@ -102,11 +102,13 @@ public class ArpeegeeMain extends JavaPlugin {
       rangedPlayerFile = new File(getDataFolder().toString() + "/rangedPlayer.txt");
       magicPlayerFile = new File(getDataFolder().toString() + "/magicPlayer.txt");
       questStartFile = new File(getDataFolder().toString() + "/questStarters.txt");
-      partyFile = new File(getDataFolder().toString() + "/texts.yml");
+      partyFile = new File(getDataFolder().toString() + "/party.yml");
       worldsFile = new File(getDataFolder().toString() + "/worlds.txt");
       textsFile = new File(getDataFolder().toString() + "/texts.txt");
       
       spoutEnabled = getServer().getPluginManager().isPluginEnabled("Spout");
+      
+      getLogger().info("Loading LittleRPG data...");
 
       meleePlayerMap = new HashMap<String, RPGMeleePlayer>();
       // Load up the melee players from file
@@ -281,6 +283,8 @@ public class ArpeegeeMain extends JavaPlugin {
          List<String> partyNameList, partyMembers, partyInvites;
          RPGParty partay;
          
+         partyFile.createNewFile();
+         
          partyConfig = YamlConfiguration.loadConfiguration(partyFile);
          
          partyNameList = partyConfig.getStringList("names");
@@ -301,6 +305,8 @@ public class ArpeegeeMain extends JavaPlugin {
          }
          
       }catch(IllegalArgumentException e){
+         getLogger().info("LittleRPG party file unable to be created");
+      }catch(IOException e){
          getLogger().info("No original LittleRPG party file found. One will be created for you");
       }catch(Exception e){
          getLogger().info("Incorrectly formatted LittleRPG party file");
@@ -389,13 +395,13 @@ public class ArpeegeeMain extends JavaPlugin {
    }
    
    public void onDisable(){
-
       // Save ALL the data!
+      getLogger().info("Saving LittleRPG data...");
       BufferedWriter bw;
+      // Save all melee players to file
       try{
          bw = new BufferedWriter(new FileWriter(meleePlayerFile));
          
-         // Save all melee players to file
          Iterator<Map.Entry<String, RPGMeleePlayer>> it = meleePlayerMap.entrySet().iterator();
          while(it.hasNext()){
             Entry<String, RPGMeleePlayer> player = it.next();
@@ -411,11 +417,11 @@ public class ArpeegeeMain extends JavaPlugin {
       }catch(IOException e){
          getLogger().info("Error saving LittleRPG melee players");
       }
-      
+
+      // Save all ranged players to file
       try{
          bw = new BufferedWriter(new FileWriter(rangedPlayerFile));
          
-         // Save all ranged players to file
          Iterator<Map.Entry<String, RPGRangedPlayer>> it = rangedPlayerMap.entrySet().iterator();
          while(it.hasNext()){
             Entry<String, RPGRangedPlayer> player = it.next();
@@ -430,11 +436,11 @@ public class ArpeegeeMain extends JavaPlugin {
       }catch(IOException e){
          getLogger().info("Error saving LittleRPG ranged players");
       }
-      
+
+      // Save all magic players to file
       try{
          bw = new BufferedWriter(new FileWriter(magicPlayerFile));
          
-         // Save all magic players to file
          Iterator<Map.Entry<String, RPGMagicPlayer>> it = magicPlayerMap.entrySet().iterator();
          while(it.hasNext()){
             Entry<String, RPGMagicPlayer> player = it.next();
@@ -450,12 +456,12 @@ public class ArpeegeeMain extends JavaPlugin {
       }catch(IOException e){
          getLogger().info("Error saving LittleRPG magic players");
       }
-      
+
+      // Save all world names to file
       try{
          bw = new BufferedWriter(new FileWriter(worldsFile));
          Iterator<Map.Entry<String, String>> it = worldsMap.entrySet().iterator();
          
-         // Save all world names to file
          while(it.hasNext()){
             Entry<String, String> world = it.next();
             bw.write(world.getValue() + "\n");
@@ -464,12 +470,12 @@ public class ArpeegeeMain extends JavaPlugin {
       }catch(IOException e){
          getLogger().info("Error saving LittleRPG worlds");
       }
-      
+
+      // Save all world names to file
       try{
          bw = new BufferedWriter(new FileWriter(textsFile));
          Iterator<Map.Entry<String, String>> it = textsMap.entrySet().iterator();
          
-         // Save all world names to file
          while(it.hasNext()){
             Entry<String, String> text = it.next();
             bw.write(text.getKey() + " " + text.getValue() + "\n");
@@ -478,12 +484,12 @@ public class ArpeegeeMain extends JavaPlugin {
       }catch(IOException e){
          getLogger().info("Error saving LittleRPG texts file");
       }
-      
+
+      // Save all quest starting points to file
       try{
          bw = new BufferedWriter(new FileWriter(questStartFile));
          Iterator<Map.Entry<Location, Integer>> it = questStartMap.entrySet().iterator();
          
-         // Save all quest starting points to file
          while(it.hasNext()){
             Entry<Location, Integer> quest = it.next();
             bw.write(quest.getKey().getWorld().getName() + " "
@@ -495,6 +501,39 @@ public class ArpeegeeMain extends JavaPlugin {
          bw.close();
       }catch(IOException e){
          getLogger().info("Error saving LittleRPG quest starting points");
+      }
+      
+      try{
+         List<String> partyNameList, partyMembers, partyInvites;
+         partyNameList = new ArrayList<String>();
+         
+         Iterator<Map.Entry<String, RPGParty>> it = partyMap.entrySet().iterator();
+         while(it.hasNext()){
+            Entry<String, RPGParty> party = it.next();
+            partyNameList.add(party.getKey());
+            
+            Iterator<Map.Entry<String, String>> it2 = party.getValue().getMembers().entrySet().iterator();
+            partyMembers = new ArrayList<String>();
+            while(it2.hasNext()){
+               Entry<String, String> partyMem = it2.next();
+               partyMembers.add(partyMem.getValue());
+            }
+            
+            Iterator<Map.Entry<String, String>> it3 = party.getValue().getInvitations().entrySet().iterator();
+            partyInvites = new ArrayList<String>();
+            while(it3.hasNext()){
+               Entry<String, String> partyInv = it3.next();
+               partyInvites.add(partyInv.getValue());
+            }
+
+            partyConfig.set(party.getKey() + ".members", partyMembers);
+            partyConfig.set(party.getKey() + ".invites", partyMembers);
+         }
+         
+         partyConfig.set("names", partyNameList);
+         
+      }catch(Exception e){
+         getLogger().info("Error saving LittleRPG parties");
       }
       
       getLogger().info(this.toString() + " disabled");
