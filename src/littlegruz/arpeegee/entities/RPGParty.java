@@ -56,6 +56,6 @@ public class RPGParty{
    }
    
    public HashMap<String, String> getInvitations(){
-      return members;
+      return invited;
    }
 }

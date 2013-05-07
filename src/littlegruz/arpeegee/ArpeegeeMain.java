@@ -68,7 +68,6 @@ public class ArpeegeeMain extends JavaPlugin {
    private File partyFile;
    private File worldsFile;
    private File textsFile;
-   private FileConfiguration partyConfig;
    private HashMap<String, RPGMeleePlayer> meleePlayerMap;
    private HashMap<String, RPGRangedPlayer> rangedPlayerMap;
    private HashMap<String, RPGMagicPlayer> magicPlayerMap;
@@ -281,6 +280,7 @@ public class ArpeegeeMain extends JavaPlugin {
       try{
          int i, j;
          List<String> partyNameList, partyMembers, partyInvites;
+         FileConfiguration partyConfig;
          RPGParty partay;
          
          partyFile.createNewFile();
@@ -505,7 +505,10 @@ public class ArpeegeeMain extends JavaPlugin {
       
       try{
          List<String> partyNameList, partyMembers, partyInvites;
+         FileConfiguration partyConfig;
          partyNameList = new ArrayList<String>();
+         
+         partyConfig = YamlConfiguration.loadConfiguration(partyFile);
          
          Iterator<Map.Entry<String, RPGParty>> it = partyMap.entrySet().iterator();
          while(it.hasNext()){
@@ -519,10 +522,10 @@ public class ArpeegeeMain extends JavaPlugin {
                partyMembers.add(partyMem.getValue());
             }
             
-            Iterator<Map.Entry<String, String>> it3 = party.getValue().getInvitations().entrySet().iterator();
+            it2 = party.getValue().getInvitations().entrySet().iterator();
             partyInvites = new ArrayList<String>();
-            while(it3.hasNext()){
-               Entry<String, String> partyInv = it3.next();
+            while(it2.hasNext()){
+               Entry<String, String> partyInv = it2.next();
                partyInvites.add(partyInv.getValue());
             }
 
@@ -531,7 +534,6 @@ public class ArpeegeeMain extends JavaPlugin {
          }
          
          partyConfig.set("names", partyNameList);
-         partyFile.delete();
          partyConfig.save(partyFile);
          
       }catch(Exception e){
