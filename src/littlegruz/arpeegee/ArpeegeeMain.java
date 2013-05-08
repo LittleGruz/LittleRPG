@@ -67,7 +67,7 @@ public class ArpeegeeMain extends JavaPlugin {
    private File questStartFile;
    private File partyFile;
    private File worldsFile;
-   private File textsFile;
+   private File dialogueFile;
    private HashMap<String, RPGMeleePlayer> meleePlayerMap;
    private HashMap<String, RPGRangedPlayer> rangedPlayerMap;
    private HashMap<String, RPGMagicPlayer> magicPlayerMap;
@@ -81,7 +81,7 @@ public class ArpeegeeMain extends JavaPlugin {
    private HashMap<String, String> buildUpMap;
    private HashMap<Entity, String> projMap;
    private HashMap<String, String> worldsMap;
-   private HashMap<String, String> textsMap;
+   private HashMap<String, String> dialogueMap;
    private HashMap<Integer, Integer> expLevelMap;
    private int questNumberToSet;
    private boolean questCanSet;
@@ -91,10 +91,6 @@ public class ArpeegeeMain extends JavaPlugin {
    public final int MAX_LEVEL = 20;
    
    public void onEnable(){
-      BufferedReader br;
-      String input;
-      StringTokenizer st;
-      
       // Create the directory if needed
       new File(getDataFolder().toString()).mkdir();
       meleePlayerFile = new File(getDataFolder().toString() + "/meleePlayer.txt");
@@ -103,214 +99,32 @@ public class ArpeegeeMain extends JavaPlugin {
       questStartFile = new File(getDataFolder().toString() + "/questStarters.txt");
       partyFile = new File(getDataFolder().toString() + "/party.yml");
       worldsFile = new File(getDataFolder().toString() + "/worlds.txt");
-      textsFile = new File(getDataFolder().toString() + "/texts.txt");
+      dialogueFile = new File(getDataFolder().toString() + "/dialogues.txt");
       
       spoutEnabled = getServer().getPluginManager().isPluginEnabled("Spout");
       
       getLogger().info("Loading LittleRPG data...");
 
       meleePlayerMap = new HashMap<String, RPGMeleePlayer>();
-      // Load up the melee players from file
-      try{
-         br = new BufferedReader(new FileReader(meleePlayerFile));
-         
-         // Load player file data into the player HashMap
-         while((input = br.readLine()) != null){
-            String name;
-            int level, rage;
-            float gear;
-            
-            st = new StringTokenizer(input, " ");
-            name = st.nextToken();
-
-            level = Integer.parseInt(st.nextToken());
-            gear = Float.parseFloat(st.nextToken());
-            rage = Integer.parseInt(st.nextToken());
-            meleePlayerMap.put(name, new RPGMeleePlayer(name, level, gear, rage, st.nextToken(), st.nextToken(), st.nextToken()));
-         }
-         br.close();
-         
-      }catch(FileNotFoundException e){
-         getLogger().info("No original LittleRPG melee player file found. One will be created for you");
-      }catch(IOException e){
-         getLogger().info("Error reading LittleRPG melee player file");
-      }catch(Exception e){
-         getLogger().info("Incorrectly formatted LittleRPG melee player file");
-      }
+      loadMeleeFile();
 
       rangedPlayerMap = new HashMap<String, RPGRangedPlayer>();
-      // Load up the ranged players from file
-      try{
-         br = new BufferedReader(new FileReader(rangedPlayerFile));
-         
-         // Load ranged player file data into the ranged player HashMap
-         while((input = br.readLine()) != null){
-            String name;
-            int level;
-            float gear;
-            
-            st = new StringTokenizer(input, " ");
-            name = st.nextToken();
-
-            level = Integer.parseInt(st.nextToken());
-            gear = Float.parseFloat(st.nextToken());
-            rangedPlayerMap.put(name, new RPGRangedPlayer(name, level, gear, st.nextToken(), st.nextToken(), st.nextToken()));
-         }
-         br.close();
-         
-      }catch(FileNotFoundException e){
-         getLogger().info("No original LittleRPG ranged player file found. One will be created for you");
-      }catch(IOException e){
-         getLogger().info("Error reading LittleRPG ranged player file");
-      }catch(Exception e){
-         getLogger().info("Incorrectly formatted LittleRPG ranged player file");
-      }
+      loadRangedFile();
 
       magicPlayerMap = new HashMap<String, RPGMagicPlayer>();
-      // Load up the magic players from file
-      try{
-         br = new BufferedReader(new FileReader(magicPlayerFile));
-         
-         // Load magic player file data into the magic player HashMap
-         while((input = br.readLine()) != null){
-            String name;
-            int level, buildUp;
-            float gear;
-            
-            st = new StringTokenizer(input, " ");
-            name = st.nextToken();
-            
-            level = Integer.parseInt(st.nextToken());
-            gear = Float.parseFloat(st.nextToken());
-            buildUp = Integer.parseInt(st.nextToken());
-            magicPlayerMap.put(name, new RPGMagicPlayer(name, level, gear, buildUp, st.nextToken(), st.nextToken(), st.nextToken()));
-         }
-         br.close();
-         
-      }catch(FileNotFoundException e){
-         getLogger().info("No original LittleRPG magic player file found. One will be created for you");
-      }catch(IOException e){
-         getLogger().info("Error reading LittleRPG magic player file");
-      }catch(Exception e){
-         getLogger().info("Incorrectly formatted LittleRPG magic player file");
-      }
+      loadMagicFile();
       
       worldsMap = new HashMap<String, String>();
-      // Load up the worlds from file
-      try{
-         br = new BufferedReader(new FileReader(worldsFile));
-         
-         // Load world file data into the world HashMap
-         while((input = br.readLine()) != null){
-            worldsMap.put(input, input);
-         }
-         br.close();
-         
-      }catch(FileNotFoundException e){
-         getLogger().info("No original LittleRPG world file found. One will be created for you");
-      }catch(IOException e){
-         getLogger().info("Error reading LittleRPG world file");
-      }catch(Exception e){
-         getLogger().info("Incorrectly formatted LittleRPG world file");
-      }
+      loadWorldsFile();
       
-      textsMap = new HashMap<String, String>();
-      // Load up the worlds from file
-      try{
-         String type, msg;
-         br = new BufferedReader(new FileReader(textsFile));
-         
-         // Load world file data into the world HashMap
-         while((input = br.readLine()) != null){
-            st = new StringTokenizer(input, " ");
-            type = st.nextToken();
-            msg = st.nextToken();
-            
-            while(st.hasMoreTokens())
-               msg += " " + st.nextToken();
-            
-            textsMap.put(type, msg);
-         }
-         br.close();
-         
-      }catch(FileNotFoundException e){
-         getLogger().info("No original LittleRPG text file found. One will be created for you");
-         
-         if(!spoutEnabled){
-         textsMap.put("intro", ChatColor.RED + " Welcome to a LittleRPG world. Please choose a class to begin. "
-               + ChatColor.YELLOW + "Melee class: type /ichoosemelee                                "
-               + ChatColor.GREEN + "Ranged class: type /ichooseranged                              "
-               + ChatColor.BLUE + "Magic class: type /ichoosemagic                                ");
-         }
-         else
-            textsMap.put("intro", ChatColor.RED + "Welcome to a LittleRPG world. You want to be the very best, like no one ever was.");
-         
-         textsMap.put("return", ChatColor.RED + "Welcome back, brave adventurer.");
-      }catch(IOException e){
-         getLogger().info("Error reading LittleRPG text file");
-      }catch(Exception e){
-         getLogger().info("Incorrectly formatted LittleRPG text file");
-      }
+      dialogueMap = new HashMap<String, String>();
+      loadDialoguesFile();
       
       questStartMap = new HashMap<Location, Integer>();
-      // Load up the quest starting points from file
-      try{
-         Location loc;
-         br = new BufferedReader(new FileReader(questStartFile));
-         
-         // Load quest start file data into the world HashMap
-         while((input = br.readLine()) != null){
-            st = new StringTokenizer(input, " ");
-            loc = new Location(getServer().getWorld(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
-            
-            questStartMap.put(loc, Integer.parseInt(st.nextToken()));
-         }
-         br.close();
-         
-      }catch(FileNotFoundException e){
-         getLogger().info("No original LittleRPG quest start file found. One will be created for you");
-      }catch(IOException e){
-         getLogger().info("Error reading LittleRPG quest start file");
-      }catch(Exception e){
-         getLogger().info("Incorrectly formatted LittleRPG quest start file");
-      }
+      loadQuestStartsFile();
       
       partyMap = new HashMap<String, RPGParty>();
-      // Load all the parties from file
-      try{
-         int i, j;
-         List<String> partyNameList, partyMembers, partyInvites;
-         FileConfiguration partyConfig;
-         RPGParty partay;
-         
-         partyFile.createNewFile();
-         
-         partyConfig = YamlConfiguration.loadConfiguration(partyFile);
-         
-         partyNameList = partyConfig.getStringList("names");
-         for(i = 0; i < partyNameList.size(); i++){
-            partay = new RPGParty(partyNameList.get(i));
-            
-            partyMembers = partyConfig.getStringList(partyNameList.get(i) + ".members");
-            for(j = 0; j < partyMembers.size(); j++){
-               partay.addMember(partyMembers.get(j));
-            }
-            
-            partyInvites = partyConfig.getStringList(partyNameList.get(i) + ".invites");
-            for(j = 0; j < partyInvites.size(); j++){
-               partay.addInvitation(partyInvites.get(j));
-            }
-            
-            partyMap.put(partay.getName(), partay);
-         }
-         
-      }catch(IllegalArgumentException e){
-         getLogger().info("LittleRPG party file unable to be created");
-      }catch(IOException e){
-         getLogger().info("No original LittleRPG party file found. One will be created for you");
-      }catch(Exception e){
-         getLogger().info("Incorrectly formatted LittleRPG party file");
-      }
+      loadPartiesFile();
 
       // Load up the exp limits
       expLevelMap = new HashMap<Integer, Integer>();
@@ -397,148 +211,14 @@ public class ArpeegeeMain extends JavaPlugin {
    public void onDisable(){
       // Save ALL the data!
       getLogger().info("Saving LittleRPG data...");
-      BufferedWriter bw;
-      // Save all melee players to file
-      try{
-         bw = new BufferedWriter(new FileWriter(meleePlayerFile));
-         
-         Iterator<Map.Entry<String, RPGMeleePlayer>> it = meleePlayerMap.entrySet().iterator();
-         while(it.hasNext()){
-            Entry<String, RPGMeleePlayer> player = it.next();
-            bw.write(player.getKey() + " "
-                  + Integer.toString(player.getValue().getLevel()) + " "
-                  + Float.toString(player.getValue().getGearLevel()) + " "
-                  + Integer.toString(player.getValue().getRage()) + " "
-                  + player.getValue().getIncomplete() + " "
-                  + player.getValue().getComplete() + " "
-                  + player.getValue().getParty() + "\n");
-         }
-         bw.close();
-      }catch(IOException e){
-         getLogger().info("Error saving LittleRPG melee players");
-      }
-
-      // Save all ranged players to file
-      try{
-         bw = new BufferedWriter(new FileWriter(rangedPlayerFile));
-         
-         Iterator<Map.Entry<String, RPGRangedPlayer>> it = rangedPlayerMap.entrySet().iterator();
-         while(it.hasNext()){
-            Entry<String, RPGRangedPlayer> player = it.next();
-            bw.write(player.getKey() + " "
-                  + Integer.toString(player.getValue().getLevel()) + " "
-                  + Float.toString(player.getValue().getGearLevel()) + " "
-                  + player.getValue().getIncomplete() + " "
-                  + player.getValue().getComplete() + " "
-                  + player.getValue().getParty() + "\n");
-         }
-         bw.close();
-      }catch(IOException e){
-         getLogger().info("Error saving LittleRPG ranged players");
-      }
-
-      // Save all magic players to file
-      try{
-         bw = new BufferedWriter(new FileWriter(magicPlayerFile));
-         
-         Iterator<Map.Entry<String, RPGMagicPlayer>> it = magicPlayerMap.entrySet().iterator();
-         while(it.hasNext()){
-            Entry<String, RPGMagicPlayer> player = it.next();
-            bw.write(player.getKey() + " "
-                  + Integer.toString(player.getValue().getLevel()) + " "
-                  + Float.toString(player.getValue().getGearLevel()) + " "
-                  + Integer.toString(player.getValue().getBuildUp()) + " "
-                  + player.getValue().getIncomplete() + " "
-                  + player.getValue().getComplete() + " "
-                  + player.getValue().getParty() + "\n");
-         }
-         bw.close();
-      }catch(IOException e){
-         getLogger().info("Error saving LittleRPG magic players");
-      }
-
-      // Save all world names to file
-      try{
-         bw = new BufferedWriter(new FileWriter(worldsFile));
-         Iterator<Map.Entry<String, String>> it = worldsMap.entrySet().iterator();
-         
-         while(it.hasNext()){
-            Entry<String, String> world = it.next();
-            bw.write(world.getValue() + "\n");
-         }
-         bw.close();
-      }catch(IOException e){
-         getLogger().info("Error saving LittleRPG worlds");
-      }
-
-      // Save all world names to file
-      try{
-         bw = new BufferedWriter(new FileWriter(textsFile));
-         Iterator<Map.Entry<String, String>> it = textsMap.entrySet().iterator();
-         
-         while(it.hasNext()){
-            Entry<String, String> text = it.next();
-            bw.write(text.getKey() + " " + text.getValue() + "\n");
-         }
-         bw.close();
-      }catch(IOException e){
-         getLogger().info("Error saving LittleRPG texts file");
-      }
-
-      // Save all quest starting points to file
-      try{
-         bw = new BufferedWriter(new FileWriter(questStartFile));
-         Iterator<Map.Entry<Location, Integer>> it = questStartMap.entrySet().iterator();
-         
-         while(it.hasNext()){
-            Entry<Location, Integer> quest = it.next();
-            bw.write(quest.getKey().getWorld().getName() + " "
-                  + Integer.toString(quest.getKey().getBlockX()) + " "
-                  + Integer.toString(quest.getKey().getBlockY()) + " "
-                  + Integer.toString(quest.getKey().getBlockZ()) + " "
-                  + Integer.toString(quest.getValue()) + "\n");
-         }
-         bw.close();
-      }catch(IOException e){
-         getLogger().info("Error saving LittleRPG quest starting points");
-      }
       
-      try{
-         List<String> partyNameList, partyMembers, partyInvites;
-         FileConfiguration partyConfig;
-         partyNameList = new ArrayList<String>();
-         
-         partyConfig = YamlConfiguration.loadConfiguration(partyFile);
-         
-         Iterator<Map.Entry<String, RPGParty>> it = partyMap.entrySet().iterator();
-         while(it.hasNext()){
-            Entry<String, RPGParty> party = it.next();
-            partyNameList.add(party.getKey());
-            
-            Iterator<Map.Entry<String, String>> it2 = party.getValue().getMembers().entrySet().iterator();
-            partyMembers = new ArrayList<String>();
-            while(it2.hasNext()){
-               Entry<String, String> partyMem = it2.next();
-               partyMembers.add(partyMem.getValue());
-            }
-            
-            it2 = party.getValue().getInvitations().entrySet().iterator();
-            partyInvites = new ArrayList<String>();
-            while(it2.hasNext()){
-               Entry<String, String> partyInv = it2.next();
-               partyInvites.add(partyInv.getValue());
-            }
-
-            partyConfig.set(party.getKey() + ".members", partyMembers);
-            partyConfig.set(party.getKey() + ".invites", partyInvites);
-         }
-         
-         partyConfig.set("names", partyNameList);
-         partyConfig.save(partyFile);
-         
-      }catch(Exception e){
-         getLogger().info("Error saving LittleRPG parties");
-      }
+      saveToMeleeFile();
+      saveToRangedFile();
+      saveToMagicFile();
+      saveToWorldsFile();
+      saveToDialoguesFile();
+      saveToQuestStartsFile();
+      saveToPartiesFile();
       
       getLogger().info("Disabled " + this.toString());
    }
@@ -623,8 +303,8 @@ public class ArpeegeeMain extends JavaPlugin {
       return spoutEnabled;
    }
 
-   public HashMap<String, String> getTextsMap(){
-      return textsMap;
+   public HashMap<String, String> getDialogueMap(){
+      return dialogueMap;
    }
 
    public LittleGUI getGUI(){
@@ -929,6 +609,407 @@ public class ArpeegeeMain extends JavaPlugin {
          this.getServer().getScheduler().cancelTask(bideMap.get(rpgmp.getName()));
          bideMap.remove(rpgmp.getName());
          this.getServer().broadcastMessage("Canceled *explode*");
+      }
+   }
+
+   // Load up the melee players from file
+   public void loadMeleeFile(){
+      BufferedReader br;
+      String input;
+      StringTokenizer st;
+      
+      try{
+         br = new BufferedReader(new FileReader(meleePlayerFile));
+         
+         while((input = br.readLine()) != null){
+            String name;
+            int level, rage;
+            float gear;
+            
+            st = new StringTokenizer(input, " ");
+            name = st.nextToken();
+
+            level = Integer.parseInt(st.nextToken());
+            gear = Float.parseFloat(st.nextToken());
+            rage = Integer.parseInt(st.nextToken());
+            meleePlayerMap.put(name, new RPGMeleePlayer(name, level, gear, rage, st.nextToken(), st.nextToken(), st.nextToken()));
+         }
+         br.close();
+         
+      }catch(FileNotFoundException e){
+         getLogger().info("No original LittleRPG melee player file found. One will be created for you");
+      }catch(IOException e){
+         getLogger().info("Error reading LittleRPG melee player file");
+      }catch(Exception e){
+         getLogger().info("Incorrectly formatted LittleRPG melee player file");
+      }
+   }
+
+   // Load up the ranged players from file
+   public void loadRangedFile(){
+      BufferedReader br;
+      String input;
+      StringTokenizer st;
+
+      try{
+         br = new BufferedReader(new FileReader(rangedPlayerFile));
+         
+         while((input = br.readLine()) != null){
+            String name;
+            int level;
+            float gear;
+            
+            st = new StringTokenizer(input, " ");
+            name = st.nextToken();
+
+            level = Integer.parseInt(st.nextToken());
+            gear = Float.parseFloat(st.nextToken());
+            rangedPlayerMap.put(name, new RPGRangedPlayer(name, level, gear, st.nextToken(), st.nextToken(), st.nextToken()));
+         }
+         br.close();
+         
+      }catch(FileNotFoundException e){
+         getLogger().info("No original LittleRPG ranged player file found. One will be created for you");
+      }catch(IOException e){
+         getLogger().info("Error reading LittleRPG ranged player file");
+      }catch(Exception e){
+         getLogger().info("Incorrectly formatted LittleRPG ranged player file");
+      }
+   }
+
+   // Load up the magic players from file
+   public void loadMagicFile(){
+      BufferedReader br;
+      String input;
+      StringTokenizer st;
+
+      try{
+         br = new BufferedReader(new FileReader(magicPlayerFile));
+         
+         // Load magic player file data into the magic player HashMap
+         while((input = br.readLine()) != null){
+            String name;
+            int level, buildUp;
+            float gear;
+            
+            st = new StringTokenizer(input, " ");
+            name = st.nextToken();
+            
+            level = Integer.parseInt(st.nextToken());
+            gear = Float.parseFloat(st.nextToken());
+            buildUp = Integer.parseInt(st.nextToken());
+            magicPlayerMap.put(name, new RPGMagicPlayer(name, level, gear, buildUp, st.nextToken(), st.nextToken(), st.nextToken()));
+         }
+         br.close();
+         
+      }catch(FileNotFoundException e){
+         getLogger().info("No original LittleRPG magic player file found. One will be created for you");
+      }catch(IOException e){
+         getLogger().info("Error reading LittleRPG magic player file");
+      }catch(Exception e){
+         getLogger().info("Incorrectly formatted LittleRPG magic player file");
+      }
+   }
+
+   // Load up the worlds from file
+   public void loadWorldsFile(){
+      BufferedReader br;
+      String input;
+
+      try{
+         br = new BufferedReader(new FileReader(worldsFile));
+         
+         // Load world file data into the world HashMap
+         while((input = br.readLine()) != null){
+            worldsMap.put(input, input);
+         }
+         br.close();
+         
+      }catch(FileNotFoundException e){
+         getLogger().info("No original LittleRPG world file found. One will be created for you");
+      }catch(IOException e){
+         getLogger().info("Error reading LittleRPG world file");
+      }catch(Exception e){
+         getLogger().info("Incorrectly formatted LittleRPG world file");
+      }
+   }
+   
+   public void loadDialoguesFile(){
+      BufferedReader br;
+      String input;
+      StringTokenizer st;
+
+      // Load up the worlds from file
+      try{
+         String type, msg;
+         br = new BufferedReader(new FileReader(dialogueFile));
+         
+         // Load world file data into the world HashMap
+         while((input = br.readLine()) != null){
+            st = new StringTokenizer(input, " ");
+            type = st.nextToken();
+            msg = st.nextToken();
+            
+            while(st.hasMoreTokens())
+               msg += " " + st.nextToken();
+            
+            dialogueMap.put(type, msg);
+         }
+         br.close();
+         
+      }catch(FileNotFoundException e){
+         getLogger().info("No original LittleRPG text file found. One will be created for you");
+         
+         if(!spoutEnabled){
+         dialogueMap.put("intro", ChatColor.RED + " Welcome to a LittleRPG world. Please choose a class to begin. "
+               + ChatColor.YELLOW + "Melee class: type /ichoosemelee                                "
+               + ChatColor.GREEN + "Ranged class: type /ichooseranged                              "
+               + ChatColor.BLUE + "Magic class: type /ichoosemagic                                ");
+         }
+         else
+            dialogueMap.put("intro", ChatColor.RED + "Welcome to a LittleRPG world. You want to be the very best, like no one ever was.");
+         
+         dialogueMap.put("return", ChatColor.RED + "Welcome back, brave adventurer.");
+      }catch(IOException e){
+         getLogger().info("Error reading LittleRPG text file");
+      }catch(Exception e){
+         getLogger().info("Incorrectly formatted LittleRPG text file");
+      }
+   }
+   
+   public void loadQuestStartsFile(){
+      BufferedReader br;
+      String input;
+      StringTokenizer st;
+
+      // Load up the quest starting points from file
+      try{
+         Location loc;
+         br = new BufferedReader(new FileReader(questStartFile));
+         
+         // Load quest start file data into the world HashMap
+         while((input = br.readLine()) != null){
+            st = new StringTokenizer(input, " ");
+            loc = new Location(getServer().getWorld(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+            
+            questStartMap.put(loc, Integer.parseInt(st.nextToken()));
+         }
+         br.close();
+         
+      }catch(FileNotFoundException e){
+         getLogger().info("No original LittleRPG quest start file found. One will be created for you");
+      }catch(IOException e){
+         getLogger().info("Error reading LittleRPG quest start file");
+      }catch(Exception e){
+         getLogger().info("Incorrectly formatted LittleRPG quest start file");
+      }
+   }
+   
+   public void loadPartiesFile(){
+      // Load all the parties from file
+      try{
+         int i, j;
+         List<String> partyNameList, partyMembers, partyInvites;
+         FileConfiguration partyConfig;
+         RPGParty partay;
+         
+         partyFile.createNewFile();
+         
+         partyConfig = YamlConfiguration.loadConfiguration(partyFile);
+         
+         partyNameList = partyConfig.getStringList("names");
+         for(i = 0; i < partyNameList.size(); i++){
+            partay = new RPGParty(partyNameList.get(i));
+            
+            partyMembers = partyConfig.getStringList(partyNameList.get(i) + ".members");
+            for(j = 0; j < partyMembers.size(); j++){
+               partay.addMember(partyMembers.get(j));
+            }
+            
+            partyInvites = partyConfig.getStringList(partyNameList.get(i) + ".invites");
+            for(j = 0; j < partyInvites.size(); j++){
+               partay.addInvitation(partyInvites.get(j));
+            }
+            
+            partyMap.put(partay.getName(), partay);
+         }
+         
+      }catch(IllegalArgumentException e){
+         getLogger().info("LittleRPG party file unable to be created");
+      }catch(IOException e){
+         getLogger().info("No original LittleRPG party file found. One will be created for you");
+      }catch(Exception e){
+         getLogger().info("Incorrectly formatted LittleRPG party file");
+      }
+   }
+
+   // Save all melee players to file
+   public void saveToMeleeFile(){
+      BufferedWriter bw;
+
+      try{
+         bw = new BufferedWriter(new FileWriter(meleePlayerFile));
+         
+         Iterator<Map.Entry<String, RPGMeleePlayer>> it = meleePlayerMap.entrySet().iterator();
+         while(it.hasNext()){
+            Entry<String, RPGMeleePlayer> player = it.next();
+            bw.write(player.getKey() + " "
+                  + Integer.toString(player.getValue().getLevel()) + " "
+                  + Float.toString(player.getValue().getGearLevel()) + " "
+                  + Integer.toString(player.getValue().getRage()) + " "
+                  + player.getValue().getIncomplete() + " "
+                  + player.getValue().getComplete() + " "
+                  + player.getValue().getParty() + "\n");
+         }
+         bw.close();
+      }catch(IOException e){
+         getLogger().info("Error saving LittleRPG melee players");
+      }
+   }
+
+   // Save all ranged players to file
+   public void saveToRangedFile(){
+      BufferedWriter bw;
+      
+      try{
+         bw = new BufferedWriter(new FileWriter(rangedPlayerFile));
+         
+         Iterator<Map.Entry<String, RPGRangedPlayer>> it = rangedPlayerMap.entrySet().iterator();
+         while(it.hasNext()){
+            Entry<String, RPGRangedPlayer> player = it.next();
+            bw.write(player.getKey() + " "
+                  + Integer.toString(player.getValue().getLevel()) + " "
+                  + Float.toString(player.getValue().getGearLevel()) + " "
+                  + player.getValue().getIncomplete() + " "
+                  + player.getValue().getComplete() + " "
+                  + player.getValue().getParty() + "\n");
+         }
+         bw.close();
+      }catch(IOException e){
+         getLogger().info("Error saving LittleRPG ranged players");
+      }
+      
+   }
+
+   // Save all magic players to file
+   public void saveToMagicFile(){
+      BufferedWriter bw;
+
+      try{
+         bw = new BufferedWriter(new FileWriter(magicPlayerFile));
+         
+         Iterator<Map.Entry<String, RPGMagicPlayer>> it = magicPlayerMap.entrySet().iterator();
+         while(it.hasNext()){
+            Entry<String, RPGMagicPlayer> player = it.next();
+            bw.write(player.getKey() + " "
+                  + Integer.toString(player.getValue().getLevel()) + " "
+                  + Float.toString(player.getValue().getGearLevel()) + " "
+                  + Integer.toString(player.getValue().getBuildUp()) + " "
+                  + player.getValue().getIncomplete() + " "
+                  + player.getValue().getComplete() + " "
+                  + player.getValue().getParty() + "\n");
+         }
+         bw.close();
+      }catch(IOException e){
+         getLogger().info("Error saving LittleRPG magic players");
+      }
+   }
+   
+   public void saveToWorldsFile(){
+      BufferedWriter bw;
+
+      // Save all world names to file
+      try{
+         bw = new BufferedWriter(new FileWriter(worldsFile));
+         Iterator<Map.Entry<String, String>> it = worldsMap.entrySet().iterator();
+         
+         while(it.hasNext()){
+            Entry<String, String> world = it.next();
+            bw.write(world.getValue() + "\n");
+         }
+         bw.close();
+      }catch(IOException e){
+         getLogger().info("Error saving LittleRPG worlds");
+      }
+   }
+
+   // Save all dialogues to file
+   public void saveToDialoguesFile(){
+      BufferedWriter bw;
+
+      try{
+         bw = new BufferedWriter(new FileWriter(dialogueFile));
+         Iterator<Map.Entry<String, String>> it = dialogueMap.entrySet().iterator();
+         
+         while(it.hasNext()){
+            Entry<String, String> text = it.next();
+            bw.write(text.getKey() + " " + text.getValue() + "\n");
+         }
+         bw.close();
+      }catch(IOException e){
+         getLogger().info("Error saving LittleRPG dialogue file");
+      }
+   }
+
+   // Save all quest starting points to file
+   public void saveToQuestStartsFile(){
+      BufferedWriter bw;
+
+      try{
+         bw = new BufferedWriter(new FileWriter(questStartFile));
+         Iterator<Map.Entry<Location, Integer>> it = questStartMap.entrySet().iterator();
+         
+         while(it.hasNext()){
+            Entry<Location, Integer> quest = it.next();
+            bw.write(quest.getKey().getWorld().getName() + " "
+                  + Integer.toString(quest.getKey().getBlockX()) + " "
+                  + Integer.toString(quest.getKey().getBlockY()) + " "
+                  + Integer.toString(quest.getKey().getBlockZ()) + " "
+                  + Integer.toString(quest.getValue()) + "\n");
+         }
+         bw.close();
+      }catch(IOException e){
+         getLogger().info("Error saving LittleRPG quest starting points");
+      }
+   }
+   
+   // Save all party data to file
+   public void saveToPartiesFile(){
+      try{
+         List<String> partyNameList, partyMembers, partyInvites;
+         FileConfiguration partyConfig;
+         partyNameList = new ArrayList<String>();
+         
+         partyConfig = YamlConfiguration.loadConfiguration(partyFile);
+         
+         Iterator<Map.Entry<String, RPGParty>> it = partyMap.entrySet().iterator();
+         while(it.hasNext()){
+            Entry<String, RPGParty> party = it.next();
+            partyNameList.add(party.getKey());
+            
+            Iterator<Map.Entry<String, String>> it2 = party.getValue().getMembers().entrySet().iterator();
+            partyMembers = new ArrayList<String>();
+            while(it2.hasNext()){
+               Entry<String, String> partyMem = it2.next();
+               partyMembers.add(partyMem.getValue());
+            }
+            
+            it2 = party.getValue().getInvitations().entrySet().iterator();
+            partyInvites = new ArrayList<String>();
+            while(it2.hasNext()){
+               Entry<String, String> partyInv = it2.next();
+               partyInvites.add(partyInv.getValue());
+            }
+
+            partyConfig.set(party.getKey() + ".members", partyMembers);
+            partyConfig.set(party.getKey() + ".invites", partyInvites);
+         }
+         
+         partyConfig.set("names", partyNameList);
+         partyConfig.save(partyFile);
+         
+      }catch(Exception e){
+         getLogger().info("Error saving LittleRPG parties");
       }
    }
 }

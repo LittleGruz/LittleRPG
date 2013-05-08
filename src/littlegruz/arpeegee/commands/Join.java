@@ -25,7 +25,7 @@ public class Join implements CommandExecutor{
                for(int i = 1; i < args.length; i++)
                   msg += " " + args[i];
                
-               plugin.getTextsMap().put("intro", msg);
+               plugin.getDialogueMap().put("intro", msg);
                
                sender.sendMessage("Introductory message set");
             }
@@ -40,7 +40,7 @@ public class Join implements CommandExecutor{
                for(int i = 1; i < args.length; i++)
                   msg += " " + args[i];
                
-               plugin.getTextsMap().put("return", msg);
+               plugin.getDialogueMap().put("return", msg);
                
                sender.sendMessage("Returning player message set");
             }

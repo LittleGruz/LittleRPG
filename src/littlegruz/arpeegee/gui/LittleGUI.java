@@ -30,7 +30,7 @@ public class LittleGUI{
       intro.setY(20);
       intro.setWidth(300); // About 80 characters
       intro.setHeight(40);
-      intro.setText(addNewLines(plugin.getTextsMap().get("intro")));
+      intro.setText(addNewLines(plugin.getDialogueMap().get("intro")));
       
       melee.setX(160);
       melee.setY(80);

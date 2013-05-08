@@ -23,7 +23,7 @@ public class PlayerJoin implements Listener{
                && plugin.getRangedPlayerMap().get(event.getPlayer().getName()) == null
                && plugin.getMagicPlayerMap().get(event.getPlayer().getName()) == null){
             if(!plugin.isSpoutEnabled()){
-               event.setJoinMessage(plugin.getTextsMap().get("intro"));
+               event.setJoinMessage(plugin.getDialogueMap().get("intro"));
             }
             else{
                plugin.getGUI().attachIntro(playa);
@@ -34,7 +34,7 @@ public class PlayerJoin implements Listener{
             event.getPlayer().setExp(0);
          }
          else{
-            event.setJoinMessage(plugin.getTextsMap().get("return"));
+            event.setJoinMessage(plugin.getDialogueMap().get("return"));
             setRPGLevel(event.getPlayer());
          }
       }
