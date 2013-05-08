@@ -27,14 +27,16 @@ public class PlayerItemHeld implements Listener{
             if(event.getPreviousSlot() == 2
                   && event.getNewSlot() == 0
                   && playa.getItemInHand().getType().compareTo(Material.CARROT_ITEM) == 0
-                  && playa.getLevel() >= 11){
+                  && playa.getLevel() >= 11
+                  && rpgmp.getOnHit() != 1){
                rpgmp.setOnHit(1);
                playa.sendMessage("Silence attack set");
             }
             else if(event.getPreviousSlot() == 3
                   && event.getNewSlot() == 0
                   && playa.getItemInHand().getType().compareTo(Material.PUMPKIN_PIE) == 0
-                  && playa.getLevel() >= 16){
+                  && playa.getLevel() >= 16
+                  && rpgmp.getOnHit() != 2){
                rpgmp.setOnHit(2);
                playa.sendMessage("Imobilise attack set");
             }

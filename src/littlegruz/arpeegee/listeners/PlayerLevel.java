@@ -87,12 +87,12 @@ public class PlayerLevel implements Listener{
             // Confusion
             if(rpgPlaya.getLevel() == 6){
                is.setDurability((short)14);
-               event.getPlayer().getInventory().setItem(2, is);
+               event.getPlayer().getInventory().setItem(1, is);
             }
             // Fire
             else if(rpgPlaya.getLevel() == 11){
                is.setDurability((short)1);
-               event.getPlayer().getInventory().setItem(1, is);
+               event.getPlayer().getInventory().setItem(2, is);
             }
             // Heal
             else if(rpgPlaya.getLevel() == 16){

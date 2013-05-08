@@ -19,9 +19,7 @@ public class PlayerJoin implements Listener{
    public void onPlayerJoin(PlayerJoinEvent event){
       if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getName())){
          Player playa = event.getPlayer();
-         if(plugin.getMeleePlayerMap().get(event.getPlayer().getName()) == null
-               && plugin.getRangedPlayerMap().get(event.getPlayer().getName()) == null
-               && plugin.getMagicPlayerMap().get(event.getPlayer().getName()) == null){
+         if(plugin.getRPGPlayer(event.getPlayer().getName()) == null){
             if(!plugin.isSpoutEnabled()){
                event.setJoinMessage(plugin.getDialogueMap().get("intro"));
             }

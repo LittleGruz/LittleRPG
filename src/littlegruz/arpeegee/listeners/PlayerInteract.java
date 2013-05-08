@@ -228,14 +228,13 @@ public class PlayerInteract implements Listener{
             /* Desummon all sheep when summon time ends*/
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                public void run(){
-                  for(Entity e: plugin.getServer().getWorld("world").getEntities()){
-                     rpgm.sheepSearchAndDestroy(e.getUniqueId(), true);
-                     e.remove();
-                     
+                  for(Entity e: plugin.getServer().getPlayer(rpgm.getName()).getNearbyEntities(10, 10, 10)){
+                     if(rpgm.sheepSearchAndDestroy(e.getUniqueId(), true))
+                        ((LivingEntity) e).damage(10);
+
                      if(rpgm.getSheepCount() == 0)
                         break;
                   }
-                  
                }
             }, 100L);
          }
