@@ -10,7 +10,6 @@ import littlegruz.arpeegee.ArpeegeeMain;
 import littlegruz.arpeegee.entities.RPGMagicPlayer;
 import littlegruz.arpeegee.entities.RPGMeleePlayer;
 import littlegruz.arpeegee.entities.RPGPlayer;
-import littlegruz.arpeegee.entities.RPGRangedPlayer;
 
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
@@ -87,7 +86,7 @@ public class EntityDamageEntity implements Listener {
                   ItemStack is = new ItemStack(351,1);
                   is.setDurability((short)15);
                   playa.getInventory().remove(is);
-                  plugin.giveCooldown(playa, "heal", "magic", 7);
+                  plugin.giveCooldown(playa, "heal", "magic", 10);
                   plugin.getMagicPlayerMap().get(playa.getName()).setHealReadiness(false);
                }
                
@@ -119,7 +118,7 @@ public class EntityDamageEntity implements Listener {
                
                /* Check if the player can swing yet and if the entity is an enemy*/
                if(rpgMeleeP.isSwordReady() && plugin.isEnemy(event.getEntity(), rpgMeleeP.getParty())){
-                  plugin.giveCooldown(playa, "slash", "melee", 1);
+                  plugin.giveCooldown(playa, "slash", "melee", 1.5);
                   rpgMeleeP.setSwordReadiness(false);
                }
                else{
@@ -179,18 +178,6 @@ public class EntityDamageEntity implements Listener {
                            public void run(){
                               rpgMeleeVic.unsilencePlayer();
                               plugin.getServer().getPlayer(rpgMeleeVic.getName()).sendMessage("*unsilenced*");
-                           }
-                        }, 60L);
-                     }
-                     else if(plugin.getRangedPlayerMap().get(((Player) victim).getName()) != null){
-                        final RPGRangedPlayer rpgRangedVic = plugin.getRangedPlayerMap().get(((Player) victim).getName());
-                        rpgRangedVic.silencePlayer();
-                        ((Player) victim).sendMessage("*silenced*");
-                        
-                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                           public void run(){
-                              rpgRangedVic.unsilencePlayer();
-                              plugin.getServer().getPlayer(rpgRangedVic.getName()).sendMessage("*unsilenced*");
                            }
                         }, 60L);
                      }

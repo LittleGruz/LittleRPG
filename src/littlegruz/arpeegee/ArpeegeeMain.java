@@ -400,31 +400,14 @@ public class ArpeegeeMain extends JavaPlugin {
          getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
             public void run() {
                RPGRangedPlayer rpgPlaya = rangedPlayerMap.get(playa.getName());
-               ItemStack is = new ItemStack(351,1);
-               playa.getInventory().setItem(0, new ItemStack(Material.BOW,1));
                
-               if(type.compareTo("arrow") == 0){
-                  rpgPlaya.setArrowReadiness(true);
+               if(type.compareTo("bow") == 0){
+                  rpgPlaya.setBowReadiness(true);
                   playa.getInventory().setItem(0, new ItemStack(Material.BOW,1));
                }
                else if(type.compareTo("egg") == 0){
                   rpgPlaya.setEggReadiness(true);
                   playa.getInventory().setItem(3, new ItemStack(Material.EGG,1));
-               }
-               else if(type.compareTo("slow") == 0){
-                  rpgPlaya.setSlowBowReadiness(true);
-                  is.setDurability((short)12);
-                  playa.getInventory().setItem(1, is);
-               }
-               else if(type.compareTo("ICANTSEE") == 0){
-                  rpgPlaya.setBlindBowReadiness(true);
-                  is.setDurability((short)0);
-                  playa.getInventory().setItem(2, is);
-               }
-               else if(type.compareTo("woof") == 0){
-                  rpgPlaya.setSheepBowReadiness(true);
-                  is.setDurability((short)15);
-                  playa.getInventory().setItem(4, is);
                }
             }
         }, (long) (delay * 20)); // Multiplied by 20 to turn the delay time into seconds

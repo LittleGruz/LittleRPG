@@ -100,7 +100,7 @@ public class PlayerInteract implements Listener{
                   
                   // Give cooldown and remove item from inventory
                   removeItem(playa);
-                  plugin.giveCooldown(playa, "flash", "melee", 10);
+                  plugin.giveCooldown(playa, "flash", "melee", 6);
                   plugin.getMeleePlayerMap().get(playa.getName()).setFlashReadiness(false);
                }
                else
@@ -230,6 +230,7 @@ public class PlayerInteract implements Listener{
                public void run(){
                   for(Entity e: plugin.getServer().getWorld("world").getEntities()){
                      rpgm.sheepSearchAndDestroy(e.getUniqueId(), true);
+                     e.remove();
                      
                      if(rpgm.getSheepCount() == 0)
                         break;
@@ -254,7 +255,7 @@ public class PlayerInteract implements Listener{
             }
             else{
                removeItem(playa);
-               plugin.giveCooldown(playa, "fire", "magic", 5);
+               plugin.giveCooldown(playa, "fire", "magic", 8);
                rpgm.setFireReadiness(false);
             }
 
@@ -327,7 +328,7 @@ public class PlayerInteract implements Listener{
                event.setCancelled(true);
             }
             else{
-               plugin.giveCooldown(playa, "egg", "ranged", 5);
+               plugin.giveCooldown(playa, "egg", "ranged", 10);
                plugin.getRangedPlayerMap().get(playa.getName()).setEggReadiness(false);
             }
          }
@@ -628,7 +629,7 @@ public class PlayerInteract implements Listener{
                removeItem(playa);
                
                // Set cooldown
-               plugin.giveCooldown(playa, "conf", "magic", 10);
+               plugin.giveCooldown(playa, "conf", "magic", 6);
                rpgm.setConfusionReadiness(false);
                
                if(plugin.getBuildUpMap().get(playa.getName()) == null){

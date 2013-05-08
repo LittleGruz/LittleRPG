@@ -45,8 +45,8 @@ public class PlayerProjectile implements Listener{
                   // Slow arrow
                   if(rpgr.getOnHit() == 1){
                      event.setCancelled(true);
-                     if(!rpgr.isSlowBowReady()){
-                        playa.sendMessage("Slow arrow is still on cooldown");
+                     if(!rpgr.isBowReady()){
+                        playa.sendMessage("Bow is still on cooldown");
                         return;
                      }
                      
@@ -56,14 +56,14 @@ public class PlayerProjectile implements Listener{
                      plugin.getProjMap().put(sb,
                            Float.toString(rpgr.getGearLevel()) + "|" + rpgr.getParty());
                      playa.getInventory().setItemInHand(null);
-                     rpgr.setSlowBowReadiness(false);
+                     rpgr.setBowReadiness(false);
                      rpgr.setOnHit(0);
-                     plugin.giveCooldown(playa, "slow", "ranged", 2);
+                     plugin.giveCooldown(playa, "bow", "ranged", 2);
                   }
                   // Blind arrow
                   else if(rpgr.getOnHit() == 2){
-                     if(!rpgr.isBlindBowReady()){
-                        playa.sendMessage("Blind arrow is still on cooldown");
+                     if(!rpgr.isBowReady()){
+                        playa.sendMessage("Bow is still on cooldown");
                         event.setCancelled(true);
                         return;
                      }
@@ -71,15 +71,15 @@ public class PlayerProjectile implements Listener{
                      plugin.getProjMap().put(arrow,
                            Float.toString(rpgr.getGearLevel()) + "|2|" + rpgr.getParty());
                      playa.getInventory().setItemInHand(null);
-                     rpgr.setBlindBowReadiness(false);
+                     rpgr.setBowReadiness(false);
                      rpgr.setOnHit(0);
-                     plugin.giveCooldown(playa, "ICANTSEE", "ranged", 3);
+                     plugin.giveCooldown(playa, "bow", "ranged", 3);
                   }
                   // Sheep arrow
                   else if(rpgr.getOnHit() == 3){
                      event.setCancelled(true);
-                     if(!rpgr.isSheepBowReady()){
-                        playa.sendMessage("Sheep arrow is still on cooldown");
+                     if(!rpgr.isBowReady()){
+                        playa.sendMessage("Bow is still on cooldown");
                         return;
                      }
                      
@@ -89,22 +89,22 @@ public class PlayerProjectile implements Listener{
                      plugin.getProjMap().put(sf,
                            Float.toString(rpgr.getGearLevel()) + "|" + rpgr.getParty());
                      playa.getInventory().setItemInHand(null);
-                     rpgr.setSheepBowReadiness(false);
+                     rpgr.setBowReadiness(false);
                      rpgr.setOnHit(0);
-                     plugin.giveCooldown(playa, "woof", "ranged", 2);
+                     plugin.giveCooldown(playa, "bow", "ranged", 5);
                   }
                   // Normal arrow
                   else{
-                     if(!rpgr.isArrowReady()){
-                        playa.sendMessage("Arrow is still on cooldown");
+                     if(!rpgr.isBowReady()){
+                        playa.sendMessage("Bow is still on cooldown");
                         event.setCancelled(true);
                         return;
                      }
                      
                      plugin.getProjMap().put(arrow,
                            Float.toString(rpgr.getGearLevel()) + "|1|" + rpgr.getParty());
-                     rpgr.setArrowReadiness(false);
-                     plugin.giveCooldown(playa, "arrow", "ranged", 2);
+                     rpgr.setBowReadiness(false);
+                     plugin.giveCooldown(playa, "bow", "ranged", 1);
                   }
 
                   /* Give player some arrows if running low*/
@@ -132,9 +132,10 @@ public class PlayerProjectile implements Listener{
             
             // Max will be a 96% chance of exploding
             if(plugin.probabilityRoll((int)(12 * egg))){
+               int range = (int)(egg * 0.5);
                event.getEgg().getLocation().getWorld().createExplosion(event.getEgg().getLocation(), 1F, false);
                
-               for(Entity victims : event.getEgg().getNearbyEntities(2, 2, 2)){
+               for(Entity victims : event.getEgg().getNearbyEntities(range, range, range)){
                   if (victims instanceof LivingEntity
                         && plugin.isEnemy(victims, plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getParty())) {
                      ((LivingEntity) victims).addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, (int) egg, 2), true);
