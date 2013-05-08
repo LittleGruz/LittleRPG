@@ -43,12 +43,6 @@ public class PlayerInteract implements Listener{
    public void onPlayerInteract(PlayerInteractEvent event){
       if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getName())){
          Player playa = event.getPlayer();
-
-         /* TODO Only here for testing*/
-         if(playa.getItemInHand().getType().compareTo(Material.APPLE) == 0)
-            playa.setLevel(playa.getLevel() + 1);
-         else if(playa.getItemInHand().getType().compareTo(Material.BREAD) == 0)
-            playa.setLevel(playa.getLevel() - 1);
    
          // Casting weapon for "Flash"
          if(playa.getItemInHand().getType().compareTo(Material.RAW_FISH) == 0

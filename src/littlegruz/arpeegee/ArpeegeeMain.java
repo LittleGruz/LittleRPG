@@ -730,13 +730,13 @@ public class ArpeegeeMain extends JavaPlugin {
             getLogger().info("No original LittleRPG dialogue file found. One will be created for you");
             
             if(!spoutEnabled){
-            dialogueMap.put("intro", ChatColor.RED + " Welcome to LittleRPG world. Please choose a class to begin. "
+            dialogueMap.put("intro", ChatColor.RED + " Welcome to LittleRPG. Please choose a class to begin. "
                   + ChatColor.YELLOW + "Melee class: type /ichoosemelee                                "
                   + ChatColor.GREEN + "Ranged class: type /ichooseranged                              "
                   + ChatColor.BLUE + "Magic class: type /ichoosemagic                                ");
             }
             else
-               dialogueMap.put("intro", ChatColor.RED + "Welcome to LittleRPG world. You want to be the very best, like no one ever was.");
+               dialogueMap.put("intro", ChatColor.RED + "Welcome to LittleRPG. You want to be the very best, like no one ever was.");
             
             dialogueMap.put("return", ChatColor.RED + "Welcome back, brave adventurer.");
             
@@ -917,10 +917,9 @@ public class ArpeegeeMain extends JavaPlugin {
          FileConfiguration dialogueConfig;
          
          dialogueConfig = YamlConfiguration.loadConfiguration(dialogueFile);
-         Iterator<Map.Entry<String, String>> it = dialogueMap.entrySet().iterator();
 
-         dialogueConfig.set("intro", it.next().getValue());
-         dialogueConfig.set("return", it.next().getValue());
+         dialogueConfig.set("intro", dialogueMap.get("intro"));
+         dialogueConfig.set("return", dialogueMap.get("return"));
          
          dialogueConfig.save(dialogueFile);
       }catch(Exception e){

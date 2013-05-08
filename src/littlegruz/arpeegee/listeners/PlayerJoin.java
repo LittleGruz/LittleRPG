@@ -19,7 +19,7 @@ public class PlayerJoin implements Listener{
    public void onPlayerJoin(PlayerJoinEvent event){
       if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getName())){
          Player playa = event.getPlayer();
-         if(plugin.getRPGPlayer(event.getPlayer().getName()) == null){
+         if(plugin.getRPGPlayer(playa.getName()) == null){
             if(!plugin.isSpoutEnabled()){
                event.setJoinMessage(plugin.getDialogueMap().get("intro"));
             }
@@ -28,12 +28,12 @@ public class PlayerJoin implements Listener{
             }
             
             // Just in case they have levels/experience
-            setRPGLevel(event.getPlayer());
-            event.getPlayer().setExp(0);
+            setRPGLevel(playa);
+            playa.setExp(0);
          }
          else{
             event.setJoinMessage(plugin.getDialogueMap().get("return"));
-            setRPGLevel(event.getPlayer());
+            setRPGLevel(playa);
          }
       }
    }
