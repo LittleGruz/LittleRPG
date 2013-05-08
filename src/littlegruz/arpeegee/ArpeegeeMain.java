@@ -99,7 +99,7 @@ public class ArpeegeeMain extends JavaPlugin {
       questStartFile = new File(getDataFolder().toString() + "/questStarters.txt");
       partyFile = new File(getDataFolder().toString() + "/party.yml");
       worldsFile = new File(getDataFolder().toString() + "/worlds.txt");
-      dialogueFile = new File(getDataFolder().toString() + "/dialogues.txt");
+      dialogueFile = new File(getDataFolder().toString() + "/dialogues.yml");
       
       spoutEnabled = getServer().getPluginManager().isPluginEnabled("Spout");
       
@@ -686,7 +686,6 @@ public class ArpeegeeMain extends JavaPlugin {
       try{
          br = new BufferedReader(new FileReader(magicPlayerFile));
          
-         // Load magic player file data into the magic player HashMap
          while((input = br.readLine()) != null){
             String name;
             int level, buildUp;
@@ -719,7 +718,6 @@ public class ArpeegeeMain extends JavaPlugin {
       try{
          br = new BufferedReader(new FileReader(worldsFile));
          
-         // Load world file data into the world HashMap
          while((input = br.readLine()) != null){
             worldsMap.put(input, input);
          }
@@ -733,61 +731,52 @@ public class ArpeegeeMain extends JavaPlugin {
          getLogger().info("Incorrectly formatted LittleRPG world file");
       }
    }
-   
-   public void loadDialoguesFile(){
-      BufferedReader br;
-      String input;
-      StringTokenizer st;
 
-      // Load up the worlds from file
+   // Load up the worlds from file
+   public void loadDialoguesFile(){
       try{
-         String type, msg;
-         br = new BufferedReader(new FileReader(dialogueFile));
+         FileConfiguration dialogueConfig;
          
-         // Load world file data into the world HashMap
-         while((input = br.readLine()) != null){
-            st = new StringTokenizer(input, " ");
-            type = st.nextToken();
-            msg = st.nextToken();
+         dialogueConfig = YamlConfiguration.loadConfiguration(dialogueFile);
+         
+         if(!dialogueFile.exists()){
+            getLogger().info("No original LittleRPG dialogue file found. One will be created for you");
             
-            while(st.hasMoreTokens())
-               msg += " " + st.nextToken();
+            if(!spoutEnabled){
+            dialogueMap.put("intro", ChatColor.RED + " Welcome to LittleRPG world. Please choose a class to begin. "
+                  + ChatColor.YELLOW + "Melee class: type /ichoosemelee                                "
+                  + ChatColor.GREEN + "Ranged class: type /ichooseranged                              "
+                  + ChatColor.BLUE + "Magic class: type /ichoosemagic                                ");
+            }
+            else
+               dialogueMap.put("intro", ChatColor.RED + "Welcome to LittleRPG world. You want to be the very best, like no one ever was.");
             
-            dialogueMap.put(type, msg);
+            dialogueMap.put("return", ChatColor.RED + "Welcome back, brave adventurer.");
+            
+            dialogueFile.createNewFile();
          }
-         br.close();
-         
-      }catch(FileNotFoundException e){
-         getLogger().info("No original LittleRPG text file found. One will be created for you");
-         
-         if(!spoutEnabled){
-         dialogueMap.put("intro", ChatColor.RED + " Welcome to a LittleRPG world. Please choose a class to begin. "
-               + ChatColor.YELLOW + "Melee class: type /ichoosemelee                                "
-               + ChatColor.GREEN + "Ranged class: type /ichooseranged                              "
-               + ChatColor.BLUE + "Magic class: type /ichoosemagic                                ");
+         else{
+            dialogueMap.put("intro", dialogueConfig.getString("intro"));
+            dialogueMap.put("return", dialogueConfig.getString("return"));
          }
-         else
-            dialogueMap.put("intro", ChatColor.RED + "Welcome to a LittleRPG world. You want to be the very best, like no one ever was.");
          
-         dialogueMap.put("return", ChatColor.RED + "Welcome back, brave adventurer.");
-      }catch(IOException e){
-         getLogger().info("Error reading LittleRPG text file");
-      }catch(Exception e){
-         getLogger().info("Incorrectly formatted LittleRPG text file");
+      }catch(IllegalArgumentException e){
+         getLogger().info("Error loading LittleRPG dialogue config file");
+      } catch(IOException e){
+         getLogger().info("Error creating LittleRPG dialogue file");
       }
    }
-   
+
+   // Load up the quest starting points from file
    public void loadQuestStartsFile(){
       BufferedReader br;
       String input;
       StringTokenizer st;
 
-      // Load up the quest starting points from file
       try{
          Location loc;
          br = new BufferedReader(new FileReader(questStartFile));
          
-         // Load quest start file data into the world HashMap
          while((input = br.readLine()) != null){
             st = new StringTokenizer(input, " ");
             loc = new Location(getServer().getWorld(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
@@ -804,9 +793,9 @@ public class ArpeegeeMain extends JavaPlugin {
          getLogger().info("Incorrectly formatted LittleRPG quest start file");
       }
    }
-   
+
+   // Load all the parties from file
    public void loadPartiesFile(){
-      // Load all the parties from file
       try{
          int i, j;
          List<String> partyNameList, partyMembers, partyInvites;
@@ -834,12 +823,13 @@ public class ArpeegeeMain extends JavaPlugin {
             partyMap.put(partay.getName(), partay);
          }
          
+         if(!partyFile.exists())
+            partyFile.createNewFile();
+         
       }catch(IllegalArgumentException e){
-         getLogger().info("LittleRPG party file unable to be created");
+         getLogger().info("Error loading LittleRPG party config file");
       }catch(IOException e){
-         getLogger().info("No original LittleRPG party file found. One will be created for you");
-      }catch(Exception e){
-         getLogger().info("Incorrectly formatted LittleRPG party file");
+         getLogger().info("Error creating LittleRPG party file");
       }
    }
 
@@ -935,18 +925,16 @@ public class ArpeegeeMain extends JavaPlugin {
 
    // Save all dialogues to file
    public void saveToDialoguesFile(){
-      BufferedWriter bw;
-
       try{
-         bw = new BufferedWriter(new FileWriter(dialogueFile));
-         Iterator<Map.Entry<String, String>> it = dialogueMap.entrySet().iterator();
+         FileConfiguration dialogueConfig;
          
-         while(it.hasNext()){
-            Entry<String, String> text = it.next();
-            bw.write(text.getKey() + " " + text.getValue() + "\n");
-         }
-         bw.close();
-      }catch(IOException e){
+         dialogueConfig = YamlConfiguration.loadConfiguration(dialogueFile);
+         Iterator<Map.Entry<String, String>> it = dialogueMap.entrySet().iterator();
+
+         dialogueConfig.set("intro", it.next().getValue());
+         dialogueConfig.set("return", it.next().getValue());
+         
+      }catch(IllegalArgumentException e){
          getLogger().info("Error saving LittleRPG dialogue file");
       }
    }
