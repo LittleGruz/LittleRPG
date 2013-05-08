@@ -754,6 +754,7 @@ public class ArpeegeeMain extends JavaPlugin {
             dialogueMap.put("return", ChatColor.RED + "Welcome back, brave adventurer.");
             
             dialogueFile.createNewFile();
+            saveToDialoguesFile();
          }
          else{
             dialogueMap.put("intro", dialogueConfig.getString("intro"));
@@ -934,7 +935,8 @@ public class ArpeegeeMain extends JavaPlugin {
          dialogueConfig.set("intro", it.next().getValue());
          dialogueConfig.set("return", it.next().getValue());
          
-      }catch(IllegalArgumentException e){
+         dialogueConfig.save(dialogueFile);
+      }catch(Exception e){
          getLogger().info("Error saving LittleRPG dialogue file");
       }
    }
