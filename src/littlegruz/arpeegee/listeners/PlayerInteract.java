@@ -292,7 +292,7 @@ public class PlayerInteract implements Listener{
          }
          // Activate discharge mode if player has gained enough buildup
          else if(event.getAction().toString().contains("RIGHT_CLICK")
-               || plugin.getMagicPlayerMap().get(playa.getName()) != null){
+               && plugin.getMagicPlayerMap().get(playa.getName()) != null){
             if(playa.getItemInHand().getType().compareTo(Material.WHEAT) == 0
                   || playa.getItemInHand().getData().toString().contains("ORANGE DYE")
                   || playa.getItemInHand().getData().toString().contains("YELLOW DYE")
