@@ -14,8 +14,8 @@ public class RPGRangedPlayer extends RPGPlayer{
       sheep = true;
    }
 
-   public RPGRangedPlayer(String name, int level, float gear, String incompleteQuests, String completeQuests, String party){
-      super(name, level, gear, incompleteQuests, completeQuests, party);
+   public RPGRangedPlayer(String name, int level, float attack, String incompleteQuests, String completeQuests, String party){
+      super(name, level, attack, incompleteQuests, completeQuests, party);
       onHit = 0;
       egg = true;
       bow = true;

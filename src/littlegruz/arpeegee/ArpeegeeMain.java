@@ -620,15 +620,15 @@ public class ArpeegeeMain extends JavaPlugin {
          while((input = br.readLine()) != null){
             String name;
             int level, rage;
-            float gear;
+            float attack;
             
             st = new StringTokenizer(input, " ");
             name = st.nextToken();
 
             level = Integer.parseInt(st.nextToken());
-            gear = Float.parseFloat(st.nextToken());
+            attack = Float.parseFloat(st.nextToken());
             rage = Integer.parseInt(st.nextToken());
-            meleePlayerMap.put(name, new RPGMeleePlayer(name, level, gear, rage, st.nextToken(), st.nextToken(), st.nextToken()));
+            meleePlayerMap.put(name, new RPGMeleePlayer(name, level, attack, rage, st.nextToken(), st.nextToken(), st.nextToken()));
          }
          br.close();
          
@@ -653,14 +653,14 @@ public class ArpeegeeMain extends JavaPlugin {
          while((input = br.readLine()) != null){
             String name;
             int level;
-            float gear;
+            float attack;
             
             st = new StringTokenizer(input, " ");
             name = st.nextToken();
 
             level = Integer.parseInt(st.nextToken());
-            gear = Float.parseFloat(st.nextToken());
-            rangedPlayerMap.put(name, new RPGRangedPlayer(name, level, gear, st.nextToken(), st.nextToken(), st.nextToken()));
+            attack = Float.parseFloat(st.nextToken());
+            rangedPlayerMap.put(name, new RPGRangedPlayer(name, level, attack, st.nextToken(), st.nextToken(), st.nextToken()));
          }
          br.close();
          
@@ -685,15 +685,15 @@ public class ArpeegeeMain extends JavaPlugin {
          while((input = br.readLine()) != null){
             String name;
             int level, buildUp;
-            float gear;
+            float attack;
             
             st = new StringTokenizer(input, " ");
             name = st.nextToken();
             
             level = Integer.parseInt(st.nextToken());
-            gear = Float.parseFloat(st.nextToken());
+            attack = Float.parseFloat(st.nextToken());
             buildUp = Integer.parseInt(st.nextToken());
-            magicPlayerMap.put(name, new RPGMagicPlayer(name, level, gear, buildUp, st.nextToken(), st.nextToken(), st.nextToken()));
+            magicPlayerMap.put(name, new RPGMagicPlayer(name, level, attack, buildUp, st.nextToken(), st.nextToken(), st.nextToken()));
          }
          br.close();
          
