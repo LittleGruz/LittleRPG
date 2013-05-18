@@ -403,7 +403,6 @@ public class ArpeegeeMain extends JavaPlugin {
                
                if(type.compareTo("bow") == 0){
                   rpgPlaya.setBowReadiness(true);
-                  playa.getInventory().setItem(0, new ItemStack(Material.BOW,1));
                }
                else if(type.compareTo("egg") == 0){
                   rpgPlaya.setEggReadiness(true);

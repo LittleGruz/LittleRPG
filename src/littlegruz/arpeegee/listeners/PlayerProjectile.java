@@ -54,7 +54,6 @@ public class PlayerProjectile implements Listener{
                      sb.setVelocity(arrow.getVelocity());
                      plugin.getProjMap().put(sb,
                            Float.toString(rpgr.getAttack()) + "|" + rpgr.getParty());
-                     playa.getInventory().setItemInHand(null);
                      rpgr.setBowReadiness(false);
                      rpgr.setOnHit(0);
                      plugin.giveCooldown(playa, "slow", "ranged", 5);
@@ -69,7 +68,6 @@ public class PlayerProjectile implements Listener{
                      
                      plugin.getProjMap().put(arrow,
                            Float.toString(rpgr.getAttack()) + "|2|" + rpgr.getParty());
-                     playa.getInventory().setItemInHand(null);
                      rpgr.setBowReadiness(false);
                      rpgr.setOnHit(0);
                      plugin.giveCooldown(playa, "bow", "ranged", 7);
@@ -87,7 +85,6 @@ public class PlayerProjectile implements Listener{
                      sf.setVelocity(arrow.getVelocity());
                      plugin.getProjMap().put(sf,
                            Float.toString(rpgr.getAttack()) + "|" + rpgr.getParty());
-                     playa.getInventory().setItemInHand(null);
                      rpgr.setBowReadiness(false);
                      rpgr.setOnHit(0);
                      plugin.giveCooldown(playa, "bow", "ranged", 13);
