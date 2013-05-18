@@ -1,7 +1,7 @@
 package littlegruz.arpeegee.entities;
 
 public class RPGRangedPlayer extends RPGPlayer{
-   private boolean egg, bow;
+   private boolean egg, bow, slow, blind, sheep;
    private int onHit;
 
    public RPGRangedPlayer(String name){
@@ -9,6 +9,9 @@ public class RPGRangedPlayer extends RPGPlayer{
       onHit = 0;
       egg = true;
       bow = true;
+      slow = true;
+      blind = true;
+      sheep = true;
    }
 
    public RPGRangedPlayer(String name, int level, float gear, String incompleteQuests, String completeQuests, String party){
@@ -16,6 +19,9 @@ public class RPGRangedPlayer extends RPGPlayer{
       onHit = 0;
       egg = true;
       bow = true;
+      slow = true;
+      blind = true;
+      sheep = true;
    }
 
    public boolean isEggReady(){
@@ -32,6 +38,30 @@ public class RPGRangedPlayer extends RPGPlayer{
 
    public void setBowReadiness(boolean bow){
       this.bow = bow;
+   }
+
+   public boolean isSlowReady(){
+      return slow;
+   }
+
+   public void setSlowReadiness(boolean slow){
+      this.slow = slow;
+   }
+
+   public boolean isBlindReady(){
+      return blind;
+   }
+
+   public void setBlindReadiness(boolean blind){
+      this.blind = blind;
+   }
+
+   public boolean isSheepReady(){
+      return sheep;
+   }
+
+   public void setSheepReadiness(boolean sheep){
+      this.sheep = sheep;
    }
 
    public void blindPlayer(){

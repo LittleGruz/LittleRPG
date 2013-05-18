@@ -28,7 +28,8 @@ public class PlayerItemHeld implements Listener{
                   && event.getNewSlot() == 0
                   && playa.getItemInHand().getType().compareTo(Material.CARROT_ITEM) == 0
                   && playa.getLevel() >= 11
-                  && rpgmp.getOnHit() != 1){
+                  && rpgmp.getOnHit() != 1
+                  && rpgmp.isSilenceReady()){
                rpgmp.setOnHit(1);
                playa.sendMessage("Silence attack set");
             }
@@ -36,7 +37,8 @@ public class PlayerItemHeld implements Listener{
                   && event.getNewSlot() == 0
                   && playa.getItemInHand().getType().compareTo(Material.PUMPKIN_PIE) == 0
                   && playa.getLevel() >= 16
-                  && rpgmp.getOnHit() != 2){
+                  && rpgmp.getOnHit() != 2
+                  && rpgmp.isImobiliseReady()){
                rpgmp.setOnHit(2);
                playa.sendMessage("Imobilise attack set");
             }
@@ -55,21 +57,24 @@ public class PlayerItemHeld implements Listener{
                if(event.getPreviousSlot() == 1
                      && event.getNewSlot() == 0
                      && playa.getItemInHand().getDurability() == 12
-                     && playa.getLevel() >= 6){
+                     && playa.getLevel() >= 6
+                     && rpgr.isSlowReady()){
                   rpgr.setOnHit(1);
                   playa.sendMessage("Slowing arrow set");
                }
                else if(event.getPreviousSlot() == 2
                      && event.getNewSlot() == 0
                      && playa.getItemInHand().getDurability() == 0
-                     && playa.getLevel() >= 11){
+                     && playa.getLevel() >= 11
+                     && rpgr.isBlindReady()){
                   rpgr.setOnHit(2);
                   playa.sendMessage("Blinding arrow set");
                }
                else if(event.getPreviousSlot() == 4
                      && event.getNewSlot() == 0
                      && playa.getItemInHand().getDurability() == 15
-                     && playa.getLevel() >= 20){
+                     && playa.getLevel() >= 20
+                     && rpgr.isSheepReady()){
                   rpgr.setOnHit(3);
                   playa.sendMessage("Sheep arrow set");
                }

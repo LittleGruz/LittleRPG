@@ -45,7 +45,7 @@ public class PlayerProjectile implements Listener{
                   if(rpgr.getOnHit() == 1){
                      event.setCancelled(true);
                      if(!rpgr.isBowReady()){
-                        playa.sendMessage("Bow is still on cooldown");
+                        playa.sendMessage("Slow arrow is still on cooldown");
                         return;
                      }
                      
@@ -57,12 +57,12 @@ public class PlayerProjectile implements Listener{
                      playa.getInventory().setItemInHand(null);
                      rpgr.setBowReadiness(false);
                      rpgr.setOnHit(0);
-                     plugin.giveCooldown(playa, "bow", "ranged", 2);
+                     plugin.giveCooldown(playa, "slow", "ranged", 5);
                   }
                   // Blind arrow
                   else if(rpgr.getOnHit() == 2){
                      if(!rpgr.isBowReady()){
-                        playa.sendMessage("Bow is still on cooldown");
+                        playa.sendMessage("Blind arrow is still on cooldown");
                         event.setCancelled(true);
                         return;
                      }
@@ -72,13 +72,13 @@ public class PlayerProjectile implements Listener{
                      playa.getInventory().setItemInHand(null);
                      rpgr.setBowReadiness(false);
                      rpgr.setOnHit(0);
-                     plugin.giveCooldown(playa, "bow", "ranged", 3);
+                     plugin.giveCooldown(playa, "bow", "ranged", 7);
                   }
                   // Sheep arrow
                   else if(rpgr.getOnHit() == 3){
                      event.setCancelled(true);
                      if(!rpgr.isBowReady()){
-                        playa.sendMessage("Bow is still on cooldown");
+                        playa.sendMessage("Killer sheep is still on cooldown");
                         return;
                      }
                      
@@ -90,7 +90,7 @@ public class PlayerProjectile implements Listener{
                      playa.getInventory().setItemInHand(null);
                      rpgr.setBowReadiness(false);
                      rpgr.setOnHit(0);
-                     plugin.giveCooldown(playa, "bow", "ranged", 5);
+                     plugin.giveCooldown(playa, "bow", "ranged", 13);
                   }
                   // Normal arrow
                   else{

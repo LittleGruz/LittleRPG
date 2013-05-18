@@ -174,6 +174,8 @@ public class EntityDamageEntity implements Listener {
                      }
                   }
                   rpgMeleeP.setOnHit(0);
+                  plugin.giveCooldown(playa, "sssh", "melee", 8);
+                  rpgMeleeP.setSilenceReadiness(true);
                }
                // Imobilise
                else if(rpgMeleeP.getOnHit() == 2){
@@ -203,6 +205,8 @@ public class EntityDamageEntity implements Listener {
                      victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 5), true);
                   }
                   rpgMeleeP.setOnHit(0);
+                  plugin.giveCooldown(playa, "imob", "melee", 10);
+                  rpgMeleeP.setImobiliseReadiness(true);
                }
             }
             // Non-default damage for fist by melee player
