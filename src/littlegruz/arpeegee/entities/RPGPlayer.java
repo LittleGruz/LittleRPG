@@ -10,7 +10,7 @@ public class RPGPlayer {
    public RPGPlayer(String name){
       this.name = name;
       level = 1;
-      gear = 0;
+      gear = 1;
       chat = 0;
       incomplete = "none";
       complete = "none";

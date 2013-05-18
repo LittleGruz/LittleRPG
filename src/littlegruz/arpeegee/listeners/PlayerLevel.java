@@ -110,11 +110,16 @@ public class PlayerLevel implements Listener{
    
    private void levelUp(RPGPlayer rpgPlaya, Player playa, int newLevel){
 
+      // Stop player going over level cap
       if(newLevel > plugin.MAX_LEVEL){
          rpgPlaya.setLevel(plugin.MAX_LEVEL);
          playa.setLevel(plugin.MAX_LEVEL);
       }
-      else
+      // Increase level and stats
+      else{
          rpgPlaya.setLevel(newLevel);
+         
+         rpgPlaya.setGearLevel(rpgPlaya.getGearLevel() + 0.4F);
+      }
    }
 }
