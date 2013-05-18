@@ -44,7 +44,7 @@ public class PlayerProjectile implements Listener{
                   // Slow arrow
                   if(rpgr.getOnHit() == 1){
                      event.setCancelled(true);
-                     if(!rpgr.isBowReady()){
+                     if(!rpgr.isSlowReady()){
                         playa.sendMessage("Slow arrow is still on cooldown");
                         return;
                      }
@@ -54,13 +54,13 @@ public class PlayerProjectile implements Listener{
                      sb.setVelocity(arrow.getVelocity());
                      plugin.getProjMap().put(sb,
                            Float.toString(rpgr.getAttack()) + "|" + rpgr.getParty());
-                     rpgr.setBowReadiness(false);
+                     rpgr.setSlowReadiness(false);
                      rpgr.setOnHit(0);
                      plugin.giveCooldown(playa, "slow", "ranged", 5);
                   }
                   // Blind arrow
                   else if(rpgr.getOnHit() == 2){
-                     if(!rpgr.isBowReady()){
+                     if(!rpgr.isBlindReady()){
                         playa.sendMessage("Blind arrow is still on cooldown");
                         event.setCancelled(true);
                         return;
@@ -68,14 +68,14 @@ public class PlayerProjectile implements Listener{
                      
                      plugin.getProjMap().put(arrow,
                            Float.toString(rpgr.getAttack()) + "|2|" + rpgr.getParty());
-                     rpgr.setBowReadiness(false);
+                     rpgr.setBlindReadiness(false);
                      rpgr.setOnHit(0);
                      plugin.giveCooldown(playa, "bow", "ranged", 7);
                   }
                   // Sheep arrow
                   else if(rpgr.getOnHit() == 3){
                      event.setCancelled(true);
-                     if(!rpgr.isBowReady()){
+                     if(!rpgr.isSheepReady()){
                         playa.sendMessage("Killer sheep is still on cooldown");
                         return;
                      }
@@ -85,7 +85,7 @@ public class PlayerProjectile implements Listener{
                      sf.setVelocity(arrow.getVelocity());
                      plugin.getProjMap().put(sf,
                            Float.toString(rpgr.getAttack()) + "|" + rpgr.getParty());
-                     rpgr.setBowReadiness(false);
+                     rpgr.setSheepReadiness(false);
                      rpgr.setOnHit(0);
                      plugin.giveCooldown(playa, "bow", "ranged", 13);
                   }
