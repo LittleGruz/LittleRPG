@@ -70,7 +70,7 @@ public class PlayerProjectile implements Listener{
                            Float.toString(rpgr.getAttack()) + "|2|" + rpgr.getParty());
                      rpgr.setBlindReadiness(false);
                      rpgr.setOnHit(0);
-                     plugin.giveCooldown(playa, "bow", "ranged", 7);
+                     plugin.giveCooldown(playa, "blind", "ranged", 7);
                   }
                   // Sheep arrow
                   else if(rpgr.getOnHit() == 3){
@@ -87,7 +87,7 @@ public class PlayerProjectile implements Listener{
                            Float.toString(rpgr.getAttack()) + "|" + rpgr.getParty());
                      rpgr.setSheepReadiness(false);
                      rpgr.setOnHit(0);
-                     plugin.giveCooldown(playa, "bow", "ranged", 13);
+                     plugin.giveCooldown(playa, "boom", "ranged", 13);
                   }
                   // Normal arrow
                   else{

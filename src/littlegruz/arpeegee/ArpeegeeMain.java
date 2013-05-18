@@ -92,6 +92,8 @@ public class ArpeegeeMain extends JavaPlugin {
    public final int MAX_LEVEL = 20;
    
    public void onEnable(){
+      getLogger().info("Loading LittleRPG data...");
+      
       // Create the directory if needed
       new File(getDataFolder().toString()).mkdir();
       meleePlayerFile = new File(getDataFolder().toString() + "/meleePlayer.txt");
@@ -104,8 +106,6 @@ public class ArpeegeeMain extends JavaPlugin {
       dialogueFile = new File(getDataFolder().toString() + "/dialogues.yml");
       
       spoutEnabled = getServer().getPluginManager().isPluginEnabled("Spout");
-      
-      getLogger().info("Loading LittleRPG data...");
 
       meleePlayerMap = new HashMap<String, RPGMeleePlayer>();
       loadMeleeFile();
