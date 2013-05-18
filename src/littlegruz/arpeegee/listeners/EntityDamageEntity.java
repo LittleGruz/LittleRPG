@@ -104,7 +104,7 @@ public class EntityDamageEntity implements Listener {
             else if(playa.getItemInHand().getType().toString().contains("SWORD")
                   && plugin.getMeleePlayerMap().get(playa.getName()) != null){
                int crit;
-               float gear;
+               float attack;
                RPGMeleePlayer rpgMeleeP = plugin.getMeleePlayerMap().get(playa.getName());
                
                /* Check if the player can swing yet and if the entity is an enemy*/
@@ -118,19 +118,19 @@ public class EntityDamageEntity implements Listener {
                }
                
                rpgMeleeP.calcGearLevel(playa.getInventory());
-               gear = rpgMeleeP.getAttack();
+               attack = rpgMeleeP.getAttack();
                
-               /* Crit chance 0% to 25%. Berserk mode adds 10%
+               /* Crit chance 2% to 18%. Berserk mode adds 10%
                 * Damage in berserk adds 1 to 3 damage*/
                if(plugin.getBerserkMap().get(playa.getName()) != null){
-                  if(plugin.probabilityRoll((int)(5 * gear + 10)))
+                  if(plugin.probabilityRoll((int)(2 * attack + 10)))
                      crit = 2;
                   else
                      crit = 1;
-                  gear++;
+                  attack++;
                }
                else{
-                  if(plugin.probabilityRoll((int)(5 * gear)))
+                  if(plugin.probabilityRoll((int)(5 * attack)))
                      crit = 2;
                   else
                      crit = 1;
@@ -138,7 +138,7 @@ public class EntityDamageEntity implements Listener {
                   rpgMeleeP.addRage(5);
                }
                
-               plugin.ohTheDamage(event, victim, gear * crit);
+               plugin.ohTheDamage(event, victim, attack * crit);
                
                if(crit == 2)
                   playa.sendMessage("*crit*");
@@ -251,7 +251,7 @@ public class EntityDamageEntity implements Listener {
          else if(event.getDamager() instanceof Arrow){
             // Check that it came from the right player
             if(plugin.getProjMap().get(event.getDamager()) != null){
-               float gear, dmg;
+               float attack, dmg;
                int type;
                String arrowData, party;
                StringTokenizer st;
@@ -259,7 +259,7 @@ public class EntityDamageEntity implements Listener {
                arrowData = plugin.getProjMap().get(event.getDamager()).replace("grounded", "");
                st = new StringTokenizer(arrowData, "|");
                
-               gear = Float.parseFloat(st.nextToken());
+               attack = Float.parseFloat(st.nextToken());
                type = Integer.parseInt(st.nextToken());
                party = st.nextToken();
                
@@ -268,7 +268,7 @@ public class EntityDamageEntity implements Listener {
                   return;
                }
                
-               dmg = gear;
+               dmg = attack;
                
                // Type 2 is the blind arrow
                if(type == 2){
@@ -278,19 +278,19 @@ public class EntityDamageEntity implements Listener {
                      public void run(){
                         plugin.getBlindMap().remove(ent);
                      }
-                  }, (long)(gear * 20));
+                  }, (long)(attack * 20));
                   
                   /* Blinding arrow only deals half the normal damage*/
-                  dmg = gear / 2;
+                  dmg = attack / 2;
                }
                
                /* Set player damage*/
                if(event.getEntity() instanceof Player){
-                  dmg = damageToPlayer((Player) event.getEntity(), gear);
+                  dmg = damageToPlayer((Player) event.getEntity(), attack);
                }
                
                // If crit do double damage. 0% to 20% chance
-               if(plugin.probabilityRoll((int)(5 * (gear / 2)))){
+               if(plugin.probabilityRoll((int)(5 * (attack / 2)))){
                   event.getEntity().getWorld().strikeLightningEffect(event.getEntity().getLocation());
                   plugin.ohTheDamage(event, event.getEntity(), dmg * 2);
                }

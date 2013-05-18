@@ -59,12 +59,12 @@ public class PlayerInteract implements Listener{
             }
             
             HashSet<Byte> hs = new HashSet<Byte>();
-            float gear;
+            float attack;
             Block block;
             Location loc;
             
             rpgm.calcGearLevel(playa.getInventory());
-            gear = rpgm.getAttack();
+            attack = rpgm.getAttack();
       
             hs.add((byte)0); //Air
             hs.add((byte)8); //Flowing water
@@ -73,7 +73,7 @@ public class PlayerInteract implements Listener{
             hs.add((byte)101); //Iron bar
             hs.add((byte)102); //Glass pane
             
-            block = playa.getTargetBlock(hs, (int)gear + 5);
+            block = playa.getTargetBlock(hs, (int)attack + 5);
             loc = block.getLocation();
             
             if(block.getType().compareTo(Material.AIR) != 0
