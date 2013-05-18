@@ -1,8 +1,5 @@
 package littlegruz.arpeegee.entities;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.PlayerInventory;
-
 public class RPGPlayer {
    private String name, incomplete, complete, party;
    private int level, chat;
@@ -51,71 +48,6 @@ public class RPGPlayer {
    
    public void setGearLevel(float gear){
       this.gear = gear;
-   }
-   
-   public void calcGearLevel(PlayerInventory playerInv){
-      float newGear = 0;
-      
-      if(playerInv.getHelmet() != null){
-         if(playerInv.getHelmet().getType().compareTo(Material.LEATHER_HELMET) == 0)
-            newGear = 1;
-         else if(playerInv.getHelmet().getType().compareTo(Material.IRON_HELMET) == 0)
-            newGear = 2;
-         else if(playerInv.getHelmet().getType().compareTo(Material.GOLD_HELMET) == 0)
-            newGear = 3;
-         else if(playerInv.getHelmet().getType().compareTo(Material.CHAINMAIL_HELMET) == 0)
-            newGear = 3;
-         else if(playerInv.getHelmet().getType().compareTo(Material.DIAMOND_HELMET) == 0)
-            newGear = 4;
-      }
-
-      if(playerInv.getChestplate() != null){
-         if(playerInv.getChestplate().getType().compareTo(Material.LEATHER_CHESTPLATE) == 0)
-            newGear += 1;
-         else if(playerInv.getChestplate().getType().compareTo(Material.IRON_CHESTPLATE) == 0)
-            newGear += 2;
-         else if(playerInv.getChestplate().getType().compareTo(Material.GOLD_CHESTPLATE) == 0)
-            newGear += 3;
-         else if(playerInv.getChestplate().getType().compareTo(Material.CHAINMAIL_CHESTPLATE) == 0)
-            newGear += 3;
-         else if(playerInv.getChestplate().getType().compareTo(Material.DIAMOND_CHESTPLATE) == 0)
-            newGear += 4;
-      }
-
-      if(playerInv.getLeggings() != null){
-         if(playerInv.getLeggings().getType().compareTo(Material.LEATHER_LEGGINGS) == 0)
-            newGear += 1;
-         else if(playerInv.getLeggings().getType().compareTo(Material.IRON_LEGGINGS) == 0)
-            newGear += 2;
-         else if(playerInv.getLeggings().getType().compareTo(Material.GOLD_LEGGINGS) == 0)
-            newGear += 3;
-         else if(playerInv.getLeggings().getType().compareTo(Material.CHAINMAIL_LEGGINGS) == 0)
-            newGear += 3;
-         else if(playerInv.getLeggings().getType().compareTo(Material.DIAMOND_LEGGINGS) == 0)
-            newGear += 4;
-      }
-      
-      if(playerInv.getBoots() != null){
-         if(playerInv.getBoots().getType().compareTo(Material.LEATHER_BOOTS) == 0)
-            newGear += 1;
-         else if(playerInv.getBoots().getType().compareTo(Material.IRON_BOOTS) == 0)
-            newGear += 2;
-         else if(playerInv.getBoots().getType().compareTo(Material.GOLD_BOOTS) == 0)
-            newGear += 3;
-         else if(playerInv.getBoots().getType().compareTo(Material.CHAINMAIL_BOOTS) == 0)
-            newGear += 3;
-         else if(playerInv.getBoots().getType().compareTo(Material.DIAMOND_BOOTS) == 0)
-            newGear += 4;
-      }
-      
-      // Average out the values
-      newGear /= 4;
-      // Give value range to all the max to match the original Minecraft sword damage
-      newGear *= 2;
-      
-      //Only update gear if the new value is larger
-      if(newGear > gear)
-         gear = newGear;
    }
 
    public String getParty(){

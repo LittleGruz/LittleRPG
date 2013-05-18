@@ -131,8 +131,6 @@ public class RPGMeleePlayer extends RPGPlayer{
    }
    
    public void calcGearLevel(PlayerInventory playerInv){
-      super.calcGearLevel(playerInv);
-      
       if(playerInv.getItemInHand().getType().compareTo(Material.WOOD_SWORD) == 0)
          super.setGearLevel(super.getGearLevel() + 0.25F);
       else if(playerInv.getItemInHand().getType().compareTo(Material.STONE_SWORD) == 0)

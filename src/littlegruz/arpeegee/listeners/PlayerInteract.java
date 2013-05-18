@@ -252,7 +252,6 @@ public class PlayerInteract implements Listener{
                rpgm.setFireReadiness(false);
             }
 
-            rpgm.calcGearLevel(playa.getInventory());
             ballOfFire = event.getPlayer().launchProjectile(Fireball.class);
             if(plugin.getBuildUpMap().get(playa.getName()) != null){
                data = Float.toString(rpgm.getGearLevel() * 1.5F) + "|y|" + rpgm.getParty();
@@ -494,7 +493,6 @@ public class PlayerInteract implements Listener{
       RPGMagicPlayer rpgm = plugin.getMagicPlayerMap().get(playa.getName());
       
       // Base range is 10 blocks plus the casters spell ability
-      rpgm.calcGearLevel(playa.getInventory());
       spell = rpgm.getGearLevel();
       range = (int)(8 + spell);
       
@@ -584,7 +582,6 @@ public class PlayerInteract implements Listener{
       RPGMagicPlayer rpgm = plugin.getMagicPlayerMap().get(playa.getName());
       
       // Base range is 10 blocks plus the casters spell ability
-      rpgm.calcGearLevel(playa.getInventory());
       spell = rpgm.getGearLevel();
       range = (int)(10 + spell);
       

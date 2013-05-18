@@ -430,7 +430,6 @@ public class EntityDamageEntity implements Listener {
    }
    
    private void healSpell(Player playa, LivingEntity fortunate, int adv){
-      plugin.getMagicPlayerMap().get(playa.getName()).calcGearLevel(playa.getInventory());
       float spell = plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel();
       if(fortunate instanceof Player){
          playa.playEffect(fortunate.getLocation(), Effect.SMOKE, 1);

@@ -41,7 +41,6 @@ public class PlayerProjectile implements Listener{
                      && playa.getItemInHand().getType() == Material.BOW){
                   RPGRangedPlayer rpgr = plugin.getRangedPlayerMap().get(playa.getName());
                   
-                  rpgr.calcGearLevel(playa.getInventory());
                   // Slow arrow
                   if(rpgr.getOnHit() == 1){
                      event.setCancelled(true);
