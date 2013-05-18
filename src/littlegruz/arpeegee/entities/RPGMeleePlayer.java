@@ -53,7 +53,8 @@ public class RPGMeleePlayer extends RPGPlayer{
    public boolean addBideAmt(int add){
       bideAmt += add;
       
-      if(bideAmt > super.getAttack())
+      // Player can take its attack stat plus a heart before exploding
+      if(bideAmt > super.getAttack() + 2)
          return false;
       else
          return true;
