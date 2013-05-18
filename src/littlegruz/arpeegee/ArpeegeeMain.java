@@ -833,7 +833,7 @@ public class ArpeegeeMain extends JavaPlugin {
             Entry<String, RPGMeleePlayer> player = it.next();
             bw.write(player.getKey() + " "
                   + Integer.toString(player.getValue().getLevel()) + " "
-                  + Float.toString(player.getValue().getGearLevel()) + " "
+                  + Float.toString(player.getValue().getAttack()) + " "
                   + Integer.toString(player.getValue().getRage()) + " "
                   + player.getValue().getIncomplete() + " "
                   + player.getValue().getComplete() + " "
@@ -857,7 +857,7 @@ public class ArpeegeeMain extends JavaPlugin {
             Entry<String, RPGRangedPlayer> player = it.next();
             bw.write(player.getKey() + " "
                   + Integer.toString(player.getValue().getLevel()) + " "
-                  + Float.toString(player.getValue().getGearLevel()) + " "
+                  + Float.toString(player.getValue().getAttack()) + " "
                   + player.getValue().getIncomplete() + " "
                   + player.getValue().getComplete() + " "
                   + player.getValue().getParty() + "\n");
@@ -881,7 +881,7 @@ public class ArpeegeeMain extends JavaPlugin {
             Entry<String, RPGMagicPlayer> player = it.next();
             bw.write(player.getKey() + " "
                   + Integer.toString(player.getValue().getLevel()) + " "
-                  + Float.toString(player.getValue().getGearLevel()) + " "
+                  + Float.toString(player.getValue().getAttack()) + " "
                   + Integer.toString(player.getValue().getBuildUp()) + " "
                   + player.getValue().getIncomplete() + " "
                   + player.getValue().getComplete() + " "

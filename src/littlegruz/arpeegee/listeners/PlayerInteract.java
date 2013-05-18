@@ -64,7 +64,7 @@ public class PlayerInteract implements Listener{
             Location loc;
             
             rpgm.calcGearLevel(playa.getInventory());
-            gear = rpgm.getGearLevel();
+            gear = rpgm.getAttack();
       
             hs.add((byte)0); //Air
             hs.add((byte)8); //Flowing water
@@ -254,11 +254,11 @@ public class PlayerInteract implements Listener{
 
             ballOfFire = event.getPlayer().launchProjectile(Fireball.class);
             if(plugin.getBuildUpMap().get(playa.getName()) != null){
-               data = Float.toString(rpgm.getGearLevel() * 1.5F) + "|y|" + rpgm.getParty();
+               data = Float.toString(rpgm.getAttack() * 1.5F) + "|y|" + rpgm.getParty();
                plugin.getBuildUpMap().remove(playa.getName());
             }
             else
-               data = Float.toString(rpgm.getGearLevel()) + "|n|" + rpgm.getParty();
+               data = Float.toString(rpgm.getAttack()) + "|n|" + rpgm.getParty();
             
             plugin.getProjMap().put(ballOfFire, data);
             
@@ -493,7 +493,7 @@ public class PlayerInteract implements Listener{
       RPGMagicPlayer rpgm = plugin.getMagicPlayerMap().get(playa.getName());
       
       // Base range is 10 blocks plus the casters spell ability
-      spell = rpgm.getGearLevel();
+      spell = rpgm.getAttack();
       range = (int)(8 + spell);
       
       for(Entity e : playa.getNearbyEntities(range, range, range)){
@@ -582,7 +582,7 @@ public class PlayerInteract implements Listener{
       RPGMagicPlayer rpgm = plugin.getMagicPlayerMap().get(playa.getName());
       
       // Base range is 10 blocks plus the casters spell ability
-      spell = rpgm.getGearLevel();
+      spell = rpgm.getAttack();
       range = (int)(10 + spell);
       
       for(Entity e : playa.getNearbyEntities(range, range, range)){

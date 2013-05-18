@@ -53,7 +53,7 @@ public class PlayerProjectile implements Listener{
                      
                      sb.setVelocity(arrow.getVelocity());
                      plugin.getProjMap().put(sb,
-                           Float.toString(rpgr.getGearLevel()) + "|" + rpgr.getParty());
+                           Float.toString(rpgr.getAttack()) + "|" + rpgr.getParty());
                      playa.getInventory().setItemInHand(null);
                      rpgr.setBowReadiness(false);
                      rpgr.setOnHit(0);
@@ -68,7 +68,7 @@ public class PlayerProjectile implements Listener{
                      }
                      
                      plugin.getProjMap().put(arrow,
-                           Float.toString(rpgr.getGearLevel()) + "|2|" + rpgr.getParty());
+                           Float.toString(rpgr.getAttack()) + "|2|" + rpgr.getParty());
                      playa.getInventory().setItemInHand(null);
                      rpgr.setBowReadiness(false);
                      rpgr.setOnHit(0);
@@ -86,7 +86,7 @@ public class PlayerProjectile implements Listener{
                      
                      sf.setVelocity(arrow.getVelocity());
                      plugin.getProjMap().put(sf,
-                           Float.toString(rpgr.getGearLevel()) + "|" + rpgr.getParty());
+                           Float.toString(rpgr.getAttack()) + "|" + rpgr.getParty());
                      playa.getInventory().setItemInHand(null);
                      rpgr.setBowReadiness(false);
                      rpgr.setOnHit(0);
@@ -101,7 +101,7 @@ public class PlayerProjectile implements Listener{
                      }
                      
                      plugin.getProjMap().put(arrow,
-                           Float.toString(rpgr.getGearLevel()) + "|1|" + rpgr.getParty());
+                           Float.toString(rpgr.getAttack()) + "|1|" + rpgr.getParty());
                      rpgr.setBowReadiness(false);
                      plugin.giveCooldown(playa, "bow", "ranged", 1);
                   }
@@ -127,7 +127,7 @@ public class PlayerProjectile implements Listener{
          // Determining explosion chance by egg skill
          if(plugin.getRangedPlayerMap().get(event.getPlayer().getName()) != null
                && event.getPlayer().getLevel() >= 16){
-            float egg = plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getGearLevel();
+            float egg = plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getAttack();
             
             // Max will be a 96% chance of exploding
             if(plugin.probabilityRoll((int)(12 * egg))){

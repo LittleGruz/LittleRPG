@@ -127,7 +127,7 @@ public class EntityDamageEntity implements Listener {
                }
                
                rpgMeleeP.calcGearLevel(playa.getInventory());
-               gear = rpgMeleeP.getGearLevel();
+               gear = rpgMeleeP.getAttack();
                
                /* Crit chance 0% to 25%. Berserk mode adds 10%
                 * Damage in berserk adds 1 to 3 damage*/
@@ -430,7 +430,7 @@ public class EntityDamageEntity implements Listener {
    }
    
    private void healSpell(Player playa, LivingEntity fortunate, int adv){
-      float spell = plugin.getMagicPlayerMap().get(playa.getName()).getGearLevel();
+      float spell = plugin.getMagicPlayerMap().get(playa.getName()).getAttack();
       if(fortunate instanceof Player){
          playa.playEffect(fortunate.getLocation(), Effect.SMOKE, 1);
          if(fortunate.getHealth() + (spell * adv) > fortunate.getMaxHealth())

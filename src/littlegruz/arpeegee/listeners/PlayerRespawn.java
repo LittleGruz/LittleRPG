@@ -85,10 +85,6 @@ public class PlayerRespawn implements Listener{
          for(i = 0; i < removeList.size(); i++)
             event.getDrops().remove(removeList.get(i));
          removeList.clear();
-         
-         // Reset gear value
-         if(plugin.getRPGPlayer(event.getEntity().getName()) != null)
-            plugin.getRPGPlayer(event.getEntity().getName()).setGearLevel(0);
       }
    }
 }

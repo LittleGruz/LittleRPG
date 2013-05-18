@@ -3,14 +3,14 @@ package littlegruz.arpeegee.entities;
 public class RPGPlayer {
    private String name, incomplete, complete, party;
    private int level, chat;
-   private float gear;
+   private float attack;
    private boolean move, baseAttack;
 
    // New RPGPlayer
    public RPGPlayer(String name){
       this.name = name;
       level = 1;
-      gear = 1;
+      attack = 1;
       chat = 0;
       incomplete = "none";
       complete = "none";
@@ -19,10 +19,10 @@ public class RPGPlayer {
    }
    
    // Restoring an RPGPlayer from a saved state
-   public RPGPlayer(String name, int level, float gear, String incomplete, String complete, String party){
+   public RPGPlayer(String name, int level, float attack, String incomplete, String complete, String party){
       this.name = name;
       this.level = level;
-      this.gear = gear;
+      this.attack = attack;
       this.incomplete = incomplete;
       this.complete = complete;
       this.party = party;
@@ -42,12 +42,12 @@ public class RPGPlayer {
       level = lvl;
    }
    
-   public float getGearLevel(){
-      return gear;
+   public float getAttack(){
+      return attack;
    }
    
-   public void setGearLevel(float gear){
-      this.gear = gear;
+   public void setAttack(float attack){
+      this.attack = attack;
    }
 
    public String getParty(){
