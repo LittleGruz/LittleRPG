@@ -40,15 +40,6 @@ public class EntityDamageEntity implements Listener {
    @EventHandler
    public void onEntityDamageEntity(EntityDamageByEntityEvent event){
       if(plugin.getWorldsMap().containsKey(event.getEntity().getWorld().getName())){
-         // Fist bump!
-         if(event.getEntity() instanceof Player
-               && event.getDamager() instanceof Player){
-            Player playa = (Player) event.getDamager();
-            if(playa.getItemInHand().getTypeId() == 0){
-               ((Player) event.getEntity()).sendMessage("*fist bumped by " + playa.getName() + "*");
-               playa.sendMessage("*fist bump*");
-            }
-         }
          
          // Should still take damage if blinded
          if(plugin.getConfMap().get(event.getDamager().getUniqueId()) != null){
