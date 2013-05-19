@@ -523,6 +523,39 @@ public class ArpeegeeMain extends JavaPlugin {
          this.getServer().broadcastMessage("Canceled *explode*");
       }
    }
+   
+   /* Calculates the damage taken by a player. Accounts for blocking, bide,
+    * sheep and berserk*/
+   public int damageToPlayer(Player playa, float dmg, boolean physical){
+      // Melee player potentially adds to its bide
+      if(meleePlayerMap.get(playa.getName()) != null){
+         if(bideMap.get(playa.getName()) != null){
+            meleeBide(playa, (int) dmg);
+            return 0;
+         }
+         else if(berserkMap.get(playa.getName()) != null){
+            return (int)(dmg * 0.6);
+         }
+      }
+      else if(magicPlayerMap.get(playa.getName()) != null){
+         return (int) (dmg - (magicPlayerMap.get(playa.getName()).getSheepCount() / 2));
+      }
+      
+      if(playa.isBlocking() && physical){
+         double damage;
+         
+         damage = dmg * 0.9;
+         
+         // Stops smaller damages from being mostly ignored
+         if(damage < dmg - 0.6){
+            damage = dmg;
+         }
+         
+         return (int) damage;
+      }
+      
+      return (int) dmg;
+   }
 
    /* Example quests from quests.yml
     * No prereq quest, must be at least level 5 and player must have at

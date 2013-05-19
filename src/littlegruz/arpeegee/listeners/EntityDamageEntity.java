@@ -174,7 +174,7 @@ public class EntityDamageEntity implements Listener {
                
                /* Set player damage*/
                if(event.getEntity() instanceof Player){
-                  dmg = damageToPlayer((Player) event.getEntity(), attack);
+                  dmg = plugin.damageToPlayer((Player) event.getEntity(), attack, true);
                }
                
                // If crit do double damage. 0% to 20% chance
@@ -216,7 +216,7 @@ public class EntityDamageEntity implements Listener {
                   
                   /* Set player damage*/
                   if(event.getEntity() instanceof Player){
-                     bow = damageToPlayer((Player) event.getEntity(), bow);
+                     bow = plugin.damageToPlayer((Player) event.getEntity(), bow, true);
                   }
                }
                
@@ -307,7 +307,7 @@ public class EntityDamageEntity implements Listener {
          }
          // Player taking generic damage
          else if(event.getEntity() instanceof Player){
-            damageToPlayer((Player) event.getEntity(), event.getDamage());
+            event.setDamage(plugin.damageToPlayer((Player) event.getEntity(), event.getDamage(), true));
          }
       }
    }
@@ -341,57 +341,6 @@ public class EntityDamageEntity implements Listener {
          fortunate.damage((int)(spell * adv));
          playa.sendMessage("Undead damage!");
       }
-   }
-   
-   private void clearGroundedProjectiles(){
-      int i;
-      ArrayList<Entity> entList = new ArrayList<Entity>();
-      
-      // Remove all arrows that have hit the ground from hashmap
-      Iterator<Map.Entry<Entity, String>> it = plugin.getProjMap().entrySet().iterator();
-      while(it.hasNext()){
-         Entry<Entity, String> arrow = it.next();
-         if(arrow.getValue().contains("grounded"))
-            entList.add(arrow.getKey());
-      }
-      // The removal is separate to stop concurrency issues
-      for(i = entList.size() - 1; entList.size() > 0; i--){
-         plugin.getProjMap().remove(entList.get(i));
-         entList.remove(i);
-      }
-   }
-   
-   /* Calculates the damage taken by a player. Accounts for blocking, bide,
-    * sheep and berserk*/
-   private int damageToPlayer(Player playa, float dmg){
-      // Melee player potentially adds to its bide
-      if(plugin.getMeleePlayerMap().get(playa.getName()) != null){
-         if(plugin.getBideMap().get(playa.getName()) != null){
-            plugin.meleeBide(playa, (int) dmg);
-            return 0;
-         }
-         else if(plugin.getBerserkMap().get(playa.getName()) != null){
-            return (int)(dmg * 0.6);
-         }
-      }
-      else if(plugin.getMagicPlayerMap().get(playa.getName()) != null){
-         return (int) (dmg - (plugin.getMagicPlayerMap().get(playa.getName()).getSheepCount() / 2));
-      }
-      
-      if(playa.isBlocking()){
-         double damage;
-         
-         damage = dmg * 0.9;
-         
-         // Stops smaller damages from being mostly ignored
-         if(damage < dmg - 0.6){
-            damage = dmg;
-         }
-         
-         return (int) damage;
-      }
-      
-      return (int) dmg;
    }
    
    private void meleeSwordAttack(Player playa, LivingEntity victim, EntityDamageByEntityEvent event){
@@ -429,6 +378,9 @@ public class EntityDamageEntity implements Listener {
          
          rpgMeleeP.addRage(5);
       }
+      
+      if(victim instanceof Player)
+         attack = plugin.damageToPlayer((Player) victim, attack, true);
       
       plugin.ohTheDamage(event, victim, attack * crit);
       
@@ -499,6 +451,24 @@ public class EntityDamageEntity implements Listener {
          rpgMeleeP.setOnHit(0);
          plugin.giveCooldown(playa, "imob", "melee", 10);
          rpgMeleeP.setImobiliseReadiness(true);
+      }
+   }
+   
+   private void clearGroundedProjectiles(){
+      int i;
+      ArrayList<Entity> entList = new ArrayList<Entity>();
+      
+      // Remove all arrows that have hit the ground from hashmap
+      Iterator<Map.Entry<Entity, String>> it = plugin.getProjMap().entrySet().iterator();
+      while(it.hasNext()){
+         Entry<Entity, String> arrow = it.next();
+         if(arrow.getValue().contains("grounded"))
+            entList.add(arrow.getKey());
+      }
+      // The removal is separate to stop concurrency issues
+      for(i = entList.size() - 1; entList.size() > 0; i--){
+         plugin.getProjMap().remove(entList.get(i));
+         entList.remove(i);
       }
    }
 }

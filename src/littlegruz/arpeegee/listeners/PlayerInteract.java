@@ -519,8 +519,11 @@ public class PlayerInteract implements Listener{
             if((bx - 0.75 <= ex && ex <= bx + 0.75) && (bz - 0.75 <= ez && ez <= bz + 0.75) && (by - 1 <= ey && ey <= by + 1)){
                loc.setY(loc.getY() + 1);
                loc.getWorld().strikeLightningEffect(loc);
-               
-               plugin.ohTheDamage(null, e, spell);
+
+               if(e instanceof Player)
+                  plugin.ohTheDamage(null, e, plugin.damageToPlayer((Player) e, spell, false));
+               else
+                  plugin.ohTheDamage(null, e, spell);
                
                // Remove item from inventory
                removeItem(playa);
@@ -559,8 +562,11 @@ public class PlayerInteract implements Listener{
                            Location enemyLoc = e.getLocation();
                            enemyLoc.setY(enemyLoc.getY() + 1);
                            enemyLoc.getWorld().strikeLightningEffect(enemyLoc);
-                           
-                           plugin.ohTheDamage(null, e, spell / 2);
+
+                           if(e instanceof Player)
+                              plugin.ohTheDamage(null, e, plugin.damageToPlayer((Player) e, spell, false) / 2);
+                           else
+                              plugin.ohTheDamage(null, e, spell / 2);
                         }
                      }
                  }, 20L);
