@@ -81,16 +81,7 @@ public class EntityDamageEntity implements Listener {
                   plugin.getMagicPlayerMap().get(playa.getName()).setHealReadiness(false);
                }
                
-               // Normal heal/undead damage
-               if(plugin.getBuildUpMap().get(playa.getName()) == null){
-                  healSpell(playa, victim, 1);
-                  plugin.getMagicPlayerMap().get(playa.getName()).addBuildUp(6);
-               }
-               // Advanced heal/undead damage
-               else{
-                  healSpell(playa, victim, 2);
-                  plugin.getBuildUpMap().remove(playa.getName());
-               }
+               healSpell(playa, victim);
             }
             // Cancel mage item attack damage
             else if(plugin.getMagicPlayerMap().get(playa.getName()) != null
@@ -103,111 +94,8 @@ public class EntityDamageEntity implements Listener {
             // Damage by a sword by melee player
             else if(playa.getItemInHand().getType().toString().contains("SWORD")
                   && plugin.getMeleePlayerMap().get(playa.getName()) != null){
-               int crit;
-               float attack;
-               RPGMeleePlayer rpgMeleeP = plugin.getMeleePlayerMap().get(playa.getName());
                
-               /* Check if the player can swing yet and if the entity is an enemy*/
-               if(rpgMeleeP.isSwordReady() && plugin.isEnemy(event.getEntity(), rpgMeleeP.getParty())){
-                  plugin.giveCooldown(playa, "slash", "melee", 1.5);
-                  rpgMeleeP.setSwordReadiness(false);
-               }
-               else{
-                  event.setCancelled(true);
-                  return;
-               }
-               
-               rpgMeleeP.calcGearLevel(playa.getInventory());
-               attack = rpgMeleeP.getAttack();
-               
-               /* Crit chance 2% to 18%. Berserk mode adds 10%
-                * Damage in berserk adds 1 to 3 damage*/
-               if(plugin.getBerserkMap().get(playa.getName()) != null){
-                  if(plugin.probabilityRoll((int)(2 * attack + 10)))
-                     crit = 2;
-                  else
-                     crit = 1;
-                  attack++;
-               }
-               else{
-                  if(plugin.probabilityRoll((int)(5 * attack)))
-                     crit = 2;
-                  else
-                     crit = 1;
-                  
-                  rpgMeleeP.addRage(5);
-               }
-               
-               plugin.ohTheDamage(event, victim, attack * crit);
-               
-               if(crit == 2)
-                  playa.sendMessage("*crit*");
-               
-               // Silence
-               if(rpgMeleeP.getOnHit() == 1){
-                  if(victim instanceof Player){
-                     
-                     /* Cause existing player to be unable to cast magic*/
-                     if(plugin.getMagicPlayerMap().get(((Player) victim).getName()) != null){
-                        final RPGMagicPlayer rpgMagicVic = plugin.getMagicPlayerMap().get(((Player) victim).getName());
-                        rpgMagicVic.silencePlayer();
-                        ((Player) victim).sendMessage("*silenced*");
-                        
-                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                           public void run(){
-                              rpgMagicVic.unsilencePlayer();
-                              plugin.getServer().getPlayer(rpgMagicVic.getName()).sendMessage("*unsilenced*");
-                           }
-                        }, 60L);
-                     }
-                     else if(plugin.getMeleePlayerMap().get(((Player) victim).getName()) != null){
-                        final RPGMeleePlayer rpgMeleeVic = plugin.getMeleePlayerMap().get(((Player) victim).getName());
-                        rpgMeleeVic.silencePlayer();
-                        ((Player) victim).sendMessage("*silenced*");
-                        
-                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                           public void run(){
-                              rpgMeleeVic.unsilencePlayer();
-                              plugin.getServer().getPlayer(rpgMeleeVic.getName()).sendMessage("*unsilenced*");
-                           }
-                        }, 60L);
-                     }
-                  }
-                  rpgMeleeP.setOnHit(0);
-                  plugin.giveCooldown(playa, "sssh", "melee", 8);
-                  rpgMeleeP.setSilenceReadiness(true);
-               }
-               // Imobilise
-               else if(rpgMeleeP.getOnHit() == 2){
-                  if(victim instanceof Player){
-                     RPGPlayer rpgPlaya;
-
-                     rpgPlaya = plugin.getRPGPlayer(((Player) victim).getName());
-                     
-                     /* Cause existing player to be unable to move*/
-                     if(rpgPlaya != null){
-                        final RPGPlayer rpgPlayer = rpgPlaya;
-                        rpgPlayer.setMove(false);
-                        ((Player) victim).sendMessage("*imobilised*");
-                        
-                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                           public void run(){
-                              rpgPlayer.setMove(true);
-                              plugin.getServer().getPlayer(rpgPlayer.getName()).sendMessage("*mobilised*");
-                           }
-                        }, 60L);
-                     }
-                  }
-                  /* Since non-players can not be rendered immobile due to no
-                   * non-player move events. So instead, they will just have a
-                   * hugely slowing potion effect*/
-                  else{
-                     victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 5), true);
-                  }
-                  rpgMeleeP.setOnHit(0);
-                  plugin.giveCooldown(playa, "imob", "melee", 10);
-                  rpgMeleeP.setImobiliseReadiness(true);
-               }
+               meleeSwordAttack(playa, victim, event);
             }
             // Non-default damage for fist by melee player
             else if(playa.getItemInHand().getTypeId() == 0
@@ -424,8 +312,21 @@ public class EntityDamageEntity implements Listener {
       }
    }
    
-   private void healSpell(Player playa, LivingEntity fortunate, int adv){
+   private void healSpell(Player playa, LivingEntity fortunate){
+      int adv;
       float spell = plugin.getMagicPlayerMap().get(playa.getName()).getAttack();
+      
+      // Normal heal/undead damage
+      if(plugin.getBuildUpMap().get(playa.getName()) == null){
+         adv = 1;
+         plugin.getMagicPlayerMap().get(playa.getName()).addBuildUp(6);
+      }
+      // Advanced heal/undead damage
+      else{
+         adv = 2;
+         plugin.getBuildUpMap().remove(playa.getName());
+      }
+      
       if(fortunate instanceof Player){
          playa.playEffect(fortunate.getLocation(), Effect.SMOKE, 1);
          if(fortunate.getHealth() + (spell * adv) > fortunate.getMaxHealth())
@@ -491,5 +392,113 @@ public class EntityDamageEntity implements Listener {
       }
       
       return (int) dmg;
+   }
+   
+   private void meleeSwordAttack(Player playa, LivingEntity victim, EntityDamageByEntityEvent event){
+      int crit;
+      float attack;
+      RPGMeleePlayer rpgMeleeP = plugin.getMeleePlayerMap().get(playa.getName());;
+      
+      /* Check if the player can swing yet and if the entity is an enemy*/
+      if(rpgMeleeP.isSwordReady() && plugin.isEnemy(victim, rpgMeleeP.getParty())){
+         plugin.giveCooldown(playa, "slash", "melee", 1.5);
+         rpgMeleeP.setSwordReadiness(false);
+      }
+      else{
+         event.setCancelled(true);
+         return;
+      }
+      
+      rpgMeleeP.calcGearLevel(playa.getInventory());
+      attack = rpgMeleeP.getAttack();
+      
+      /* Crit chance 2% to 18%. Berserk mode adds 10%
+       * Damage in berserk adds 1 to 3 damage*/
+      if(plugin.getBerserkMap().get(playa.getName()) != null){
+         if(plugin.probabilityRoll((int)(2 * attack + 10)))
+            crit = 2;
+         else
+            crit = 1;
+         attack++;
+      }
+      else{
+         if(plugin.probabilityRoll((int)(5 * attack)))
+            crit = 2;
+         else
+            crit = 1;
+         
+         rpgMeleeP.addRage(5);
+      }
+      
+      plugin.ohTheDamage(event, victim, attack * crit);
+      
+      if(crit == 2)
+         playa.sendMessage("*crit*");
+      
+      // Silence
+      if(rpgMeleeP.getOnHit() == 1){
+         if(victim instanceof Player){
+            
+            /* Cause existing player to be unable to cast magic*/
+            if(plugin.getMagicPlayerMap().get(((Player) victim).getName()) != null){
+               final RPGMagicPlayer rpgMagicVic = plugin.getMagicPlayerMap().get(((Player) victim).getName());
+               rpgMagicVic.silencePlayer();
+               ((Player) victim).sendMessage("*silenced*");
+               
+               plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                  public void run(){
+                     rpgMagicVic.unsilencePlayer();
+                     plugin.getServer().getPlayer(rpgMagicVic.getName()).sendMessage("*unsilenced*");
+                  }
+               }, 60L);
+            }
+            else if(plugin.getMeleePlayerMap().get(((Player) victim).getName()) != null){
+               final RPGMeleePlayer rpgMeleeVic = plugin.getMeleePlayerMap().get(((Player) victim).getName());
+               rpgMeleeVic.silencePlayer();
+               ((Player) victim).sendMessage("*silenced*");
+               
+               plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                  public void run(){
+                     rpgMeleeVic.unsilencePlayer();
+                     plugin.getServer().getPlayer(rpgMeleeVic.getName()).sendMessage("*unsilenced*");
+                  }
+               }, 60L);
+            }
+         }
+         rpgMeleeP.setOnHit(0);
+         plugin.giveCooldown(playa, "sssh", "melee", 8);
+         rpgMeleeP.setSilenceReadiness(true);
+      }
+      // Imobilise
+      else if(rpgMeleeP.getOnHit() == 2){
+         if(victim instanceof Player){
+            RPGPlayer rpgPlaya;
+
+            rpgPlaya = plugin.getRPGPlayer(((Player) victim).getName());
+            
+            /* Cause existing player to be unable to move*/
+            if(rpgPlaya != null){
+               final RPGPlayer rpgPlayer = rpgPlaya;
+               rpgPlayer.setMove(false);
+               ((Player) victim).sendMessage("*imobilised*");
+               
+               plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                  public void run(){
+                     rpgPlayer.setMove(true);
+                     plugin.getServer().getPlayer(rpgPlayer.getName()).sendMessage("*mobilised*");
+                  }
+               }, 60L);
+            }
+         }
+         /* Since non-players can not be rendered immobile due to no
+          * non-player move events. So instead, they will just have a
+          * hugely slowing potion effect*/
+         else{
+            victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 5), true);
+         }
+         rpgMeleeP.setOnHit(0);
+         plugin.giveCooldown(playa, "imob", "melee", 10);
+         rpgMeleeP.setImobiliseReadiness(true);
+      }
    }
 }
