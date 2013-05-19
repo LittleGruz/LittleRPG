@@ -453,6 +453,10 @@ public class ArpeegeeMain extends JavaPlugin {
    public void giveExp(Player playa, int exp){
       float amount;
       
+      // Set level if player does not have a level
+      if(expLevelMap.get(playa.getLevel()) == null)
+         playa.setLevel(1);
+      
       amount = (float) exp / expLevelMap.get(playa.getLevel());
       if(playa.getExp() + amount > 1){
          amount = (amount + playa.getExp()) - 1;

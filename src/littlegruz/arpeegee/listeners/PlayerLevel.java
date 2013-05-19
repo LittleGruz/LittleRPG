@@ -119,7 +119,7 @@ public class PlayerLevel implements Listener{
       else{
          rpgPlaya.setLevel(newLevel);
          
-         rpgPlaya.setAttack(rpgPlaya.getAttack() + 0.4F);
+         rpgPlaya.setAttack(newLevel * 0.4F + 0.6F);
       }
    }
 }
