@@ -126,8 +126,8 @@ public class PlayerProjectile implements Listener{
                && event.getPlayer().getLevel() >= 16){
             float egg = plugin.getRangedPlayerMap().get(event.getPlayer().getName()).getAttack();
             
-            // Max will be a 96% chance of exploding
-            if(plugin.probabilityRoll((int)(12 * egg))){
+            // Max will be a 99% chance of exploding
+            if(plugin.probabilityRoll((int)(11 * egg))){
                int range = (int)(egg * 0.5);
                event.getEgg().getLocation().getWorld().createExplosion(event.getEgg().getLocation(), 1F, false);
                

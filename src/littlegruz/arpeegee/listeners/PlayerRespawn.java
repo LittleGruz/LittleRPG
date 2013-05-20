@@ -85,6 +85,8 @@ public class PlayerRespawn implements Listener{
          for(i = 0; i < removeList.size(); i++)
             event.getDrops().remove(removeList.get(i));
          removeList.clear();
+         
+         event.getEntity().setExp(event.getEntity().getExp() / 2);
       }
    }
 }
