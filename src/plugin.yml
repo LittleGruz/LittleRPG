@@ -51,6 +51,12 @@ commands:
    party:
       description: Toggle party chat
       usage: /party
+   levelup:
+      description: Increase users level
+      usage: /levelup
+   leveldown:
+      description: Decrease users level
+      usage: /leveldown
 
 permissions:
    rpg.world:
@@ -67,6 +73,9 @@ permissions:
       default: true
    rpg.party:
       description: Party creation/leaving/chatting
+      default: true
+   rpg.admin:
+      description: General admin stuff
       default: true
 
 softdepend: [Spout]
