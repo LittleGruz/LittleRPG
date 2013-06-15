@@ -17,6 +17,7 @@ import java.util.StringTokenizer;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import littlegruz.arpeegee.commands.Admin;
 import littlegruz.arpeegee.commands.Begin;
 import littlegruz.arpeegee.commands.Join;
 import littlegruz.arpeegee.commands.Party;
@@ -190,6 +191,9 @@ public class ArpeegeeMain extends JavaPlugin {
       getCommand("removepartyinvite").setExecutor(new Party(this));
       getCommand("party").setExecutor(new Party(this));
 
+      getCommand("levelup").setExecutor(new Admin());
+      getCommand("leveldown").setExecutor(new Admin());
+
       berserkMap = new HashMap<String, String>();
       buildUpMap = new HashMap<String, String>();
       projMap = new HashMap<Entity, String>();
@@ -335,11 +339,14 @@ public class ArpeegeeMain extends JavaPlugin {
       else if(ent instanceof Player){
          RPGPlayer rpgPlaya;
 
-         /* Find the RPG player*/
+         /* Find the RPG player and do damage to them anyway if not an RPG player*/
          if((rpgPlaya = getRPGPlayer(((Player) ent).getName())) == null)
             return true;
          
-         if(rpgPlaya.getParty().compareToIgnoreCase(party) == 0)
+         /* Damage non-fellow party member*/
+         if(rpgPlaya.getParty().compareToIgnoreCase("none") == 0)
+            return true;
+         else if(rpgPlaya.getParty().compareToIgnoreCase(party) == 0)
             return false;
          
          return true;

@@ -1,17 +1,12 @@
 package littlegruz.arpeegee.commands;
 
-import littlegruz.arpeegee.ArpeegeeMain;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Admin implements CommandExecutor{
-   private ArpeegeeMain plugin;
-   
-   public Admin(ArpeegeeMain instance){
-      plugin = instance;
+   public Admin(){
    }
 
    @Override
