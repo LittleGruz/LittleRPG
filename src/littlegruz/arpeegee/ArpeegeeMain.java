@@ -51,9 +51,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Ghast;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Slime;
 import org.bukkit.entity.Squid;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -336,6 +338,10 @@ public class ArpeegeeMain extends JavaPlugin {
          return true;
       else if(ent instanceof EnderDragon)
          return true;
+      else if(ent instanceof Slime)
+         return true;
+      else if(ent instanceof Ghast)
+         return true;
       else if(ent instanceof Player){
          RPGPlayer rpgPlaya;
 
@@ -351,6 +357,7 @@ public class ArpeegeeMain extends JavaPlugin {
          
          return true;
       }
+      
       return false;
    }
 
