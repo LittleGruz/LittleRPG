@@ -484,7 +484,8 @@ public class ArpeegeeMain extends JavaPlugin {
             ((EntityDamageByEntityEvent) event).setDamage((int)(dmg * 2));
          else{
             if(entity instanceof Player){
-               if(meleePlayerMap.get(((Player) entity).getName()) != null){
+               if(meleePlayerMap.get(((Player) entity).getName()) != null
+                     && bideMap.get(((Player) entity).getName()) != null){
                   meleeBide((Player) entity, (int) dmg);
                   otherMother = false;
                }
@@ -500,7 +501,8 @@ public class ArpeegeeMain extends JavaPlugin {
             ((LivingEntity)entity).damage((int)(dmg * 2));
          else{
             if(entity instanceof Player){
-               if(meleePlayerMap.get(((Player) entity).getName()) != null){
+               if(meleePlayerMap.get(((Player) entity).getName()) != null
+                     && bideMap.get(((Player) entity).getName()) != null){
                   meleeBide((Player) entity, (int)dmg);
                   otherMother = false;
                }
@@ -526,13 +528,13 @@ public class ArpeegeeMain extends JavaPlugin {
    public void meleeBide(Player playa, int damage){
       RPGMeleePlayer rpgmp = meleePlayerMap.get(playa.getName());
       
-      this.getServer().broadcastMessage("Biding");
-      if(!rpgmp.addBideAmt(damage)){
-         playa.getWorld().createExplosion(playa.getLocation(), damage);
-         this.getServer().getScheduler().cancelTask(bideMap.get(rpgmp.getName()));
-         bideMap.remove(rpgmp.getName());
-         this.getServer().broadcastMessage("Canceled *explode*");
-      }
+      
+         if(!rpgmp.addBideAmt(damage)){
+            playa.getWorld().createExplosion(playa.getLocation(), damage);
+            this.getServer().getScheduler().cancelTask(bideMap.get(rpgmp.getName()));
+            bideMap.remove(rpgmp.getName());
+            this.getServer().broadcastMessage("Canceled *explode*");
+         }
    }
    
    /* Calculates the damage taken by a player. Accounts for blocking, bide,

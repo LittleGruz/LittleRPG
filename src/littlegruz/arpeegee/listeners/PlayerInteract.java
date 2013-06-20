@@ -129,7 +129,7 @@ public class PlayerInteract implements Listener{
                      }
                      plugin.getServer().getPlayer(name).getWorld().playEffect(plugin.getServer().getPlayer(name).getLocation(), Effect.BLAZE_SHOOT, null);
                      plugin.getBideMap().remove(name);
-                     plugin.getServer().getPlayer(name).sendMessage("Bide unleased!");
+                     plugin.getServer().getPlayer(name).sendMessage("Bide unleashed!");
                   }
                }, 100L);
                
