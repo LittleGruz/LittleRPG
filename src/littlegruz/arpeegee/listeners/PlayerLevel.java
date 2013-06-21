@@ -24,15 +24,14 @@ public class PlayerLevel implements Listener{
    @EventHandler
    public void onPlayerLevel(PlayerLevelChangeEvent event){
       if(plugin.getWorldsMap().containsKey(event.getPlayer().getWorld().getName())){
-         if(event.getNewLevel() > event.getOldLevel())
-            event.getPlayer().sendMessage("Level up!");
+         boolean leveling = false;
          
          // New weapon for the melee class
          if(plugin.getMeleePlayerMap().get(event.getPlayer().getName()) != null){
             RPGMeleePlayer rpgPlaya = plugin.getMeleePlayerMap().get(event.getPlayer().getName());
    
             // Increase player stats
-            levelUp(rpgPlaya, event.getPlayer(), event.getNewLevel());
+            leveling = levelUp(rpgPlaya, event.getPlayer(), event.getNewLevel());
 
             // Blink
             if(rpgPlaya.getLevel() == 6)
@@ -44,7 +43,7 @@ public class PlayerLevel implements Listener{
             else if(rpgPlaya.getLevel() == 16)
                event.getPlayer().getInventory().setItem(3, new ItemStack(Material.PUMPKIN_PIE,1));
             // Bide
-            else if(rpgPlaya.getLevel() == 20)
+            else if(rpgPlaya.getLevel() == 20 && leveling)
                event.getPlayer().getInventory().setItem(4, new ItemStack(Material.POTATO_ITEM,1));
          }
          // New weapon for the ranged class
@@ -52,7 +51,7 @@ public class PlayerLevel implements Listener{
             RPGRangedPlayer rpgPlaya = plugin.getRangedPlayerMap().get(event.getPlayer().getName());
             
             // Increase player stats
-            levelUp(rpgPlaya, event.getPlayer(), event.getNewLevel());
+            leveling = levelUp(rpgPlaya, event.getPlayer(), event.getNewLevel());
             
             // Create the base dye type first
             ItemStack is = new ItemStack(351,1);
@@ -70,7 +69,7 @@ public class PlayerLevel implements Listener{
             else if(rpgPlaya.getLevel() == 16)
                event.getPlayer().getInventory().setItem(3, new ItemStack(Material.EGG,1));
             // Sheep arrow
-            else if(rpgPlaya.getLevel() == 20){
+            else if(rpgPlaya.getLevel() == 20 && leveling){
                is.setDurability((short)15);
                event.getPlayer().getInventory().setItem(4, is);
             }
@@ -80,7 +79,7 @@ public class PlayerLevel implements Listener{
             RPGMagicPlayer rpgPlaya = plugin.getMagicPlayerMap().get(event.getPlayer().getName());
             
             // Increase player stats
-            levelUp(rpgPlaya, event.getPlayer(), event.getNewLevel());
+            leveling = levelUp(rpgPlaya, event.getPlayer(), event.getNewLevel());
             
             // Create the base dye type first
             ItemStack is = new ItemStack(351,1);
@@ -100,26 +99,32 @@ public class PlayerLevel implements Listener{
                event.getPlayer().getInventory().setItem(3, is);
             }
             // Sheep summon
-            else if(rpgPlaya.getLevel() == 20){
+            else if(rpgPlaya.getLevel() == 20 && leveling){
                is.setType(Material.WHEAT);
                event.getPlayer().getInventory().setItem(4, is);
             }
          }
+         
+         if(leveling)
+            event.getPlayer().sendMessage("Level up!");
       }
    }
    
-   private void levelUp(RPGPlayer rpgPlaya, Player playa, int newLevel){
+   private boolean levelUp(RPGPlayer rpgPlaya, Player playa, int newLevel){
 
       // Stop player going over level cap
       if(newLevel > plugin.MAX_LEVEL){
          rpgPlaya.setLevel(plugin.MAX_LEVEL);
          playa.setLevel(plugin.MAX_LEVEL);
+         return false;
       }
       // Increase level and stats
       else{
          rpgPlaya.setLevel(newLevel);
          
          rpgPlaya.setAttack(newLevel * 0.4F + 0.6F);
+         
+         return true;
       }
    }
 }
